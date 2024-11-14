@@ -1,7 +1,5 @@
 ## fio.apl
 
-License: zlib.
-
 In GnuAPL, interations with the operating system (file handling, spawning
 processes, opening ports, etc.) are done with ⎕FIO.
 

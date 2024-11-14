@@ -1,27 +1,20 @@
 ⍝!/usr/local/bin/apl --script
 
-⍝ zlib license
+⍝ This file is part of fio.apl.
 ⍝
 ⍝ Copyright (c) 2024 ona-li-toki-e-jan-Epiphany-tawa-mi
 ⍝
-⍝ This software is provided ‘as-is’, without any express or implied
-⍝ warranty. In no event will the authors be held liable for any damages
-⍝ arising from the use of this software.
+⍝ fio.apl is free software: you can redistribute it and/or modify it under the
+⍝ terms of the GNU General Public License as published by the Free Software
+⍝ Foundation, either version 3 of the License, or (at your option) any later
+⍝ version.
 ⍝
-⍝ Permission is granted to anyone to use this software for any purpose,
-⍝ including commercial applications, and to alter it and redistribute it
-⍝ freely, subject to the following restrictions:
+⍝ fio.apl is distributed in the hope that it will be useful, but WITHOUT ANY
+⍝ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+⍝ A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 ⍝
-⍝ 1. The origin of this software must not be misrepresented; you must not
-⍝ claim that you wrote the original software. If you use this software
-⍝ in a product, an acknowledgment in the product documentation would be
-⍝ appreciated but is not required.
-⍝
-⍝ 2. Altered source versions must be plainly marked as such, and must not be
-⍝ misrepresented as being the original software.
-⍝
-⍝ 3. This notice may not be removed or altered from any source
-⍝ distribution.
+⍝ You should have received a copy of the GNU General Public License along with
+⍝ fio.apl. If not, see <https://www.gnu.org/licenses/>.
 
 ⍝ In GnuAPL, interations with the operating system (file handling, spawning
 ⍝ processes, opening ports, etc.) are done with ⎕FIO.
@@ -38,7 +31,10 @@
 ⍝ ⎕FIO.
 ⍝
 ⍝ Changelog:
-⍝ - Intial release.
+⍝ - Upcoming:
+⍝   - Relicensed as GPLv3+.
+⍝ - 0.1.0:
+⍝   - Intial release.
 
 ⍝ TODO: add unit tests.
 
@@ -46,7 +42,7 @@
 
 ⍝ See <https://www.gnu.org/software/apl/Library-Guidelines-GNU-APL.html> for
 ⍝ details.
-FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/gnu-apl-libraries" "https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/gnu-apl-libraries/blob/master/fio.apl" "ZLIB" "L3" "FIO" "" "0.1.0"
+FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/gnu-apl-libraries" "https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/gnu-apl-libraries/blob/master/fio.apl" "GPLv3+" "L3" "FIO" "" "0.1.0"
 
 ⍝ Also on my personal git server:
 ⍝ - I2P - http://oytjumugnwsf4g72vemtamo72vfvgmp4lfsf6wmggcvba3qmcsta.b32.i2p/cgit/gnu-apl-libraries.git/about
