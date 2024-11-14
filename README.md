@@ -26,7 +26,6 @@ Simply include it into your project on one of the library search paths (run
 
 If the inclusion of `)COPY_ONCE` in scripts results in weird text output,
 replace the command with `⊣ ⍎")COPY <file>"`.
-```
 
 ## TODOs
 
