@@ -52,11 +52,13 @@
 
 ⍝ See <https://www.gnu.org/software/apl/Library-Guidelines-GNU-APL.html> for
 ⍝ details.
-FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/gnu-apl-libraries" "https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/gnu-apl-libraries/blob/master/fio.apl" "GPLv3+" "L3" "FIO" "" "0.1.0"
+FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://paltepuk.xyz/cgit/fio.apl.git/about/" "https://paltepuk.xyz/cgit/fio.apl.git/plain/fio.apl" "GPLv3+" "L3" "FIO" "" "0.1.0"
 
-⍝ Also on my personal git server:
-⍝ - I2P - http://oytjumugnwsf4g72vemtamo72vfvgmp4lfsf6wmggcvba3qmcsta.b32.i2p/cgit/gnu-apl-libraries.git/about
-⍝ - Tor - http://4blcq4arxhbkc77tfrtmy4pptf55gjbhlj32rbfyskl672v2plsmjcyd.onion/cgit/gnu-apl-libraries.git/about
+⍝ Links:
+⍝ - paltepuk - https://http://paltepuk.xyz/cgit/fio.apl.git/about/
+⍝ - paltepuk (I2P) - http://oytjumugnwsf4g72vemtamo72vfvgmp4lfsf6wmggcvba3qmcsta.b32.i2p/cgit/fio.apl.git/about/
+⍝ - paltepuk (Tor) - http://4blcq4arxhbkc77tfrtmy4pptf55gjbhlj32rbfyskl672v2plsmjcyd.onion/cgit/fio.apl.git/about/
+⍝ - GitHub - https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/fio.apl/
 
 
 
