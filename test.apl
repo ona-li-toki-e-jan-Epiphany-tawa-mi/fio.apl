@@ -62,6 +62,9 @@ LALREADY_FAILED:
 ∇
 
 ⍝ TODO document.
+ASSERT_R←"→(ASSERT RESULT) ⍴ LFAIL"
+
+⍝ TODO document.
 ∇REPORT; TESTS_PASSED
   TESTS_PASSED←TEST_COUNT-≢FAILED_TESTS
   ⍞←TESTS_PASSED ◊ ⍞←"/" ◊ ⍞←TEST_COUNT ◊ ⍞←" test(s) passed - "
@@ -78,18 +81,22 @@ LALREADY_FAILED:
 ⍝ Tests                                                                        ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
-∇TEST_ASSUMPTIONS
-  →(ASSERT (0≡FIO∆STDIN))  ⍴ LFAIL
-  →(ASSERT (1≡FIO∆STDOUT)) ⍴ LFAIL
-  →(ASSERT (2≡FIO∆STDERR)) ⍴ LFAIL
+
+∇TEST_ASSUMPTIONS; RESULT
+  RESULT←0≡FIO∆STDIN  ◊ ⍎ASSERT_R
+  RESULT←1≡FIO∆STDOUT ◊ ⍎ASSERT_R
+  RESULT←2≡FIO∆STDERR ◊ ⍎ASSERT_R
 
   ⍝ Should be nothing in ERRNO.
-  →(ASSERT (0≡FIO∆ERRNO)) ⍴ LFAIL
-  →(ASSERT ("Success"≡FIO∆STRERROR FIO∆ERRNO)) ⍴ LFAIL
+  RESULT←0≡FIO∆ERRNO                      ◊ ⍎ASSERT_R
+  RESULT←"Success"≡FIO∆STRERROR FIO∆ERRNO ◊ ⍎ASSERT_R
 
   ⍝ At the time of calling, these should be the only open file descriptors.
-  →(ASSERT (3≡≢FIO∆LIST_FDS)) ⍴ LFAIL
-  →(ASSERT (∧/FIO∆LIST_FDS∊FIO∆STDIN FIO∆STDOUT FIO∆STDERR)) ⍴ LFAIL
+  RESULT←3≡≢FIO∆LIST_FDS                                ◊ ⍎ASSERT_R
+  RESULT←∧/FIO∆LIST_FDS∊FIO∆STDIN FIO∆STDOUT FIO∆STDERR ◊ ⍎ASSERT_R
+
+LFAIL:
+∇
 LFAIL:
 ∇
 
