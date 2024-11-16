@@ -78,13 +78,11 @@ LALREADY_FAILED:
 ⍝ Tests                                                                        ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
-∇TEST_FIO_CONSTANTS
+∇TEST_ASSUMPTIONS
   →(ASSERT (0≡FIO∆STDIN))  ⍴ LFAIL
   →(ASSERT (1≡FIO∆STDOUT)) ⍴ LFAIL
   →(ASSERT (2≡FIO∆STDERR)) ⍴ LFAIL
-LFAIL:
-∇
-∇TEST_FIO∆LIST_FDS
+
   ⍝ At the time of calling, these should be the only open file descriptors.
   →(ASSERT (3≡≢FIO∆LIST_FDS)) ⍴ LFAIL
   →(ASSERT (∧/FIO∆LIST_FDS∊FIO∆STDIN FIO∆STDOUT FIO∆STDERR)) ⍴ LFAIL
@@ -99,8 +97,7 @@ LFAIL:
 ⍞←" ^ Output of )COPY. Unimportant, please ignore\n\n"
 
 ∇MAIN
-  RUN "TEST_FIO_CONSTANTS"
-  RUN "TEST_FIO∆LIST_FDS"
+  RUN "TEST_ASSUMPTIONS"
   ⍞←"\n" ◊ REPORT
 ∇
 MAIN
