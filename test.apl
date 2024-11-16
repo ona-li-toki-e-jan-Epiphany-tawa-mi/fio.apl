@@ -98,6 +98,27 @@ EXISTING_FILE←"tests/existing-file"
 EXISTING_FILE_CONTENTS←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 EXISTING_FILE_CONTENTS_LINES←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 
+∇TEST_UTF8_BYTES_CONVERSION; RESULT;STRING;BYTES;ASSERT_UTF8_BYTES_CONVERSION
+  ASSERT_UTF8_BYTES_CONVERSION←"RESULT←BYTES≡FIO∆UTF8_TO_BYTES STRING ◊ ⍎ASSERT_R ◊ RESULT←STRING≡FIO∆BYTES_TO_UTF8 BYTES ◊ ⍎ASSERT_R"
+
+  SECTION "1"
+  STRING←"This is a test"
+  BYTES←84 104 105 115 32 105 115 32 97 32 116 101 115 116
+  ⍎ASSERT_UTF8_BYTES_CONVERSION
+
+  SECTION "2"
+  STRING←"Have you tried C-\\ APL-Z RET?"
+  BYTES←72 97 118 101 32 121 111 117 32 116 114 105 101 100 32 67 45 92 32 65 80 76 45 90 32 82 69 84 63
+  ⍎ASSERT_UTF8_BYTES_CONVERSION
+
+  SECTION "3"
+  STRING←"Вы что, яйцо?"
+  BYTES←208 146 209 139 32 209 135 209 130 208 190 44 32 209 143 208 185 209 134 208 190 63
+  ⍎ASSERT_UTF8_BYTES_CONVERSION
+
+LFAIL:
+∇
+
 ∇TEST_ASSUMPTIONS; RESULT
   SECTION "Standard file descriptors"
   RESULT←0≡FIO∆STDIN  ◊ ⍎ASSERT_R
@@ -105,8 +126,8 @@ EXISTING_FILE_CONTENTS_LINES←"Lorem ipsum dolor sit amet, consectetur adipisci
   RESULT←2≡FIO∆STDERR ◊ ⍎ASSERT_R
 
   SECTION "Empty ERRNO"
-  RESULT←0≡FIO∆ERRNO                      ◊ ⍎ASSERT_R
-  RESULT←"Success"≡FIO∆STRERROR FIO∆ERRNO ◊ ⍎ASSERT_R
+  RESULT←0≡FIO∆ERRNO                                          ◊ ⍎ASSERT_R
+  RESULT←(FIO∆STRERROR FIO∆ERRNO)≡FIO∆UTF8_TO_BYTES "Success" ◊ ⍎ASSERT_R
 
   SECTION "Standard open file descriptors"
   RESULT←3≡≢FIO∆LIST_FDS                                ◊ ⍎ASSERT_R
@@ -134,27 +155,6 @@ LFAIL:
   ⍎ASSERT_R
   RESULT←EXISTING_FILE_CONTENTS_LINES≡"\n" FIO∆SPLIT_CLEAN EXISTING_FILE_CONTENTS
   ⍎ASSERT_R
-
-LFAIL:
-∇
-
-∇TEST_UTF8_BYTES_CONVERSION; RESULT;STRING;BYTES;ASSERT_UTF8_BYTES_CONVERSION
-  ASSERT_UTF8_BYTES_CONVERSION←"RESULT←BYTES≡FIO∆UTF8_TO_BYTES STRING ◊ ⍎ASSERT_R ◊ RESULT←STRING≡FIO∆BYTES_TO_UTF8 BYTES ◊ ⍎ASSERT_R"
-
-  SECTION "1"
-  STRING←"This is a test"
-  BYTES←84 104 105 115 32 105 115 32 97 32 116 101 115 116
-  ⍎ASSERT_UTF8_BYTES_CONVERSION
-
-  SECTION "2"
-  STRING←"Have you tried C-\\ APL-Z RET?"
-  BYTES←72 97 118 101 32 121 111 117 32 116 114 105 101 100 32 67 45 92 32 65 80 76 45 90 32 82 69 84 63
-  ⍎ASSERT_UTF8_BYTES_CONVERSION
-
-  SECTION "3"
-  STRING←"Вы что, яйцо?"
-  BYTES←208 146 209 139 32 209 135 209 130 208 190 44 32 209 143 208 185 209 134 208 190 63
-  ⍎ASSERT_UTF8_BYTES_CONVERSION
 
 LFAIL:
 ∇
@@ -205,7 +205,7 @@ LFAIL:
 ∇
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
-⍝ Test runner                                                                  ⍝
+⍝ Test Runner                                                                  ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
 )COPY ./fio.apl

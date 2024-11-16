@@ -110,11 +110,11 @@ FIO∆FCLOSE←{⎕FIO[4] ⍵}
 ⍝ From ⎕FIO '': Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
 FIO∆FREAD←{⍺ ⎕FIO[6] ⍵}
 
-⍝ TODO Unit test
-⍝ Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
 ⍝ Writes to a file descriptor.
 ⍝ →⍵ - file descriptor.
 ⍝ →⍺ - data as byte vector.
+⍝ ←The number of bytes written.
+⍝ From ⎕FIO '': Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
 FIO∆FWRITE←{⍺ ⎕FIO[7] ⍵}
 
 ⍝ Reads bytes to a newline or up to a specified number of bytes from the file
@@ -153,14 +153,6 @@ FIO∆MKDIR←{(8⊥0 7 5 5) ⎕FIO[20] ⍵}
 ⍝ →⍺ - octal mode for the directory as an integer vector (i.e. 0 7 5 5.)
 ⍝ ←Non zero if an error occured.
 FIO∆MKDIR_MODE←{(8⊥⍺) ⎕FIO[20] ⍵}
-
-⍝ TODO Unit test
-⍝ Zi ← Ac ⎕FIO[23] Bh    fwrite(Ac, 1, ⍴Ac, Bh) 1 Unicode per Ac, Output UTF8
-⍝ Writes a character vector to a file descriptor.
-⍝ →⍵ - file descriptor.
-⍝ →⍺ - characte vector.
-⍝ ←Error code.
-FIO∆FWRITE_CVECTOR←{⍺ ⎕FIO[23] ⍵}
 
 ⍝ TODO Unit test
 ⍝ Zh ← As ⎕FIO[24] Bs    popen(Bs, As) command Bs mode As
