@@ -94,6 +94,7 @@ ASSERT_R←"→(ASSERT RESULT) ⍴ LFAIL"
 ⍝ Tests                                                                        ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
+EXISTING_FILE←"tests/existing-file"
 EXISTING_FILE_CONTENTS←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 EXISTING_FILE_CONTENTS_LINES←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 
@@ -171,7 +172,7 @@ LFAIL:
   ASSERT_FCLOSE←"RESULT←0≡FIO∆FCLOSE FD ◊ ⍎ASSERT_R"
 
   SECTION "FIO∆FREAD"
-  ⍎"r" ASSERT_FOPEN "tests/existing-file"
+  ⍎"r" ASSERT_FOPEN EXISTING_FILE
   CONTENTS←⍬
   LFREAD_LOOP:
     BUFFER←500 FIO∆FREAD FD
@@ -182,7 +183,7 @@ LFAIL:
   ⍎ASSERT_READ ◊ ⍎ASSERT_FCLOSE
 
   SECTION "FIO∆FGETS"
-  ⍎"r" ASSERT_FOPEN "tests/existing-file"
+  ⍎"r" ASSERT_FOPEN EXISTING_FILE
   ⍝ Should read file line-by-line, preserving newlines.
   CONTENTS←⍬
   ASSERT_FGETS←{"BUFFER←500 FIO∆FGETS FD ◊ CONTENTS←CONTENTS,BUFFER ◊ RESULT←(FIO∆BYTES_TO_UTF8 BUFFER)≡",(↑('"\n",⍨' "")[1+⍺]),"↑EXISTING_FILE_CONTENTS_LINES[",⍵,"] ◊ ⍎ASSERT_R"}
@@ -194,7 +195,7 @@ LFAIL:
   ⍎ASSERT_READ ◊ ⍎ASSERT_FCLOSE
 
   SECTION "FIO∆READ_ENTIRE_FD"
-  ⍎"r" ASSERT_FOPEN "tests/existing-file"
+  ⍎"r" ASSERT_FOPEN EXISTING_FILE
   RESULT←1≤FD ◊ ⍎ASSERT_R
   CONTENTS←FIO∆READ_ENTIRE_FD FD
   RESULT←0≡FIO∆READ_ENTIRE_FD FD ◊ ⍎ASSERT_R
