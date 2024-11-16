@@ -80,6 +80,7 @@ FIO∆STDERR←2
 ⍝ From ⎕FIO '': ⎕FIO     0     return a list of open file descriptors
 FIO∆LIST_FDS←{⎕FIO 0}
 
+⍝ TODO Unit test
 ⍝ Zh ← As ⎕FIO[ 3] Bs    fopen(Bs, As) filename Bs mode As
 ⍝ Opens a file with fopen.
 ⍝ →⍺ - mode (i.e. "w", "r+", etc..)
@@ -87,15 +88,18 @@ FIO∆LIST_FDS←{⎕FIO 0}
 ⍝ ←The file descriptor, or a scalar number less than 1 on failure.
 FIO∆FOPEN←{⍺ ⎕FIO[3] ⍵}
 
+⍝ TODO Unit test
 ⍝ Ze ←    ⎕FIO[ 4] Bh    fclose(Bh)
 ⍝ Closes a file descriptor.
 ⍝ →⍵ - file descriptor.
 ⍝ ←Error code.
 FIO∆FCLOSE←{⎕FIO[4] ⍵}
 
+⍝ TODO Unit test
 ⍝ Zb ←    ⎕FIO[ 6] Bh    fread(Zi, 1, 5000, Bh) 1 byte per Zb
 ⍝ Reads up to 5,000 bytes in from the file descriptor as a byte vector.
 FIO∆FREAD←{⎕FIO[6] ⍵}
+⍝ TODO Unit test
 ⍝ Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
 ⍝ Reads bytes up to specified number of bytes from the file descriptor as a byte
 ⍝ vector.
@@ -103,34 +107,40 @@ FIO∆FREAD←{⎕FIO[6] ⍵}
 ⍝ →⍺ - maximum number of bytes to read in.
 FIO∆FREAD_SIZED←{⍺ ⎕FIO[6] ⍵}
 
+⍝ TODO Unit test
 ⍝ Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
 ⍝ Writes to a file descriptor.
 ⍝ →⍵ - file descriptor.
 ⍝ →⍺ - data as byte vector.
 FIO∆FWRITE←{⍺ ⎕FIO[7] ⍵}
 
+⍝ TODO Unit test
 ⍝ Zi ←    ⎕FIO[10] Bh    feof(Bh)
 ⍝ →⍵ - file descriptor.
 ⍝ ←Non-zero if EOF was reached for the file descriptor.
 FIO∆FEOF←{⎕FIO[10] ⍵}
 
+⍝ TODO Unit test
 ⍝ Ze ←    ⎕FIO[11] Bh    ferror(Bh)
 ⍝ →⍵ - file descriptor.
 ⍝ ←Non-zero if an error ocurred reading file descriptor.
 FIO∆FERROR←{⎕FIO[11] ⍵}
 
+⍝ TODO Unit test
 ⍝ Zi ← Ai ⎕FIO[20] Bh    mkdir(Bc, Ai)
 ⍝ Creates the given directory if it doesn't exist with file mode 0755. Does not
 ⍝ recurse.
 ⍝ →⍵ - file path.
 ⍝ ←Non zero if an error occured.
 FIO∆MKDIR←{(8⊥0 7 5 5) ⎕FIO[20] ⍵}
+⍝ TODO Unit test
 ⍝ Creates the given directory if it doesn't exist. Does not recurse.
 ⍝ →⍵ - file path.
 ⍝ →⍺ - octal mode for the directory as an integer vector (i.e. 0 7 5 5.)
 ⍝ ←Non zero if an error occured.
 FIO∆MKDIR_MODE←{(8⊥⍺) ⎕FIO[20] ⍵}
 
+⍝ TODO Unit test
 ⍝ Zi ← Ac ⎕FIO[23] Bh    fwrite(Ac, 1, ⍴Ac, Bh) 1 Unicode per Ac, Output UTF8
 ⍝ Writes a character vector to a file descriptor.
 ⍝ →⍵ - file descriptor.
@@ -138,22 +148,26 @@ FIO∆MKDIR_MODE←{(8⊥⍺) ⎕FIO[20] ⍵}
 ⍝ ←Error code.
 FIO∆FWRITE_CVECTOR←{⍺ ⎕FIO[23] ⍵}
 
+⍝ TODO Unit test
 ⍝ Zh ← As ⎕FIO[24] Bs    popen(Bs, As) command Bs mode As
 ⍝ Stars the given command in a subprocess.
 ⍝ →⍵ - command.
 ⍝ ←The process' read-only file descriptor, or a scalar 0 on failure.
 FIO∆POPEN_READ←{⎕FIO[24] ⍵}
+⍝ TODO Unit test
 ⍝ Stars the given command in a subprocess.
 ⍝ →⍵ - command.
 ⍝ ←The process' write-only file descriptor, or a scalar 0 on failure.
 FIO∆POPEN_WRITE←{"w" ⎕FIO[24] ⍵}
 
+⍝ TODO Unit test
 ⍝ Ze ←    ⎕FIO[25] Bh    pclose(Bh)
 ⍝ Closes a file descripter opened with FIO∆POPEN_READ.
 ⍝ →⍵ - process file descriptor.
 ⍝ ←Process exit code, or a scalar ¯1 on failure.
 FIO∆PCLOSE←{⎕FIO[25] ⍵}
 
+⍝ TODO Unit test
 ⍝ Zb ←    ⎕FIO[26] Bs    return entire file Bs as byte vector
 ⍝ Reads in the enitrety of the file a byte vector.
 ⍝ →FILE_PATH - file path to read from.
@@ -168,11 +182,13 @@ FIO∆PCLOSE←{⎕FIO[25] ⍵}
   LERROR:
 ∇
 
+⍝ TODO Unit test
 ⍝ Zn ←    ⎕FIO[29] Bs    return file names in directory Bs
 ⍝ →⍵ - directory file path.
 ⍝ ←The filenames in the directory, or a scalar ¯2 on failure.
 FIO∆LIST_DIRECTORY←{⎕FIO[29] ⍵}
 
+⍝ TODO Unit test
 ⍝ Zi ←    ⎕FIO[50] Bu    gettimeofday()
 ⍝ Returns the current time since the Epoch in either seconds, milliseconds, or
 ⍝ microseconds.
@@ -184,11 +200,14 @@ FIO∆GET_TIME_OF_DAY←{⎕FIO[50] ⍵}
 ⍝ Utility Functions                                                            ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
+⍝ TODO Unit test
 ⍝ Converts a byte vector to a UTF-8 encoded character vector.
 FIO∆BYTES_TO_UTF8←{19 ⎕CR ⎕UCS ⍵}
+⍝ TODO Unit test
 ⍝ Converts a UTF-8 encoded character vector to a byte vector.
 FIO∆UTF8_TO_BYTES←{⎕UCS 18 ⎕CR ⍵}
 
+⍝ TODO Unit test
 ⍝ Reads input from the file descriptor until EOF is reached and outputs the
 ⍝ contents as a byte vector.
 ∇BYTE_VECTOR←FIO∆READ_ENTIRE_FD FILE_DESCRIPTOR
@@ -202,11 +221,13 @@ FIO∆UTF8_TO_BYTES←{⎕UCS 18 ⎕CR ⍵}
   LEND_READ_LOOP:
 ∇
 
+⍝ TODO Unit test
 ⍝ Checks is the file path exists and is a directory.
 ⍝ →⍵ - directory file path.
 ⍝ ←1 if the file path represents a directory, else 0.
 FIO∆IS_DIRECTORY←{¯2≢FIO∆LIST_DIRECTORY ⍵}
 
+⍝ TODO Unit test
 ⍝ Splits a vector by a delimiter value into a nested vector of vectors. If a
 ⍝ vector ends up being empty, it will still be included in the result (i.e.
 ⍝ VALUE VALUE DELIMETER DELIMETER VALUE -> (VALUE VALUE) () (VALUE).) The
@@ -214,6 +235,7 @@ FIO∆IS_DIRECTORY←{¯2≢FIO∆LIST_DIRECTORY ⍵}
 ∇RESULT←DELIMETER FIO∆SPLIT VECTOR
   RESULT←{⍵~DELIMETER}¨ VECTOR ⊂⍨1++\ VECTOR ∊ DELIMETER
 ∇
+⍝ TODO Unit test
 ⍝ Splits a vector by a delimiter value into a nested vector of vectors. If a
 ⍝ vector ends up being empty, it will not be included in the result (i.e. VALUE
 ⍝ VALUE DELIMETER DELIMETER VALUE -> (VALUE VALUE) (VALUE).) The delimiter value
@@ -222,12 +244,15 @@ FIO∆IS_DIRECTORY←{¯2≢FIO∆LIST_DIRECTORY ⍵}
   RESULT←{⍵~DELIMETER}¨ VECTOR ⊂⍨1++ VECTOR ∊ DELIMETER
 ∇
 
+⍝ TODO Unit test
 ⍝ Splits a file path into it's seperate parts and removes the seperators (i.e.
 ⍝ FIO∆SPLIT_PATH "../a/p///apples" → ".." "a" "p" "apples"
 FIO∆SPLIT_PATH←{'/' FIO∆SPLIT_CLEAN ⍵}
+⍝ TODO Unit test
 ⍝ Joins two file paths together with a seperator.
 FIO∆JOIN_PATHS←{⍺,'/',⍵}
 
+⍝ TODO Unit test
 ⍝ Creates the given directory and it's parent directories if they don't exist.
 ⍝ →PATH - file path.
 ⍝ →MODE - octal mode for the directory as an integer vector (i.e. 0 7 5 5.)
@@ -237,6 +262,7 @@ FIO∆JOIN_PATHS←{⍺,'/',⍵}
   DIRECTORIES←FIO∆JOIN_PATHS\ FIO∆SPLIT_PATH PATH
   ERROR_CODES←{MODE FIO∆MKDIR_MODE ⍵}¨ DIRECTORIES
 ∇
+⍝ TODO Unit test
 ⍝ Creates the given directory and it's parent directories if they don't exist
 ⍝ with file mode 0755.
 ⍝ →⍵ - file path.
@@ -245,6 +271,7 @@ FIO∆JOIN_PATHS←{⍺,'/',⍵}
 ⍝ non-zero if an error occured.
 FIO∆MKDIRS←{(0 7 5 5) FIO∆MKDIRS_MODE ⍵}
 
+⍝ TODO Unit test
 ⍝ Replaces all instances of a character sequence in a character vector with
 ⍝ another one.
 ⍝ →MATCH_REPLACEMENT - A two-element nested array of character vectors, the
@@ -256,6 +283,7 @@ FIO∆MKDIRS←{(0 7 5 5) FIO∆MKDIRS_MODE ⍵}
   RESULT←∊CHARACTER_VECTOR{(⍺ REPLACEMENT)[1+⍵]}¨CHARACTER_VECTOR∊MATCH
 ∇
 
+⍝ TODO Unit test
 ⍝ Escapes the given shell argument with quotes. Intended for use with
 ⍝ FIO∆POPEN_{READ,WRITE}
 FIO∆ESCAPE_SHELL_ARGUMENT←{"'","'",⍨ ⍵ FIO∆CVECTOR_REPLACE⍨ "'" "'\\''"}
