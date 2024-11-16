@@ -43,21 +43,23 @@ FAILED_TESTS←⍬
 ∇
 
 ⍝ TODO document.
-∇FAIL←ASSERT RESULT
+∇FAILED←ASSERT RESULT
   →(0≡RESULT) ⍴ LVALID ◊ →(1≡RESULT) ⍴ LVALID
     ⍞←"\nASSERT: encounted unexpected result value. Expected a scalar 0 or 1, got"
     ⍞←": '" ◊ ⍞←RESULT ◊ ⍞←"'\n"
     ⍎")OFF"
   LVALID:
 
+  →TEST_FAILED ⍴ LALREADY_FAILED
   TEST_FAILED←~RESULT
-  FAIL←TEST_FAILED
+LALREADY_FAILED:
+  FAILED←TEST_FAILED
 ∇
 
 ⍝ TODO document.
 ∇REPORT; TESTS_PASSED
   TESTS_PASSED←TEST_COUNT-≢FAILED_TESTS
-  ⍞←"\n" ◊ ⍞←TESTS_PASSED ◊ ⍞←"/" ◊ ⍞←TEST_COUNT ◊ ⍞←" test(s) passed - "
+  ⍞←TESTS_PASSED ◊ ⍞←"/" ◊ ⍞←TEST_COUNT ◊ ⍞←" test(s) passed - "
   →(0≢≢FAILED_TESTS) ⍴ LTESTS_FAILED
     ⍞←"OK\n" ◊ →LTESTS_PASSED
   LTESTS_FAILED:
@@ -86,7 +88,7 @@ LFAIL:
 
 ∇MAIN
   RUN "TEST_FIO∆FOPEN"
-  REPORT
+  ⍞←"\n" ◊ REPORT
 ∇
 MAIN
 
