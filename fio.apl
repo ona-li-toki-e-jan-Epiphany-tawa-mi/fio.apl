@@ -84,8 +84,7 @@ FIO∆LIST_FDS←{⎕FIO 0}
 ⍝ From ⎕FIO '': Zi ←    ⎕FIO[ 1] ''    errno (of last call)
 FIO∆ERRNO←{⎕FIO[1] ''}
 
-⍝ TODO?: perror,
-⍝ Returns a character vector describing the provided ERRNO.
+⍝ Returns a byte vector describing the provided ERRNO.
 ⍝ From ⎕FIO '': Zs ←    ⎕FIO[ 2] Be    strerror(Be)
 ⍝ ⎕FIO[2] actually returns a character vector of the bytes, so ⎕UCS is used
 ⍝ to convert them to numbers.
@@ -192,7 +191,7 @@ FIO∆PCLOSE←{⎕FIO[25] ⍵}
 
   →(¯2≡BYTE_VECTOR) ⍴ LERROR
     ⍝ ⎕FIO[26] actually returns a character vector of the bytes, so ⎕UCS is used
-    ⍝ to convert them to actual numbers like whats returned from ⎕FIO[6].
+    ⍝ to convert them to numbers.
     BYTE_VECTOR←⎕UCS BYTE_VECTOR
   LERROR:
 ∇
@@ -215,6 +214,25 @@ FIO∆GET_TIME_OF_DAY←{⎕FIO[50] ⍵}
 ⍝ Utility Functions                                                            ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
+⍝ Converts a byte vector to a UTF-8 encoded character vector.
+FIO∆BYTES_TO_UTF8←{19 ⎕CR ⎕UCS ⍵}
+⍝ Converts a UTF-8 encoded character vector to a byte vector.
+FIO∆UTF8_TO_BYTES←{⎕UCS 18 ⎕CR ⍵}
+
+⍝ Prints a message, with a newline, to stderr describing the value in ERRNO. If
+⍝ MESSAGE is not an empty list, it will be prepended to the printed message with
+⍝ a colon and space.
+∇PERROR MESSAGE; NEWLINE
+  NEWLINE←FIO∆UTF8_TO_BYTES "\n"
+
+  →(0≡≢MESSAGE) ⍴ LNO_MESSAGE
+    ⊣ FIO∆STDERR FIO∆FWRITE⍨ NEWLINE,⍨(FIO∆STRERROR FIO∆ERRNO),⍨FIO∆UTF8_TO_BYTES MESSAGE,": "
+    →LMESSAGE
+  LNO_MESSAGE:
+    ⊣ FIO∆STDERR FIO∆FWRITE⍨ NEWLINE,⍨FIO∆STRERROR FIO∆ERRNO
+  LMESSAGE:
+∇
+
 ⍝ Splits a vector by a delimiter value into a nested vector of vectors. If a
 ⍝ vector ends up being empty, it will still be included in the result (i.e.
 ⍝ VALUE VALUE DELIMETER DELIMETER VALUE -> (VALUE VALUE) () (VALUE).) The
@@ -229,11 +247,6 @@ FIO∆GET_TIME_OF_DAY←{⎕FIO[50] ⍵}
 ∇RESULT←DELIMETER FIO∆SPLIT_CLEAN VECTOR
   RESULT←VECTOR⊂⍨~VECTOR∊DELIMETER
 ∇
-
-⍝ Converts a byte vector to a UTF-8 encoded character vector.
-FIO∆BYTES_TO_UTF8←{19 ⎕CR ⎕UCS ⍵}
-⍝ Converts a UTF-8 encoded character vector to a byte vector.
-FIO∆UTF8_TO_BYTES←{⎕UCS 18 ⎕CR ⍵}
 
 ⍝ Reads input from the file descriptor until EOF is reached and outputs the
 ⍝ contents as a byte vector.
