@@ -83,6 +83,10 @@ LALREADY_FAILED:
   →(ASSERT (1≡FIO∆STDOUT)) ⍴ LFAIL
   →(ASSERT (2≡FIO∆STDERR)) ⍴ LFAIL
 
+  ⍝ Should be nothing in ERRNO.
+  →(ASSERT (0≡FIO∆ERRNO)) ⍴ LFAIL
+  →(ASSERT ("Success"≡FIO∆STRERROR FIO∆ERRNO)) ⍴ LFAIL
+
   ⍝ At the time of calling, these should be the only open file descriptors.
   →(ASSERT (3≡≢FIO∆LIST_FDS)) ⍴ LFAIL
   →(ASSERT (∧/FIO∆LIST_FDS∊FIO∆STDIN FIO∆STDOUT FIO∆STDERR)) ⍴ LFAIL

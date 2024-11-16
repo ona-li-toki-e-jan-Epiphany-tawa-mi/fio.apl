@@ -80,6 +80,14 @@ FIO∆STDERR←2
 ⍝ From ⎕FIO '': ⎕FIO     0     return a list of open file descriptors
 FIO∆LIST_FDS←{⎕FIO 0}
 
+⍝ Returns the value of ERRNO for the previous ⎕FIO-C function.
+⍝ From ⎕FIO '': Zi ←    ⎕FIO[ 1] ''    errno (of last call)
+FIO∆ERRNO←{⎕FIO[1] ''}
+
+⍝ Returns a character vector describing the provided ERRNO.
+⍝ From ⎕FIO '': Zs ←    ⎕FIO[ 2] Be    strerror(Be)
+FIO∆STRERROR←{⎕FIO[2] ⍵}
+
 ⍝ TODO Unit test
 ⍝ Zh ← As ⎕FIO[ 3] Bs    fopen(Bs, As) filename Bs mode As
 ⍝ Opens a file with fopen.
