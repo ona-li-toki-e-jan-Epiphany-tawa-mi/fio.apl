@@ -208,10 +208,8 @@ FIO∆GET_TIME_OF_DAY←{⎕FIO[50] ⍵}
 ⍝ Utility Functions                                                            ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
-⍝ TODO Unit test
 ⍝ Converts a byte vector to a UTF-8 encoded character vector.
 FIO∆BYTES_TO_UTF8←{19 ⎕CR ⎕UCS ⍵}
-⍝ TODO Unit test
 ⍝ Converts a UTF-8 encoded character vector to a byte vector.
 FIO∆UTF8_TO_BYTES←{⎕UCS 18 ⎕CR ⍵}
 
