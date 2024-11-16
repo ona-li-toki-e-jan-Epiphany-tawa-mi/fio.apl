@@ -84,36 +84,30 @@ FIO∆LIST_FDS←{⎕FIO 0}
 ⍝ From ⎕FIO '': Zi ←    ⎕FIO[ 1] ''    errno (of last call)
 FIO∆ERRNO←{⎕FIO[1] ''}
 
+⍝ TODO?: perror,
 ⍝ Returns a character vector describing the provided ERRNO.
 ⍝ From ⎕FIO '': Zs ←    ⎕FIO[ 2] Be    strerror(Be)
 FIO∆STRERROR←{⎕FIO[2] ⍵}
 
-⍝ TODO Unit test
-⍝ Zh ← As ⎕FIO[ 3] Bs    fopen(Bs, As) filename Bs mode As
 ⍝ Opens a file with fopen.
 ⍝ →⍺ - mode (i.e. "w", "r+", etc..)
 ⍝ →⍵ - file path.
 ⍝ ←The file descriptor, or a scalar number less than 1 on failure.
+⍝ From ⎕FIO '': Zh ← As ⎕FIO[ 3] Bs    fopen(Bs, As) filename Bs mode As
 FIO∆FOPEN←{⍺ ⎕FIO[3] ⍵}
 
-⍝ TODO Unit test
-⍝ Ze ←    ⎕FIO[ 4] Bh    fclose(Bh)
 ⍝ Closes a file descriptor.
-⍝ →⍵ - file descriptor.
-⍝ ←Error code.
+⍝ ←0, if successful.
+⍝ From ⎕FIO '': Ze ←    ⎕FIO[ 4] Bh    fclose(Bh)
 FIO∆FCLOSE←{⎕FIO[4] ⍵}
 
-⍝ TODO Unit test
-⍝ Zb ←    ⎕FIO[ 6] Bh    fread(Zi, 1, 5000, Bh) 1 byte per Zb
-⍝ Reads up to 5,000 bytes in from the file descriptor as a byte vector.
-FIO∆FREAD←{⎕FIO[6] ⍵}
-⍝ TODO Unit test
-⍝ Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
-⍝ Reads bytes up to specified number of bytes from the file descriptor as a byte
-⍝ vector.
+⍝ Reads bytes up to specified number of bytes from the file descriptor.
 ⍝ →⍵ - file descriptor.
 ⍝ →⍺ - maximum number of bytes to read in.
-FIO∆FREAD_SIZED←{⍺ ⎕FIO[6] ⍵}
+⍝ ←The data read, as a byte vector, or a scalar 0, if there was an error or EOF
+⍝  was reached.
+⍝ From ⎕FIO '': Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
+FIO∆FREAD←{⍺ ⎕FIO[6] ⍵}
 
 ⍝ TODO Unit test
 ⍝ Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
@@ -122,16 +116,27 @@ FIO∆FREAD_SIZED←{⍺ ⎕FIO[6] ⍵}
 ⍝ →⍺ - data as byte vector.
 FIO∆FWRITE←{⍺ ⎕FIO[7] ⍵}
 
-⍝ TODO Unit test
-⍝ Zi ←    ⎕FIO[10] Bh    feof(Bh)
+⍝ Reads bytes to a newline or up to a specified number of bytes from the file
+⍝ descriptor. Newlines are included in the output.
 ⍝ →⍵ - file descriptor.
-⍝ ←Non-zero if EOF was reached for the file descriptor.
+⍝ →⍺ - maximum number of bytes to read in.
+⍝ ←The data read, as a byte vector, or a scalar 0, if there was an error or EOF
+⍝  was reached.
+⍝ From ⎕FIO '': Zb ← Ai ⎕FIO[ 8] Bh    fgets(Zb, Ai, Bh) 1 byte per Zb
+FIO∆FGETS←{{↑(⍵ 0)[1+⍬≡⍵]}(⍺ ⎕FIO[8] ⍵)}
+
+⍝ Reads on byte fro mthe file descriptor, or a scalar 0, if there was an error
+⍝ or EOF.
+⍝ From ⎕FIO '': Zb ←    ⎕FIO[ 9] Bh    fgetc(Zb, Bh) 1 byte
+FIO∆FGETC←{⎕FIO[9] ⍵}
+
+⍝ Retoruns a non-zero scalar number if EOF was reached for the file descriptor.
+⍝ From ⎕FIO: '': Zi ←    ⎕FIO[10] Bh    feof(Bh)
 FIO∆FEOF←{⎕FIO[10] ⍵}
 
-⍝ TODO Unit test
-⍝ Ze ←    ⎕FIO[11] Bh    ferror(Bh)
-⍝ →⍵ - file descriptor.
-⍝ ←Non-zero if an error ocurred reading file descriptor.
+⍝ Retoruns a non-zero scalar number if an error ocurred with the file
+⍝ descriptor.
+⍝ From ⎕FIO: '':  Ze ←    ⎕FIO[11] Bh    ferror(Bh)
 FIO∆FERROR←{⎕FIO[11] ⍵}
 
 ⍝ TODO Unit test
@@ -208,31 +213,6 @@ FIO∆GET_TIME_OF_DAY←{⎕FIO[50] ⍵}
 ⍝ Utility Functions                                                            ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
-⍝ Converts a byte vector to a UTF-8 encoded character vector.
-FIO∆BYTES_TO_UTF8←{19 ⎕CR ⎕UCS ⍵}
-⍝ Converts a UTF-8 encoded character vector to a byte vector.
-FIO∆UTF8_TO_BYTES←{⎕UCS 18 ⎕CR ⍵}
-
-⍝ TODO Unit test
-⍝ Reads input from the file descriptor until EOF is reached and outputs the
-⍝ contents as a byte vector.
-∇BYTE_VECTOR←FIO∆READ_ENTIRE_FD FILE_DESCRIPTOR
-  BYTE_VECTOR←⍬
-
-  LREAD_LOOP:
-    BYTE_VECTOR←BYTE_VECTOR,FIO∆FREAD FILE_DESCRIPTOR
-    →(0≢FIO∆FEOF   FILE_DESCRIPTOR) ⍴ LEND_READ_LOOP
-    →(0≢FIO∆FERROR FILE_DESCRIPTOR) ⍴ LEND_READ_LOOP
-    →LREAD_LOOP
-  LEND_READ_LOOP:
-∇
-
-⍝ TODO Unit test
-⍝ Checks is the file path exists and is a directory.
-⍝ →⍵ - directory file path.
-⍝ ←1 if the file path represents a directory, else 0.
-FIO∆IS_DIRECTORY←{¯2≢FIO∆LIST_DIRECTORY ⍵}
-
 ⍝ Splits a vector by a delimiter value into a nested vector of vectors. If a
 ⍝ vector ends up being empty, it will still be included in the result (i.e.
 ⍝ VALUE VALUE DELIMETER DELIMETER VALUE -> (VALUE VALUE) () (VALUE).) The
@@ -247,6 +227,35 @@ FIO∆IS_DIRECTORY←{¯2≢FIO∆LIST_DIRECTORY ⍵}
 ∇RESULT←DELIMETER FIO∆SPLIT_CLEAN VECTOR
   RESULT←VECTOR⊂⍨~VECTOR∊DELIMETER
 ∇
+
+⍝ Converts a byte vector to a UTF-8 encoded character vector.
+FIO∆BYTES_TO_UTF8←{19 ⎕CR ⎕UCS ⍵}
+⍝ Converts a UTF-8 encoded character vector to a byte vector.
+FIO∆UTF8_TO_BYTES←{⎕UCS 18 ⎕CR ⍵}
+
+⍝ Reads input from the file descriptor until EOF is reached and outputs the
+⍝ contents as a byte vector.
+⍝ ←The byte vector, or a scalar 0, if and error occurred or EOF was reached.
+∇BYTE_VECTOR←FIO∆READ_ENTIRE_FD FD
+  BYTE_VECTOR←⍬
+
+  LREAD_LOOP:
+    BYTE_VECTOR←BYTE_VECTOR,5000 FIO∆FREAD FD
+    →(0≢FIO∆FEOF   FD) ⍴ LEND_READ_LOOP
+    →(0≢FIO∆FERROR FD) ⍴ LEND_READ_LOOP
+    →LREAD_LOOP
+  LEND_READ_LOOP:
+
+  →(BYTE_VECTOR≢⍬,0) ⍴ LSUCCESS
+    BYTE_VECTOR←0
+  LSUCCESS:
+∇
+
+⍝ TODO Unit test
+⍝ Checks is the file path exists and is a directory.
+⍝ →⍵ - directory file path.
+⍝ ←1 if the file path represents a directory, else 0.
+FIO∆IS_DIRECTORY←{¯2≢FIO∆LIST_DIRECTORY ⍵}
 
 ⍝ TODO Unit test
 ⍝ Splits a file path into it's seperate parts and removes the seperators (i.e.
