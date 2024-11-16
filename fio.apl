@@ -87,7 +87,9 @@ FIO∆ERRNO←{⎕FIO[1] ''}
 ⍝ TODO?: perror,
 ⍝ Returns a character vector describing the provided ERRNO.
 ⍝ From ⎕FIO '': Zs ←    ⎕FIO[ 2] Be    strerror(Be)
-FIO∆STRERROR←{⎕FIO[2] ⍵}
+⍝ ⎕FIO[2] actually returns a character vector of the bytes, so ⎕UCS is used
+⍝ to convert them to numbers.
+FIO∆STRERROR←{⎕UCS (⎕FIO[2] ⍵)}
 
 ⍝ Opens a file with fopen.
 ⍝ →⍺ - mode (i.e. "w", "r+", etc..)
