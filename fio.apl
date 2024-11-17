@@ -140,19 +140,26 @@ FIO∆FEOF←{⎕FIO[10] ⍵}
 ⍝ From ⎕FIO: '':  Ze ←    ⎕FIO[11] Bh    ferror(Bh)
 FIO∆FERROR←{⎕FIO[11] ⍵}
 
-⍝ TODO Unit test
-⍝ Zi ← Ai ⎕FIO[20] Bh    mkdir(Bc, Ai)
-⍝ Creates the given directory if it doesn't exist with file mode 0755. Does not
-⍝ recurse.
-⍝ →⍵ - file path.
-⍝ ←Non zero if an error occured.
-FIO∆MKDIR←{(8⊥0 7 5 5) ⎕FIO[20] ⍵}
-⍝ TODO Unit test
+⍝ TODO FIO[12] - ftell
+⍝ TODO FIO[13,14,15] - fseek
+⍝ TODO FIO[16] - fflush.
+⍝ TODO FIO[17] - fsync.
+⍝ TODO FIO[18] - fstat.
+⍝ TODO FIO[19] - unlink.
+
 ⍝ Creates the given directory if it doesn't exist. Does not recurse.
 ⍝ →⍵ - file path.
 ⍝ →⍺ - octal mode for the directory as an integer vector (i.e. 0 7 5 5.)
-⍝ ←Non zero if an error occured.
-FIO∆MKDIR_MODE←{(8⊥⍺) ⎕FIO[20] ⍵}
+⍝ ←Should return non zero if an error occured, but always seems to return ¯17.
+⍝ From ⎕FIO '': Zi ← Ai ⎕FIO[20] Bh    mkdir(Bc, AI)
+FIO∆MKDIR←{(8⊥⍺) ⎕FIO[20] ⍵}
+
+⍝ Creates the given directory if it doesn't exist. Does not recurse.
+⍝ →⍵ - file path.
+⍝ →⍺ - octal mode for the directory as an integer vector (i.e. 0 7 5 5.)
+⍝ ←Should return non zero if an error occured, but always seems to return ¯17.
+⍝ From ⎕FIO '': Zi ←    ⎕FIO[21] Bh    rmdir(Bc)
+FIO∆RMDIR←{⎕FIO[21] ⍵}
 
 ⍝ TODO Unit test
 ⍝ Zh ← As ⎕FIO[24] Bs    popen(Bs, As) command Bs mode As

@@ -160,7 +160,7 @@ LFAIL:
 ∇
 
 ∇TEST_FILE_HANDLING; RESULT;FD;CONTENTS;BUFFER;ASSERT_FOPEN;ASSERT_READ;ASSERT_FCLOSE;_ASSERT_FGETS;BYTES_READ
-  SECTION "Fail on non-existant file"
+  SECTION "FIO∆FOPEN fail on non-existant file"
   FD←"r" FIO∆FOPEN "tests/nonexisting-file"
   RESULT←1>FD ◊ ⍎ASSERT_R
 
@@ -211,6 +211,15 @@ LFAIL:
 LFAIL:
 ∇
 
+⍝ TODO once a function to check if a file exists is added, use it to validate
+⍝ these tests.
+∇TEST_DIRECTORY_HANDLING; RESULT
+  ⊣ 7 5 5 FIO∆MKDIR "tests/new-directory/"
+  ⊣ FIO∆RMDIR "tests/new-directory/"
+
+LFAIL:
+∇
+
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ Test Runner                                                                  ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
@@ -223,6 +232,7 @@ LFAIL:
   RUN "TEST_SPLITTING_VECTORS"
   RUN "TEST_UTF8_BYTES_CONVERSION"
   RUN "TEST_FILE_HANDLING"
+  RUN "TEST_DIRECTORY_HANDLING"
   ⍞←"\n" ◊ REPORT
 ∇
 MAIN
