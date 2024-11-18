@@ -246,6 +246,8 @@ LFAIL:
   SECTION "Assumptions"
   RESULT←(⍬,⊂"existing-file")≡FIO∆LIST_DIRECTORY "tests/" ◊ ⍎ASSERT_R
   RESULT←1≡FIO∆IS_DIRECTORY "tests/"                      ◊ ⍎ASSERT_R
+  RESULT←0≢FIO∆GETCWD                                     ◊ ⍎ASSERT_R
+  RESULT←0≢≢FIO∆GETCWD                                    ◊ ⍎ASSERT_R
 
   SECTION "Non-existant directories"
   RESULT←0≡FIO∆LIST_DIRECTORY "tests/nonexisting-directory/" ◊ ⍎ASSERT_R

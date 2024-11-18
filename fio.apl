@@ -215,6 +215,7 @@ FIO∆STDERR←2
 ⍝ ←Process exit code, or a scalar ¯1 on failure.
 ⍝FIO∆PCLOSE←{⎕FIO[25] ⍵}
 
+
 ⍝ Reads in the entirety of the file at the given path as a byte vector.
 ⍝ BYTE_VECTOR← - The byte vector, or a scalar 0 on failure.
 ⍝ From '' ⎕FIO[0] '': Zb ←    ⎕FIO[26] Bs    return entire file Bs as byte vector
@@ -230,6 +231,8 @@ FIO∆STDERR←2
   LERROR:
 ∇
 
+⍝ TODO ⎕FIO[27] rename file.
+
 ⍝ Returns a vector of character vectors with the contents of the directory at
 ⍝ the given path, or a scalar 0 on error.
 ⍝ From '' ⎕FIO[0] '': Zn ←    ⎕FIO[29] Bs    return file names in directory Bs
@@ -239,6 +242,12 @@ FIO∆STDERR←2
   →(¯2≢CONTENTS) ⍴ LSUCCESS
     CONTENTS←0
   LSUCCESS:
+∇
+
+⍝ Returns the current working directory.
+⍝ Probably returns 0 on error.
+∇DIRECTORY←FIO∆GETCWD
+  DIRECTORY←⎕FIO 30
 ∇
 
 ⍝ TODO Unit test
