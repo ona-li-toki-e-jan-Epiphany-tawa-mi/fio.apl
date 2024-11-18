@@ -227,11 +227,13 @@ LFAIL:
 LFAIL:
 ∇
 
-⍝ TODO once a function to check if a file exists is added, use it to validate
-⍝ these tests.
 ∇TEST_DIRECTORY_HANDLING; RESULT
-  ⊣ 7 5 5 FIO∆MKDIR "tests/new-directory/"
-  ⊣ FIO∆RMDIR "tests/new-directory/"
+  SECTION "FIO∆RMDIR fail on non-existant directory"
+  RESULT←0≢FIO∆RMDIR "tests/nonexisting-directory/" ◊ ⍎ASSERT_R
+
+  SECTION "FIO∆MKDIR"
+  RESULT←0≡7 5 5 FIO∆MKDIR "tests/new-directory/" ◊ ⍎ASSERT_R
+  RESULT←0≡FIO∆RMDIR "tests/new-directory/"       ◊ ⍎ASSERT_R
 
 LFAIL:
 ∇
