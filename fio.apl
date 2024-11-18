@@ -77,19 +77,19 @@ FIO∆STDERR←2
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
 ⍝ Returns a number vector of open file descriptors.
-⍝ From ⎕FIO '': ⎕FIO     0     return a list of open file descriptors
+⍝ From '' ⎕FIO[0] '': ⎕FIO     0     return a list of open file descriptors
 ∇FDS←FIO∆LIST_FDS
   FDS←⎕FIO 0
 ∇
 
 ⍝ Returns the value of ERRNO for the previous ⎕FIO-C function.
-⍝ From ⎕FIO '': Zi ←    ⎕FIO[ 1] ''    errno (of last call)
+⍝ From '' ⎕FIO[0] '': Zi ←    ⎕FIO[ 1] ''    errno (of last call)
 ∇ERRNO←FIO∆ERRNO
   ERRNO←⎕FIO[1] ''
 ∇
 
 ⍝ Returns a byte vector describing the provided ERRNO.
-⍝ From ⎕FIO '': Zs ←    ⎕FIO[ 2] Be    strerror(Be)
+⍝ From '' ⎕FIO[0] '': Zs ←    ⎕FIO[ 2] Be    strerror(Be)
 ∇BYTES←FIO∆STRERROR ERRNO
   ⍝ ⎕FIO[2] actually returns a character vector of the bytes, so ⎕UCS is used to
   ⍝ convert them to numbers.
@@ -99,14 +99,14 @@ FIO∆STDERR←2
 ⍝ Opens a file with fopen.
 ⍝ MODE - open mode (i.e. "w", "r+", etc..)
 ⍝ FD - the file descriptor, or a scalar number less than 1 on failure.
-⍝ From ⎕FIO '': Zh ← As ⎕FIO[ 3] Bs    fopen(Bs, As) filename Bs mode As
+⍝ From '' ⎕FIO[0] '': Zh ← As ⎕FIO[ 3] Bs    fopen(Bs, As) filename Bs mode As
 ∇FD←MODE FIO∆FOPEN PATH
   FD←MODE ⎕FIO[3] PATH
 ∇
 
 ⍝ Closes a file descriptor.
 ⍝ ERROR - 0, if successful.
-⍝ From ⎕FIO '': Ze ←    ⎕FIO[ 4] Bh    fclose(Bh)
+⍝ From '' ⎕FIO[0] '': Ze ←    ⎕FIO[ 4] Bh    fclose(Bh)
 ∇ERROR←FIO∆FCLOSE FD
   ERROR←⎕FIO[4] FD
 ∇
@@ -114,14 +114,14 @@ FIO∆STDERR←2
 ⍝ Reads bytes up to specified number of bytes from the file descriptor.
 ⍝ BYTES - The data read, as a byte vector, or a scalar 0, if there was an error
 ⍝         or EOF was reached.
-⍝ From ⎕FIO '': Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
+⍝ From '' ⎕FIO[0] '': Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
 ∇BYTES←MAXIMUM_BYTES FIO∆FREAD FD
   BYTES←MAXIMUM_BYTES ⎕FIO[6] FD
 ∇
 
 ⍝ Writes a byte vector to the file descriptor.
 ⍝ BYTES_WRITTEN -The number of bytes written.
-⍝ From ⎕FIO '': Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
+⍝ From '' ⎕FIO[0] '': Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
 ∇BYTES_WRITTEN←BYTES FIO∆FWRITE FD
   BYTES_WRITTEN←BYTES ⎕FIO[7] FD
 ∇
@@ -130,7 +130,7 @@ FIO∆STDERR←2
 ⍝ descriptor. Newlines are included in the output.
 ⍝ BYTES - The data read, as a byte vector, or a scalar 0, if there was an error
 ⍝         or EOF was reached.
-⍝ From ⎕FIO '': Zb ← Ai ⎕FIO[ 8] Bh    fgets(Zb, Ai, Bh) 1 byte per Zb
+⍝ From '' ⎕FIO[0] '': Zb ← Ai ⎕FIO[ 8] Bh    fgets(Zb, Ai, Bh) 1 byte per Zb
 ∇BYTES←MAXIMUM_BYTES FIO∆FGETS FD
   BYTES←MAXIMUM_BYTES ⎕FIO[8] FD
 
@@ -141,7 +141,7 @@ FIO∆STDERR←2
 
 ⍝ Reads one byte from the file descriptor, or a scalar 0, if there was an error
 ⍝ or EOF.
-⍝ From ⎕FIO '': Zb ←    ⎕FIO[ 9] Bh    fgetc(Zb, Bh) 1 byte
+⍝ From '' ⎕FIO[0] '': Zb ←    ⎕FIO[ 9] Bh    fgetc(Zb, Bh) 1 byte
 ∇BYTE←FIO∆FGETC FD
   BYTE←⎕FIO[9] FD
 ∇
@@ -167,7 +167,7 @@ FIO∆STDERR←2
 
 ⍝ Unlinks a file at the given path, possibly deleting it.
 ⍝ ERROR - a non-zero scalar number if an error ocurred.
-⍝ From ⎕FIO '': Zi ←    ⎕FIO[19] Bh    unlink(Bc)
+⍝ From '' ⎕FIO[0] '': Zi ←    ⎕FIO[19] Bh    unlink(Bc)
 ∇ERROR←FIO∆UNLINK PATH
   ERROR←⎕FIO[19] PATH
 ∇
@@ -175,14 +175,14 @@ FIO∆STDERR←2
 ⍝ Creates a directory at the given path if it doesn't exist. Does not recurse.
 ⍝ MODE - octal mode for the directory as an integer vector (i.e. 0 7 5 5.)
 ⍝ ERROR - a non-zero scalar number if an error occured.
-⍝ From ⎕FIO '': Zi ← Ai ⎕FIO[20] Bh    mkdir(Bc, AI)
+⍝ From '' ⎕FIO[0] '': Zi ← Ai ⎕FIO[20] Bh    mkdir(Bc, AI)
 ∇ERROR←MODE FIO∆MKDIR PATH
   ERROR←PATH ⎕FIO[20]⍨ 8⊥MODE
 ∇
 
 ⍝ Deletes the directory at the given path.
 ⍝ ERROR - a non-zero scalar number if an error occured.
-⍝ From ⎕FIO '': Zi ←    ⎕FIO[21] Bh    rmdir(Bc)
+⍝ From '' ⎕FIO[0] '': Zi ←    ⎕FIO[21] Bh    rmdir(Bc)
 ∇ERROR←FIO∆RMDIR PATH
   ERROR←⎕FIO[21] PATH
 ∇
@@ -217,7 +217,7 @@ FIO∆STDERR←2
 
 ⍝ Reads in the entirety of the file at the given path as a byte vector.
 ⍝ BYTE_VECTOR← - The byte vector, or a scalar 0 on failure.
-⍝ From FIO⎕ '': Zb ←    ⎕FIO[26] Bs    return entire file Bs as byte vector
+⍝ From '' ⎕FIO[0] '': Zb ←    ⎕FIO[26] Bs    return entire file Bs as byte vector
 ∇BYTES←FIO∆READ_ENTIRE_FILE PATH
   BYTES←⎕FIO[26] PATH
 
