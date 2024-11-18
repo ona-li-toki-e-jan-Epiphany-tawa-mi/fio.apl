@@ -1,1 +1,5 @@
+# GnuAPL.
 .apl.history
+
+# Nix.
+flake.lock
