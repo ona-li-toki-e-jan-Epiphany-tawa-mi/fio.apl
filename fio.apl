@@ -112,15 +112,15 @@ FIO∆STDERR←2
 ∇
 
 ⍝ Reads bytes up to specified number of bytes from the file descriptor.
-⍝ ←The data read, as a byte vector, or a scalar 0, if there was an error or EOF
-⍝  was reached.
+⍝ BYTES - The data read, as a byte vector, or a scalar 0, if there was an error
+⍝         or EOF was reached.
 ⍝ From ⎕FIO '': Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
 ∇BYTES←MAXIMUM_BYTES FIO∆FREAD FD
   BYTES←MAXIMUM_BYTES ⎕FIO[6] FD
 ∇
 
 ⍝ Writes a byte vector to the file descriptor.
-⍝ ←The number of bytes written.
+⍝ BYTES_WRITTEN -The number of bytes written.
 ⍝ From ⎕FIO '': Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
 ∇BYTES_WRITTEN←BYTES FIO∆FWRITE FD
   BYTES_WRITTEN←BYTES ⎕FIO[7] FD
@@ -128,8 +128,8 @@ FIO∆STDERR←2
 
 ⍝ Reads bytes to a newline or up to a specified number of bytes from the file
 ⍝ descriptor. Newlines are included in the output.
-⍝ ←The data read, as a byte vector, or a scalar 0, if there was an error or EOF
-⍝  was reached.
+⍝ BYTES - The data read, as a byte vector, or a scalar 0, if there was an error
+⍝         or EOF was reached.
 ⍝ From ⎕FIO '': Zb ← Ai ⎕FIO[ 8] Bh    fgets(Zb, Ai, Bh) 1 byte per Zb
 ∇BYTES←MAXIMUM_BYTES FIO∆FGETS FD
   BYTES←MAXIMUM_BYTES ⎕FIO[8] FD
@@ -152,7 +152,7 @@ FIO∆STDERR←2
   EOF_REACHED←⎕FIO[10] FD
 ∇
 
-⍝ Retoruns a non-zero scalar number if an error ocurred with the file
+⍝ Returns a non-zero scalar number if an error ocurred with the file
 ⍝ descriptor.
 ⍝ From ⎕FIO: '':  Ze ←    ⎕FIO[11] Bh    ferror(Bh)
 ∇HAS_ERROR←FIO∆FERROR FD
@@ -164,19 +164,26 @@ FIO∆STDERR←2
 ⍝ TODO FIO[16] - fflush.
 ⍝ TODO FIO[17] - fsync.
 ⍝ TODO FIO[18] - fstat.
+
 ⍝ TODO FIO[19] - unlink.
+
+⍝ Unlinks a file at the given path, possibly deleting it.
+⍝ ERROR - a non-zero scalar number if an error ocurred.
+⍝ From ⎕FIO '': Zi ←    ⎕FIO[19] Bh    unlink(Bc)
+∇ERROR←FIO∆UNLINK PATH
+  ERROR←⎕FIO[19] PATH
+∇
 
 ⍝ Creates a directory at the given path if it doesn't exist. Does not recurse.
 ⍝ MODE - octal mode for the directory as an integer vector (i.e. 0 7 5 5.)
-⍝ ←Should return non zero if an error occured, but always seems to return ¯17.
+⍝ ERROR - a non-zero scalar number if an error occured.
 ⍝ From ⎕FIO '': Zi ← Ai ⎕FIO[20] Bh    mkdir(Bc, AI)
 ∇ERROR←MODE FIO∆MKDIR PATH
   ERROR←PATH ⎕FIO[20]⍨ 8⊥MODE
 ∇
 
 ⍝ Deltes the directory at the given path.
-⍝ →⍵ - file path.
-⍝ ←Should return non zero if an error occured, but always seems to return ¯17.
+⍝ ERROR - a non-zero scalar number if an error occured.
 ⍝ From ⎕FIO '': Zi ←    ⎕FIO[21] Bh    rmdir(Bc)
 ∇ERROR←FIO∆RMDIR PATH
   ERROR←⎕FIO[21] PATH
