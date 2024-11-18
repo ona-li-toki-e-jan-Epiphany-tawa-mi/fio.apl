@@ -122,13 +122,8 @@ EXISTING_FILE_CONTENTS_LINES←"Lorem ipsum dolor sit amet, consectetur adipisci
 LFAIL:
 ∇
 
-∇TEST_ASSUMPTIONS; RESULT
-  SECTION "Standard file descriptors"
-  RESULT←0≡FIO∆STDIN  ◊ ⍎ASSERT_R
-  RESULT←1≡FIO∆STDOUT ◊ ⍎ASSERT_R
-  RESULT←2≡FIO∆STDERR ◊ ⍎ASSERT_R
-
-  SECTION "Empty ERRNO"
+∇TEST_MISC; RESULT
+  SECTION "Assumptions"
   RESULT←0≡FIO∆ERRNO                                          ◊ ⍎ASSERT_R
   RESULT←(FIO∆STRERROR FIO∆ERRNO)≡FIO∆UTF8_TO_BYTES "Success" ◊ ⍎ASSERT_R
 
@@ -175,6 +170,9 @@ LFAIL:
 ∇
 ∇TEST_FILE_HANDLING; RESULT;FD;CONTENTS;BUFFER;ASSERT_READ;ASSERT_FCLOSE;BYTES_WRITTEN
   SECTION "Assumptions"
+  RESULT←0≡FIO∆STDIN                                    ◊ ⍎ASSERT_R
+  RESULT←1≡FIO∆STDOUT                                   ◊ ⍎ASSERT_R
+  RESULT←2≡FIO∆STDERR                                   ◊ ⍎ASSERT_R
   RESULT←3≡≢FIO∆LIST_FDS                                ◊ ⍎ASSERT_R
   RESULT←∧/FIO∆LIST_FDS∊FIO∆STDIN FIO∆STDOUT FIO∆STDERR ◊ ⍎ASSERT_R
 
@@ -271,9 +269,9 @@ LFAIL:
 ⍞←" ^ Output of )COPY. Unimportant, please ignore\n\n"
 
 ∇MAIN
-  RUN "TEST_ASSUMPTIONS"
-  RUN "TEST_SPLITTING_VECTORS"
   RUN "TEST_UTF8_BYTES_CONVERSION"
+  RUN "TEST_MISC"
+  RUN "TEST_SPLITTING_VECTORS"
   RUN "TEST_FILE_HANDLING"
   RUN "TEST_DIRECTORY_HANDLING"
   ⍞←"\n" ◊ REPORT
