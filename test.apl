@@ -153,6 +153,27 @@ LFAIL:
 LFAIL:
 ∇
 
+∇TEST_PATH_HANDLING; RESULT
+  SECTION "Path splitting"
+  RESULT←("this" "is" "a" "test")≡FIO∆SPLIT_PATH "/this//////is/a///test"
+  ⍎ASSERT_R
+  RESULT←("fortune" "favors" "the" "brave")≡FIO∆SPLIT_PATH "fortune/favors//the/brave/"
+  ⍎ASSERT_R
+  RESULT←("infi" "nit" "e" "wis" "do" "m" "!")≡FIO∆SPLIT_PATH "///infi/nit/e//wis/do/m///!"
+  ⍎ASSERT_R
+  RESULT←("digg" ".." "y h" "." "ole")≡FIO∆SPLIT_PATH "digg/../y h/./ole"
+  ⍎ASSERT_R
+
+  SECTION "Path joining"
+  RESULT←"this is/a test"≡"this is" FIO∆JOIN_PATH "a test"       ◊ ⍎ASSERT_R
+  RESULT←"/after////market"≡"/after" FIO∆JOIN_PATH "///market"   ◊ ⍎ASSERT_R
+  RESULT←"this/is/a/test"≡↑FIO∆JOIN_PATH/ "this" "is" "a" "test" ◊ ⍎ASSERT_R
+  RESULT←"public/static/void/main/String[]/args"≡↑FIO∆JOIN_PATH/ "public" "static" "void" "main" "String[]" "args"
+  ⍎ASSERT_R
+
+LFAIL:
+∇
+
 ∇MACRO←MODE ASSERT_FOPEN PATH
   MACRO←'FD←"',MODE,'" FIO∆FOPEN "',PATH,'" ◊ '
   MACRO←MACRO,"RESULT←1≤FD ◊ "
@@ -261,7 +282,7 @@ LFAIL:
 LFAIL:
 ∇
 
-∇TEST_TIME; SECONDS;MILLISECONDS;MICROSECONDS
+∇TEST_TIME; RESULT;SECONDS;MILLISECONDS;MICROSECONDS
   SECONDS←FIO∆GET_TIME_OF_DAY_S
   MILLISECONDS←FIO∆GET_TIME_OF_DAY_MS
   MICROSECONDS←FIO∆GET_TIME_OF_DAY_US
@@ -290,6 +311,7 @@ LFAIL:
   RUN "TEST_UTF8_BYTES_CONVERSION"
   RUN "TEST_MISC"
   RUN "TEST_SPLITTING_VECTORS"
+  RUN "TEST_PATH_HANDLING"
   RUN "TEST_FILE_HANDLING"
   RUN "TEST_DIRECTORY_HANDLING"
   RUN "TEST_TIME"

@@ -339,6 +339,16 @@ FIO∆STDERR←2
   RESULT←VECTOR⊂⍨~VECTOR∊DELIMETER
 ∇
 
+⍝ Splits a file path into it's seperate parts and removes the seperators (i.e.
+⍝ FIO∆SPLIT_PATH "../a/p///apples" → ".." "a" "p" "apples".)
+∇PATHS←FIO∆SPLIT_PATH PATH
+  PATHS←'/' FIO∆SPLIT_CLEAN PATH
+∇
+⍝ Joins two paths together with a seperator.
+∇PATH←FRONT_PATH FIO∆JOIN_PATH BACK_PATH
+  PATH←FRONT_PATH,'/',BACK_PATH
+∇
+
 ⍝ Reads input from the file descriptor until EOF is reached and outputs the
 ⍝ contents as a byte vector.
 ⍝ ←The byte vector, or a scalar 0, if and error occurred or EOF was reached.
@@ -361,14 +371,6 @@ FIO∆STDERR←2
 ∇RESULT←FIO∆IS_DIRECTORY PATH
   RESULT←0≢FIO∆LIST_DIRECTORY PATH
 ∇
-
-⍝ TODO Unit test
-⍝ Splits a file path into it's seperate parts and removes the seperators (i.e.
-⍝ FIO∆SPLIT_PATH "../a/p///apples" → ".." "a" "p" "apples"
-⍝FIO∆SPLIT_PATH←{'/' FIO∆SPLIT_CLEAN ⍵}
-⍝ TODO Unit test
-⍝ Joins two file paths together with a seperator.
-⍝FIO∆JOIN_PATHS←{⍺,'/',⍵}
 
 ⍝ TODO Unit test
 ⍝ Creates the given directory and it's parent directories if they don't exist.
