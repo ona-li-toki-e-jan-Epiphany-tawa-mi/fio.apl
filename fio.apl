@@ -253,7 +253,7 @@ FIO∆STDERR←2
 ⍝ Prints a message, with a newline, to stderr describing the value in ERRNO. If
 ⍝ MESSAGE is not an empty list, it will be prepended to the printed message with
 ⍝ a colon and space.
-∇PERROR MESSAGE; NEWLINE
+∇FIO∆PERROR MESSAGE; NEWLINE
   NEWLINE←FIO∆UTF8_TO_BYTES "\n"
 
   →(0≡≢MESSAGE) ⍴ LNO_MESSAGE
