@@ -261,6 +261,24 @@ LFAIL:
 LFAIL:
 ∇
 
+∇TEST_TIME; SECONDS;MILLISECONDS;MICROSECONDS
+  SECONDS←FIO∆GET_TIME_OF_DAY_S
+  MILLISECONDS←FIO∆GET_TIME_OF_DAY_MS
+  MICROSECONDS←FIO∆GET_TIME_OF_DAY_US
+
+  SECTION "Assumptions"
+  RESULT←0≢SECONDS      ◊ ⍎ASSERT_R
+  RESULT←0≢MILLISECONDS ◊ ⍎ASSERT_R
+  RESULT←0≢MICROSECONDS ◊ ⍎ASSERT_R
+
+  SECTION "Time should increases"
+  RESULT←SECONDS≤FIO∆GET_TIME_OF_DAY_S       ◊ ⍎ASSERT_R
+  RESULT←MILLISECONDS≤FIO∆GET_TIME_OF_DAY_MS ◊ ⍎ASSERT_R
+  RESULT←MICROSECONDS≤FIO∆GET_TIME_OF_DAY_US ◊ ⍎ASSERT_R
+
+LFAIL:
+∇
+
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ Test Runner                                                                  ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
@@ -274,6 +292,7 @@ LFAIL:
   RUN "TEST_SPLITTING_VECTORS"
   RUN "TEST_FILE_HANDLING"
   RUN "TEST_DIRECTORY_HANDLING"
+  RUN "TEST_TIME"
   ⍞←"\n" ◊ REPORT
 ∇
 MAIN

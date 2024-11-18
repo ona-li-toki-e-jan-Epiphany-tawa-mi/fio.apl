@@ -246,17 +246,56 @@ FIO∆STDERR←2
 
 ⍝ Returns the current working directory.
 ⍝ Probably returns 0 on error.
+⍝ From '' ⎕FIO[0] '': Zs ←    ⎕FIO 30        getcwd()
 ∇DIRECTORY←FIO∆GETCWD
   DIRECTORY←⎕FIO 30
 ∇
 
-⍝ TODO Unit test
-⍝ Zi ←    ⎕FIO[50] Bu    gettimeofday()
-⍝ Returns the current time since the Epoch in either seconds, milliseconds, or
-⍝ microseconds.
-⍝ →⍵ - the time divisor. 1 - seconds, 1000 - milliseconds, 1000000 -
-⍝ microseconds.
-⍝FIO∆GET_TIME_OF_DAY←{⎕FIO[50] ⍵}
+⍝ TODO ⎕FIO[31] access
+⍝ TODO ⎕FIO[32] socket
+⍝ TODO ⎕FIO[33] bind
+⍝ TODO ⎕FIO[34] listen
+⍝ TODO ⎕FIO[35] accept
+⍝ TODO ⎕FIO[36] connect
+⍝ TODO ⎕FIO[37] recv
+⍝ TODO ⎕FIO[38] send
+⍝ TODO ⎕FIO[40] select
+⍝ TODO ⎕FIO[41] read
+⍝ TODO ⎕FIO[42] write
+⍝ TODO ⎕FIO[44] getsockname
+⍝ TODO ⎕FIO[45] getpeername
+⍝ TODO ⎕FIO[46] getsockopt
+⍝ TODO ⎕FIO[47] setsockopt
+⍝ TODO ⎕FIO[48] fscanf
+⍝ TODO ⎕FIO[49] read entire file as nested lines
+
+⍝ From '' ⎕FIO[0] '': Zi ←    ⎕FIO[50] Bu    gettimeofday()
+⍝ Returns the current time since the Epoch in seconds, or a scalar 0 on error.
+∇SECONDS←FIO∆GET_TIME_OF_DAY_S
+  SECONDS←⎕FIO[50] 1
+∇
+⍝ Returns the current time since the Epoch in milliseconds, or a scalar 0 on
+⍝ error.
+∇MILISECONDS←FIO∆GET_TIME_OF_DAY_MS
+  MILISECONDS←⎕FIO[50] 1000
+∇
+⍝ Returns the current time since the Epoch in microseconds, or a scalar 0 on
+⍝ error.
+∇MICROSECONDS←FIO∆GET_TIME_OF_DAY_US
+  MICROSECONDS←⎕FIO[50] 1000000
+∇
+
+⍝ TODO ⎕FIO[51] mktime
+⍝ TODO ⎕FIO[52] localtime
+⍝ TODO ⎕FIO[53] gmtime
+⍝ TODO ⎕FIO[54] chdir
+⍝ TODO ⎕FIO[55] sscanf
+⍝ TODO ⎕FIO[56] write nested lines to file
+⍝ TODO ⎕FIO[57] fork and execve
+⍝ TODO ⎕FIO[58] snprintf
+⍝ TODO ⎕FIO[59] fcntl
+⍝ TODO ⎕FIO[60] random byte vector
+⍝ TODO ⎕FIO[61] seconds since Epoch; Bv←YYYY [MM DD [HH MM SS]]   ???????
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ Utility Functions                                                            ⍝
