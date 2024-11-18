@@ -165,8 +165,6 @@ FIO∆STDERR←2
 ⍝ TODO FIO[17] - fsync.
 ⍝ TODO FIO[18] - fstat.
 
-⍝ TODO FIO[19] - unlink.
-
 ⍝ Unlinks a file at the given path, possibly deleting it.
 ⍝ ERROR - a non-zero scalar number if an error ocurred.
 ⍝ From ⎕FIO '': Zi ←    ⎕FIO[19] Bh    unlink(Bc)
@@ -208,20 +206,20 @@ FIO∆STDERR←2
 ⍝ ←Process exit code, or a scalar ¯1 on failure.
 ⍝FIO∆PCLOSE←{⎕FIO[25] ⍵}
 
-⍝ TODO Unit test
-⍝ Zb ←    ⎕FIO[26] Bs    return entire file Bs as byte vector
-⍝ Reads in the enitrety of the file a byte vector.
-⍝ →FILE_PATH - file path to read from.
-⍝ BYTE_VECTOR← - The byte vector, or a scalar ¯2 on failure.
-⍝∇BYTE_VECTOR←FIO∆READ_ENTIRE_FILE PATH
-⍝  BYTE_VECTOR←⎕FIO[26] PATH
-⍝
-⍝  →(¯2≡BYTE_VECTOR) ⍴ LERROR
-⍝    ⍝ ⎕FIO[26] actually returns a character vector of the bytes, so ⎕UCS is used
-⍝    ⍝ to convert them to numbers.
-⍝    BYTE_VECTOR←⎕UCS BYTE_VECTOR
-⍝  LERROR:
-⍝∇
+⍝ Reads in the entirety of the file at the given path as a byte vector.
+⍝ BYTE_VECTOR← - The byte vector, or a scalar 0 on failure.
+⍝ From FIO⎕ '': Zb ←    ⎕FIO[26] Bs    return entire file Bs as byte vector
+∇BYTES←FIO∆READ_ENTIRE_FILE PATH
+  BYTES←⎕FIO[26] PATH
+
+  →(¯2≢BYTES) ⍴ LSUCCESS
+    BYTES←0 ◊ →LERROR
+  LSUCCESS:
+    ⍝ ⎕FIO[26] actually returns a character vector of the bytes, so ⎕UCS is used
+    ⍝ to convert them to numbers.
+    BYTES←⎕UCS BYTES
+  LERROR:
+∇
 
 ⍝ TODO Unit test
 ⍝ Zn ←    ⎕FIO[29] Bs    return file names in directory Bs
