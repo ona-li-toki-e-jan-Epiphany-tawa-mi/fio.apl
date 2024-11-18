@@ -230,11 +230,16 @@ FIO∆STDERR←2
   LERROR:
 ∇
 
-⍝ TODO Unit test
-⍝ Zn ←    ⎕FIO[29] Bs    return file names in directory Bs
-⍝ →⍵ - directory file path.
-⍝ ←The filenames in the directory, or a scalar ¯2 on failure.
-⍝FIO∆LIST_DIRECTORY←{⎕FIO[29] ⍵}
+⍝ Returns a vector of character vectors with the contents of the directory at
+⍝ the given path, or a scalar 0 on error.
+⍝ From '' ⎕FIO[0] '': Zn ←    ⎕FIO[29] Bs    return file names in directory Bs
+∇CONTENTS←FIO∆LIST_DIRECTORY PATH
+  CONTENTS←⎕FIO[29] PATH
+
+  →(¯2≢CONTENTS) ⍴ LSUCCESS
+    CONTENTS←0
+  LSUCCESS:
+∇
 
 ⍝ TODO Unit test
 ⍝ Zi ←    ⎕FIO[50] Bu    gettimeofday()
@@ -304,11 +309,10 @@ FIO∆STDERR←2
   LSUCCESS:
 ∇
 
-⍝ TODO Unit test
 ⍝ Checks is the file path exists and is a directory.
-⍝ →⍵ - directory file path.
-⍝ ←1 if the file path represents a directory, else 0.
-⍝FIO∆IS_DIRECTORY←{¯2≢FIO∆LIST_DIRECTORY ⍵}
+∇RESULT←FIO∆IS_DIRECTORY PATH
+  RESULT←0≢FIO∆LIST_DIRECTORY PATH
+∇
 
 ⍝ TODO Unit test
 ⍝ Splits a file path into it's seperate parts and removes the seperators (i.e.
