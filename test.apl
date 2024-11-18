@@ -132,10 +132,6 @@ LFAIL:
   RESULT←0≡FIO∆ERRNO                                          ◊ ⍎ASSERT_R
   RESULT←(FIO∆STRERROR FIO∆ERRNO)≡FIO∆UTF8_TO_BYTES "Success" ◊ ⍎ASSERT_R
 
-  SECTION "Standard open file descriptors"
-  RESULT←3≡≢FIO∆LIST_FDS                                ◊ ⍎ASSERT_R
-  RESULT←∧/FIO∆LIST_FDS∊FIO∆STDIN FIO∆STDOUT FIO∆STDERR ◊ ⍎ASSERT_R
-
 LFAIL:
 ∇
 
@@ -178,6 +174,10 @@ LFAIL:
   MACRO←MACRO,"⍎ASSERT_R"
 ∇
 ∇TEST_FILE_HANDLING; RESULT;FD;CONTENTS;BUFFER;ASSERT_READ;ASSERT_FCLOSE;BYTES_WRITTEN
+  SECTION "Assumptions"
+  RESULT←3≡≢FIO∆LIST_FDS                                ◊ ⍎ASSERT_R
+  RESULT←∧/FIO∆LIST_FDS∊FIO∆STDIN FIO∆STDOUT FIO∆STDERR ◊ ⍎ASSERT_R
+
   SECTION "FIO∆FOPEN fail on non-existant file"
   FD←"r" FIO∆FOPEN "tests/nonexisting-file"
   RESULT←1>FD ◊ ⍎ASSERT_R
