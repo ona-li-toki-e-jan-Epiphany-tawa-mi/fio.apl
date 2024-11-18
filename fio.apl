@@ -45,7 +45,11 @@
 ⍝ Changelog:
 ⍝ - Upcoming:
 ⍝   - Relicensed as GPLv3+ (orignally zlib.)
-⍝   - Code cleanup.
+⍝   - Code cleanup. A number of functions have changed, audit your code.
+⍝   - Added FIO∆PERROR, FIO∆LIST_FDS, FIO∆STRERROR, FIO∆ERRNO, FIO∆FGETS,
+⍝     FIO∆FGETC, FIO∆UNLINK, FIO∆RMDIR, FIO∆FPRINTF, FIO∆GETCWD.
+⍝   - Split FIO∆GET_TIME_OF_DAY into seperate functions.
+⍝   - Verified behavior with unit testing.
 ⍝ - 0.1.0:
 ⍝   - Intial release.
 
