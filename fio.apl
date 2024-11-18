@@ -180,11 +180,20 @@ FIO∆STDERR←2
   ERROR←PATH ⎕FIO[20]⍨ 8⊥MODE
 ∇
 
-⍝ Deltes the directory at the given path.
+⍝ Deletes the directory at the given path.
 ⍝ ERROR - a non-zero scalar number if an error occured.
 ⍝ From ⎕FIO '': Zi ←    ⎕FIO[21] Bh    rmdir(Bc)
 ∇ERROR←FIO∆RMDIR PATH
   ERROR←⎕FIO[21] PATH
+∇
+
+⍝ Prints formatted output to a file descriptor, like C fprintf.
+⍝ FORMAT_ARGUMENTS - a vector containing the format as the first element, and
+⍝                    the arguments being the remaining elements.
+⍝ BYTES_WRITTEN - the number of bytes written, or a scalar negative number, if
+⍝                 an error ocurred.
+∇BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆FPRINTF FD
+  BYTES_WRITTEN←FORMAT_ARGUMENTS ⎕FIO[22] FD
 ∇
 
 ⍝ TODO Unit test
