@@ -196,29 +196,30 @@ FIO∆STDERR←2
 ⍝                    the arguments being the remaining elements.
 ⍝ BYTES_WRITTEN - the number of bytes written, or a scalar negative number, if
 ⍝                 an error ocurred.
+⍝ From '' ⎕FIO[0] '': Zi ← A  ⎕FIO[22] Bh    fprintf(Bh,     A1, A2...) format A1
 ∇BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆FPRINTF FD
   BYTES_WRITTEN←FORMAT_ARGUMENTS ⎕FIO[22] FD
 ∇
 
-⍝ TODO Unit test
-⍝ Zh ← As ⎕FIO[24] Bs    popen(Bs, As) command Bs mode As
-⍝ Stars the given command in a subprocess.
-⍝ →⍵ - command.
-⍝ ←The process' read-only file descriptor, or a scalar 0 on failure.
-⍝FIO∆POPEN_READ←{⎕FIO[24] ⍵}
-⍝ TODO Unit test
-⍝ Stars the given command in a subprocess.
-⍝ →⍵ - command.
-⍝ ←The process' write-only file descriptor, or a scalar 0 on failure.
-⍝FIO∆POPEN_WRITE←{"w" ⎕FIO[24] ⍵}
+⍝ From '' ⎕FIO[0] '': Zh ← As ⎕FIO[24] Bs    popen(Bs, As) command Bs mode As
+⍝ Starts the given command in a subprocess.
+⍝ FD - the process' read-only file descriptor, or a scalar 0 on failure.
+∇FD←FIO∆POPEN_READ COMMAND
+  FD←"r" ⎕FIO[24] COMMAND
+∇
+⍝ TODO add unit test
+⍝ Starts the given command in a subprocess.
+⍝ FD - The process' write-only file descriptor, or a scalar 0 on failure.
+∇FD←FIO∆POPEN_WRITE COMMAND
+  FD←"w" ⎕FIO[24] COMMAND
+∇
 
-⍝ TODO Unit test
-⍝ Ze ←    ⎕FIO[25] Bh    pclose(Bh)
 ⍝ Closes a file descripter opened with FIO∆POPEN_READ.
-⍝ →⍵ - process file descriptor.
-⍝ ←Process exit code, or a scalar ¯1 on failure.
-⍝FIO∆PCLOSE←{⎕FIO[25] ⍵}
-
+⍝ ERPOR - process exit code, or probably a scalar ¯1 on failure.
+⍝ From '' ⎕FIO[0] '': Ze ←    ⎕FIO[25] Bh    pclose(Bh)
+∇ERROR←FIO∆PCLOSE FD
+  ERROR←⎕FIO[25] FD
+∇
 
 ⍝ Reads in the entirety of the file at the given path as a byte vector.
 ⍝ BYTE_VECTOR← - The byte vector, or a scalar 0 on failure.
@@ -371,6 +372,15 @@ FIO∆STDERR←2
   LSUCCESS:
 ∇
 
+⍝ Escapes the given shell argument with quotes.
+∇ESCAPED_ARUGMENT←FIO∆ESCAPE_SHELL_ARGUMENT ARGUMENT
+  ESCAPED_ARUGMENT←"'",⍨"'",∊(ARGUMENT,⍨⊂"'\\''")[1+(⍳⍨ARGUMENT)×~ARGUMENT∊"'"]
+∇
+⍝ Joins two shell arguments together with a space.
+∇RESULT←FRONT_ARGUMENT FIO∆JOIN_SHELL_ARGUMENTS BACK_ARGUMENT
+  RESULT←FRONT_ARGUMENT,' ',BACK_ARGUMENT
+∇
+
 ⍝ Checks is the file path exists and is a directory.
 ∇RESULT←FIO∆IS_DIRECTORY PATH
   RESULT←0≢FIO∆LIST_DIRECTORY PATH
@@ -394,20 +404,3 @@ FIO∆STDERR←2
 ⍝ ←The list of error codes from FIO∆MKDIRS_MODE for each directory level,
 ⍝ non-zero if an error occured.
 ⍝FIO∆MKDIRS←{(0 7 5 5) FIO∆MKDIRS_MODE ⍵}
-
-⍝ TODO Unit test
-⍝ Replaces all instances of a character sequence in a character vector with
-⍝ another one.
-⍝ →MATCH_REPLACEMENT - A two-element nested array of character vectors, the
-⍝ first being the vector to match, and the second being the replacement.
-⍝∇RESULT←MATCH_REPLACEMENT FIO∆CVECTOR_REPLACE CHARACTER_VECTOR; MATCH;REPLACEMENT
-⍝  MATCH←↑MATCH_REPLACEMENT[1]
-⍝  REPLACEMENT←↑MATCH_REPLACEMENT[2]
-⍝
-⍝  RESULT←∊CHARACTER_VECTOR{(⍺ REPLACEMENT)[1+⍵]}¨CHARACTER_VECTOR∊MATCH
-⍝∇
-
-⍝ TODO Unit test
-⍝ Escapes the given shell argument with quotes. Intended for use with
-⍝ FIO∆POPEN_{READ,WRITE}
-⍝FIO∆ESCAPE_SHELL_ARGUMENT←{"'","'",⍨ ⍵ FIO∆CVECTOR_REPLACE⍨ "'" "'\\''"}
