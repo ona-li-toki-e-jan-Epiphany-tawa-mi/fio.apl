@@ -372,6 +372,48 @@ FIO∆STDERR←2
   LSUCCESS:
 ∇
 
+⍝ Checks is the file path exists and is a directory.
+∇RESULT←FIO∆IS_DIRECTORY PATH
+  RESULT←"0" ⎕EA "0≢FIO∆LIST_DIRECTORY PATH"
+∇
+
+⍝ TODO unit test.
+⍝ Creates a directory at the given path and it's parent directories if they
+⍝ don't exist.
+⍝ →MODE - octal mode for the directory as an integer vector (i.e. 0 7 5 5.)
+⍝ ←ERROR_CODES - a non-zero scalar number if an error occured.
+∇ERROR←MODE FIO∆MKDIRS PATH; DIRECTORIES
+  DIRECTORIES←FIO∆JOIN_PATH\ FIO∆SPLIT_PATH PATH
+  ERROR←↑DIRECTORIES FIO∆MKDIR⍨¨ (≢DIRECTORIES)/⊂MODE
+∇
+
+⍝ TODO refactor.
+⍝ TODO unit test.
+⍝ TODO fix: failure on deleteing files.
+∇ERROR←FIO∆RMDIRS PATH; CONTENTS;OTHER_PATH
+  CONTENTS←FIO∆LIST_DIRECTORY PATH
+  →(0≡CONTENTS) ⍴ LERROR
+
+  →(0≡≢CONTENTS) ⍴ LDELETE_LOOP_END
+  LDELETE_LOOP:
+    OTHER_PATH←PATH FIO∆JOIN_PATH ↑CONTENTS
+    CONTENTS←1↓CONTENTS
+    →(FIO∆IS_DIRECTORY OTHER_PATH) ⍴ LIS_DIRECTORY
+      →(0≢FIO∆UNLINK OTHER_PATH) ⍴ LERROR ◊ →LIS_FILE
+    LIS_DIRECTORY:
+      →(0≢FIO∆RMDIRS OTHER_PATH) ⍴ LERROR
+    LIS_FILE:
+    →(0≢≢CONTENTS) ⍴ LDELETE_LOOP
+  LDELETE_LOOP_END:
+
+  ERROR←FIO∆RMDIR PATH ◊ →LEND
+LSUCCESS:
+  ERROR←0  ◊ →LEND
+LERROR:
+  ERROR←¯1
+LEND:
+∇
+
 ⍝ Escapes the given shell argument with quotes.
 ∇ESCAPED_ARUGMENT←FIO∆ESCAPE_SHELL_ARGUMENT ARGUMENT
   ESCAPED_ARUGMENT←"'",⍨"'",∊(ARGUMENT,⍨⊂"'\\''")[1+(⍳⍨ARGUMENT)×~ARGUMENT∊"'"]
@@ -380,27 +422,3 @@ FIO∆STDERR←2
 ∇RESULT←FRONT_ARGUMENT FIO∆JOIN_SHELL_ARGUMENTS BACK_ARGUMENT
   RESULT←FRONT_ARGUMENT,' ',BACK_ARGUMENT
 ∇
-
-⍝ Checks is the file path exists and is a directory.
-∇RESULT←FIO∆IS_DIRECTORY PATH
-  RESULT←0≢FIO∆LIST_DIRECTORY PATH
-∇
-
-⍝ TODO Unit test
-⍝ Creates the given directory and it's parent directories if they don't exist.
-⍝ →PATH - file path.
-⍝ →MODE - octal mode for the directory as an integer vector (i.e. 0 7 5 5.)
-⍝ ←ERROR_CODES - The list of error codes from FIO∆MKDIR_MODE for each directory
-⍝ level, non-zero if an error occured.
-⍝∇ERROR_CODES←MODE FIO∆MKDIRS_MODE PATH; DIRECTORIES
-⍝  DIRECTORIES←FIO∆JOIN_PATHS\ FIO∆SPLIT_PATH PATH
-⍝  ERROR_CODES←{MODE FIO∆MKDIR_MODE ⍵}¨ DIRECTORIES
-⍝∇
-⍝ TODO Unit test
-⍝ Creates the given directory and it's parent directories if they don't exist
-⍝ with file mode 0755.
-⍝ →⍵ - file path.
-⍝ ←Non zero if an error occured.
-⍝ ←The list of error codes from FIO∆MKDIRS_MODE for each directory level,
-⍝ non-zero if an error occured.
-⍝FIO∆MKDIRS←{(0 7 5 5) FIO∆MKDIRS_MODE ⍵}

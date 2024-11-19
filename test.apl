@@ -261,7 +261,7 @@ LFAIL:
 LFAIL:
 ∇
 
-∇TEST_DIRECTORY_HANDLING; RESULT
+∇TEST_DIRECTORY_HANDLING; RESULT;FD
   SECTION "Assumptions"
   RESULT←(⍬,⊂"existing-file")≡FIO∆LIST_DIRECTORY "tests/" ◊ ⍎ASSERT_R
   RESULT←1≡FIO∆IS_DIRECTORY "tests/"                      ◊ ⍎ASSERT_R
@@ -273,11 +273,25 @@ LFAIL:
   RESULT←0≢FIO∆RMDIR "tests/nonexisting-directory/"          ◊ ⍎ASSERT_R
   RESULT←0≡FIO∆IS_DIRECTORY "tests/nonexisting-directory/"   ◊ ⍎ASSERT_R
 
-  SECTION "FIO∆MKDIR"
-  RESULT←0≡7 5 5 FIO∆MKDIR "tests/new-directory/"         ◊ ⍎ASSERT_R
-  RESULT←(0⍴'')≡FIO∆LIST_DIRECTORY "tests/new-directory/" ◊ ⍎ASSERT_R
-  RESULT←1≡FIO∆IS_DIRECTORY "tests//new-directory/"       ◊ ⍎ASSERT_R
-  RESULT←0≡FIO∆RMDIR "tests/new-directory/"               ◊ ⍎ASSERT_R
+  SECTION "FIO∆MKDIR and FIO∆RMDIR"
+  RESULT←0≡7 5 5 FIO∆MKDIR "tests/new-directory/"  ◊ ⍎ASSERT_R
+  RESULT←1≡FIO∆IS_DIRECTORY "tests/new-directory/" ◊ ⍎ASSERT_R
+  RESULT←0≡FIO∆RMDIR "tests/new-directory/"        ◊ ⍎ASSERT_R
+  RESULT←0≡FIO∆IS_DIRECTORY "tests/new-directory/" ◊ ⍎ASSERT_R
+
+  ⍝ TODO reinstate
+  ⍝SECTION "FIO∆MKDIRS and FIO∆RMDIRS"
+  ⍝RESULT←0≡7 5 5 FIO∆MKDIRS "tests/this/is/a/test/" ◊ ⍎ASSERT_R
+  ⍝RESULT←1≡FIO∆IS_DIRECTORY "tests/this/"           ◊ ⍎ASSERT_R
+  ⍝RESULT←1≡FIO∆IS_DIRECTORY "tests/this/is/"        ◊ ⍎ASSERT_R
+  ⍝RESULT←1≡FIO∆IS_DIRECTORY "tests/this/is/a/"      ◊ ⍎ASSERT_R
+  ⍝RESULT←1≡FIO∆IS_DIRECTORY "tests/this/is/a/test/" ◊ ⍎ASSERT_R
+  ⍝FD←"w" FIO∆FOPEN "tests/this/is/a/test/file"
+  ⍝RESULT←1≤FD ◊ ⍎ASSERT_R
+  ⍝RESULT←(≢EXISTING_FILE_CONTENTS)≡FD FIO∆FWRITE⍨ FIO∆UTF8_TO_BYTES EXISTING_FILE_CONTENTS
+  ⍝⍎ASSERT_R ◊ RESULT←0≡FIO∆FCLOSE FD ◊ ⍎ASSERT_R
+  ⍝RESULT←0≡FIO∆RMDIRS "tests/this"                  ◊ ⍎ASSERT_R
+  ⍝RESULT←0≡FIO∆IS_DIRECTORY "tests/this/"           ◊ ⍎ASSERT_R
 
 LFAIL:
 ∇
