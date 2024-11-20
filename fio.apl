@@ -86,120 +86,259 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ - GitHub - https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/fio.apl/
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
-⍝ Constants                                                                    ⍝
+⍝ Utilities                                                                    ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+
+⍝ Converts bytes to a UTF-8 encoded string.
+⍝ BYTES: bytes.
+⍝ UTF8: string.
+∇UTF8←FIO∆BYTES_TO_UTF8 BYTES
+  UTF8←19 ⎕CR ⎕UCS BYTES
+∇
+
+⍝ Converts a UTF-8 encoded string to bytes.
+⍝ UTF8: string.
+⍝ BYTES: bytes.
+∇BYTES←FIO∆UTF8_TO_BYTES UTF8
+  BYTES←⎕UCS 18 ⎕CR UTF8
+∇
+
+⍝ Splits VECTOR by DELIMITER into a nested vector of vectors. If any of the
+⍝ resulting vectors are empty, they will still be included in RESULT (i.e.
+⍝ value value delimeter delimeter value -> (value value) () (value).)  DELIMITER
+⍝  will not appear in RESULT.
+⍝ VECTOR: vector<any>.
+⍝ DELIMETER: vector<any>.
+⍝ RESULT: vector<vector<any>>.
+∇RESULT←DELIMITER FIO∆SPLIT VECTOR
+  RESULT←DELIMITER~⍨¨VECTOR⊂⍨1++\VECTOR∊DELIMITER
+∇
+
+⍝ Splits VECTOR by DELIMITER into a nested vector of vectors. If a any of
+⍝ the resulting vectors are empty, they will not be included in RESULT (i.e.
+⍝ value value delimeter delimeter value -> (value value) (value).) DELIMITER
+⍝ will not appear in RESULT.
+⍝ VECTOR: vector<any>.
+⍝ DELIMITER: vector<any>.
+⍝ RESULT: vector<vector<any>>.
+∇RESULT←DELIMITER FIO∆SPLIT_CLEAN VECTOR
+  RESULT←VECTOR⊂⍨~VECTOR∊DELIMITER
+∇
+
+⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+⍝ ERRNO                                                                        ⍝
+⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+
+⍝ Returns the value of ERRNO for the previous ⎕FIO C function.
+⍝ ERRNO: errno.
+∇ERRNO←FIO∆ERRNO
+  ⍝ Zi ←    ⎕FIO[ 1] ''    errno (of last call)
+  ERRNO←⎕FIO[1] ''
+∇
+
+⍝ Returns a description of the provided ERRNO.
+⍝ ERRNO: errno.
+⍝ DESCRIPTION: string.
+∇DESCRIPTION←FIO∆STRERROR ERRNO
+  ⍝ Zs ←    ⎕FIO[ 2] Be    strerror(Be)
+  ⍝ ⎕FIO[2] actually returns a character vector of bytes, so ⎕UCS is used to
+  ⍝ convert them to bytes.
+  DESCRIPTION←FIO∆BYTES_TO_UTF8 ⎕UCS (⎕FIO[2] ERRNO)
+∇
+
+⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+⍝ File and Directory Handling                                                  ⍝
+⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+
+⍝ Splits a file path into it's seperate parts and removes the seperators (i.e.
+⍝ FIO∆SPLIT_PATH "../a/p///apples" → ".." "a" "p" "apples".)
+⍝ PATH: string.
+⍝ PATHS: vector<string>.
+∇PATHS←FIO∆SPLIT_PATH PATH
+  PATHS←'/' FIO∆SPLIT_CLEAN PATH
+∇
+⍝ FRONT_PATH: string.
+⍝ BACK_PATH: string.
+⍝ PATH: string.
+⍝ Joins two paths together with a seperator.
+∇PATH←FRONT_PATH FIO∆JOIN_PATH BACK_PATH
+  PATH←FRONT_PATH,'/',BACK_PATH
+∇
+
+⍝ Returns a vector of strings with the contents of the directory at the given
+⍝ path.
+⍝ PATH: string.
+⍝ CONTENTS: optional<vector<string>>.
+∇CONTENTS←FIO∆LIST_DIRECTORY PATH
+  ⍝ Zn ←    ⎕FIO[29] Bs    return file names in directory Bs
+  CONTENTS←⎕FIO[29] PATH
+
+  →(1≤≡CONTENTS) ⍴ LSUCCESS
+    ⍝ Failed to list PATH.
+    CONTENTS←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LSUCCESS:
+    CONTENTS←1 CONTENTS
+  LSWITCH_END:
+∇
+
+⍝ Returns path of the current working directory.
+⍝ DIRECTORY: optional<string>.
+∇PATH←FIO∆CURRENT_DIRECTORY
+  ⍝ Zs ←    ⎕FIO 30        getcwd()
+  PATH←⎕FIO 30
+
+  →(1≤≡PATH) ⍴ LSUCCESS
+    ⍝ Failed to list directory.
+    PATH←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LSUCCESS:
+    PATH←1 PATH
+  LSWITCH_END:
+∇
+
+⍝ TODO make fail if path exists and is not directory.
+⍝ Creates a directory at the given path if it doesn't exist. Does not recurse.
+⍝ MODE: vector<uint> - octal mode for the directory (i.e. 7 5 5.)
+⍝ SUCCESS: optional<void>.
+∇SUCCESS←MODE FIO∆MAKE_DIRECTORY PATH
+  ⍝ Zi ← Ai ⎕FIO[20] Bh    mkdir(Bc, AI)
+  SUCCESS←PATH ⎕FIO[20]⍨ 8⊥MODE
+
+  →(0≡SUCCESS) ⍴ LSUCCESS
+    SUCCESS←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LSUCCESS:
+    SUCCESS←⍬,1
+  LSWITCH_END:
+∇
 
 ⍝ Common file descriptors.
 FIO∆STDIN←0
 FIO∆STDOUT←1
 FIO∆STDERR←2
 
-⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
-⍝ ⎕FIO Wrappers                                                                ⍝
-⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
-
-⍝ Returns a number vector of open file descriptors.
-⍝ From '' ⎕FIO[0] '': ⎕FIO     0     return a list of open file descriptors
+⍝ Returns open file descriptors.
+⍝ FDS: vector<fd>.
 ∇FDS←FIO∆LIST_FDS
+  ⍝ ⎕FIO     0     return a list of open file descriptors
   FDS←⎕FIO 0
 ∇
 
-⍝ Returns the value of ERRNO for the previous ⎕FIO-C function.
-⍝ From '' ⎕FIO[0] '': Zi ←    ⎕FIO[ 1] ''    errno (of last call)
-∇ERRNO←FIO∆ERRNO
-  ERRNO←⎕FIO[1] ''
-∇
-
-⍝ Returns a byte vector describing the provided ERRNO.
-⍝ From '' ⎕FIO[0] '': Zs ←    ⎕FIO[ 2] Be    strerror(Be)
-∇BYTES←FIO∆STRERROR ERRNO
-  ⍝ ⎕FIO[2] actually returns a character vector of the bytes, so ⎕UCS is used to
-  ⍝ convert them to numbers.
-  BYTES←⎕UCS (⎕FIO[2] ERRNO)
-∇
-
-⍝ Opens a file with fopen.
-⍝ MODE - open mode (i.e. "w", "r+", etc..)
-⍝ FD - the file descriptor, or a scalar number less than 1 on failure.
-⍝ From '' ⎕FIO[0] '': Zh ← As ⎕FIO[ 3] Bs    fopen(Bs, As) filename Bs mode As
-∇FD←MODE FIO∆FOPEN PATH
+⍝ Opens a file.
+⍝ MODE: string - open mode (i.e. "w", "r+", etc..). See 'man fopen' for details.
+⍝ FD: optional<fd> - the descriptor of the opened file.
+∇FD←MODE FIO∆OPEN_FILE PATH
+  ⍝ Zh ← As ⎕FIO[ 3] Bs    fopen(Bs, As) filename Bs mode As
   FD←MODE ⎕FIO[3] PATH
+
+  →(1≤FD) ⍴ LSUCCESS
+    FD←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LFAIL
+  LSUCCESS:
+    FD←1 FD
+  LFAIL:
 ∇
 
 ⍝ Closes a file descriptor.
-⍝ ERROR - 0, if successful.
-⍝ From '' ⎕FIO[0] '': Ze ←    ⎕FIO[ 4] Bh    fclose(Bh)
-∇ERROR←FIO∆FCLOSE FD
-  ERROR←⎕FIO[4] FD
+⍝ FD: fd.
+⍝ SUCCESS: optional<void>.
+∇SUCCESS←FIO∆CLOSE_FD FD
+  ⍝ Ze ←    ⎕FIO[ 4] Bh    fclose(Bh)
+  ⍝ ⎕FIO[4] throws an APL exception on an unopen fd.
+  SUCCESS←"→LEXCEPTION" ⎕EA "⎕FIO[4] FD"
+  →(0≡SUCCESS) ⍴ LSUCCESS
+    ⍝ Failed to close FD.
+    SUCCESS←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LEXCEPTION:
+    SUCCESS←0 "Either APL exception or not an open file descriptor" ◊ →LSWITCH_END
+  LSUCCESS:
+    SUCCESS←⍬,1
+  LSWITCH_END:
 ∇
 
-⍝ Reads bytes up to specified number of bytes from the file descriptor.
-⍝ BYTES - The data read, as a byte vector, or a scalar 0, if there was an error
-⍝         or EOF was reached.
-⍝ From '' ⎕FIO[0] '': Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
-∇BYTES←MAXIMUM_BYTES FIO∆FREAD FD
-  BYTES←MAXIMUM_BYTES ⎕FIO[6] FD
-∇
-
-⍝ Writes a byte vector to the file descriptor.
-⍝ BYTES_WRITTEN -The number of bytes written.
-⍝ From '' ⎕FIO[0] '': Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
-∇BYTES_WRITTEN←BYTES FIO∆FWRITE FD
-  BYTES_WRITTEN←BYTES ⎕FIO[7] FD
-∇
-
-⍝ Reads bytes to a newline or up to a specified number of bytes from the file
-⍝ descriptor. Newlines are included in the output.
-⍝ BYTES - The data read, as a byte vector, or a scalar 0, if there was an error
-⍝         or EOF was reached.
-⍝ From '' ⎕FIO[0] '': Zb ← Ai ⎕FIO[ 8] Bh    fgets(Zb, Ai, Bh) 1 byte per Zb
-∇BYTES←MAXIMUM_BYTES FIO∆FGETS FD
-  BYTES←MAXIMUM_BYTES ⎕FIO[8] FD
-
-  →(⍬≢BYTES) ⍴ LSUCCESS
-    BYTES←0
+⍝ Returns whether EOF was reached for the file descriptor. If the file
+⍝ descriptor is not open, returns true.
+⍝ FD: fd.
+⍝ EOF_REACHED: boolean.
+∇EOF_REACHED←FIO∆EOF_FD FD
+  ⍝ Zi ←    ⎕FIO[10] Bh    feof(Bh).
+  ⍝ ⎕FIO[10] throws an APL exception on an unopen fd.
+  EOF_REACHED←0≢"→LEXCEPTION" ⎕EA "⎕FIO[10] FD"
+  →LSUCCESS
+  LEXCEPTION:
+    EOF_REACHED←1
   LSUCCESS:
 ∇
 
-⍝ Reads one byte from the file descriptor, or a scalar 0, if there was an error
-⍝ or EOF.
-⍝ From '' ⎕FIO[0] '': Zb ←    ⎕FIO[ 9] Bh    fgetc(Zb, Bh) 1 byte
-∇BYTE←FIO∆FGETC FD
-  BYTE←⎕FIO[9] FD
+⍝ Returns whether an error ocurred with the file descriptor. If the file
+⍝ descriptor is not open, returns true.
+⍝ FD: fd.
+⍝ HAS_ERROR: boolean.
+∇HAS_ERROR←FIO∆ERROR_FD FD
+  ⍝ Ze ←    ⎕FIO[11] Bh    ferror(Bh)
+  HAS_ERROR←0≢"→LEXCEPTION" ⎕EA "⎕FIO[11] FD"
+  →LSUCCESS
+  LEXCEPTION:
+    HAS_ERROR←1
+  LSUCCESS:
 ∇
 
-⍝ Returns a non-zero scalar number if EOF was reached for the file descriptor.
-⍝ From ⎕FIO: '': Zi ←    ⎕FIO[10] Bh    feof(Bh)
-∇EOF_REACHED←FIO∆FEOF FD
-  EOF_REACHED←⎕FIO[10] FD
+⍝ Reads bytes up to specified number of bytes from the file descriptor.
+⍝ MAXIMUM_BYTES: uint - the maximum number of bytes to read.
+⍝ FD: fd.
+⍝ BYTES: optional<bytes>.
+∇BYTES←MAXIMUM_BYTES FIO∆READ_FD FD
+  ⍝ Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
+  ⍝ ⎕FIO[6] throws an APL exception on an unopen fd.
+  BYTES←"→LEXCEPTION" ⎕EA "MAXIMUM_BYTES ⎕FIO[6] FD"
+  →(0≢BYTES) ⍴ LSUCCESS
+    ⍝ Failed to read FD.
+    BYTES←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LEXCEPTION:
+    BYTES←0 "Either APL exception or not an open file descriptor" ◊ →LSWITCH_END
+  LSUCCESS:
+    BYTES←1 BYTES
+  LSWITCH_END:
 ∇
 
-⍝ Returns a non-zero scalar number if an error ocurred with the file
-⍝ descriptor.
-⍝ From ⎕FIO: '':  Ze ←    ⎕FIO[11] Bh    ferror(Bh)
-∇HAS_ERROR←FIO∆FERROR FD
-  HAS_ERROR←⎕FIO[11] FD
+⍝ Reads bytes up to a newline or a specified number of bytes from the file
+⍝ descriptor. Newlines are included in the output.
+⍝ MAXIMUM_BYTES: uint - the maximum number of bytes to read.
+⍝ FD: fd.
+⍝ BYTES: optional<bytes>.
+∇BYTES←MAXIMUM_BYTES FIO∆READ_LINE_FD FD
+  ⍝ Zb ← Ai ⎕FIO[ 8] Bh    fgets(Zb, Ai, Bh) 1 byte per Zb
+  ⍝ ⎕FIO[8] throws an APL exception on an unopen fd.
+  BYTES←"→LEXCEPTION" ⎕EA "MAXIMUM_BYTES ⎕FIO[8] FD"
+  →(⍬≢BYTES) ⍴ LSUCCESS
+    ⍝ Failed to read FD.
+    BYTES←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LEXCEPTION:
+    BYTES←0 "Either APL exception or not an open file descriptor" ◊ →LSWITCH_END
+  LSUCCESS:
+    BYTES←1 BYTES
+  LSWITCH_END:
 ∇
 
-⍝ TODO FIO[12] - ftell
-⍝ TODO FIO[13,14,15] - fseek
-⍝ TODO FIO[16] - fflush.
-⍝ TODO FIO[17] - fsync.
-⍝ TODO FIO[18] - fstat.
+⍝ Reads bytes from a file descriptor until EOF is reached.
+⍝ FD: fd.
+⍝ BYTES: optional<bytes>.
+∇BYTES←FIO∆READ_ENTIRE_FD FD; BUFFER
+  →(~FIO∆EOF_FD FD) ⍴ LNOT_EOF
+    BYTES←0 "Reached EOF" ◊ →LEND
+  LNOT_EOF:
 
-⍝ Unlinks a file at the given path, possibly deleting it.
-⍝ ERROR - a non-zero scalar number if an error ocurred.
-⍝ From '' ⎕FIO[0] '': Zi ←    ⎕FIO[19] Bh    unlink(Bc)
-∇ERROR←FIO∆UNLINK PATH
-  ERROR←⎕FIO[19] PATH
-∇
+  BYTES←⍬
+  LREAD_LOOP:
+    BUFFER←5000 FIO∆READ_FD FD
+    →(~↑BUFFER) ⍴ LEND_READ_LOOP
+    BYTES←↑BUFFER[2] ◊ →LREAD_LOOP
+  LEND_READ_LOOP:
 
-⍝ Creates a directory at the given path if it doesn't exist. Does not recurse.
-⍝ MODE - octal mode for the directory as an integer vector (i.e. 0 7 5 5.)
-⍝ ERROR - a non-zero scalar number if an error occured.
-⍝ From '' ⎕FIO[0] '': Zi ← Ai ⎕FIO[20] Bh    mkdir(Bc, AI)
-∇ERROR←MODE FIO∆MKDIR PATH
-  ERROR←PATH ⎕FIO[20]⍨ 8⊥MODE
+  →(~FIO∆ERROR_FD FD) ⍴ LSUCCESS
+    BYTES←0 BUFFER[2] ◊ →LFAIL
+  LSUCCESS:
+    BYTES←1 BYTES
+  LFAIL:
+
+LEND:
 ∇
 
 ⍝ Deletes the directory at the given path.
@@ -207,71 +346,182 @@ FIO∆STDERR←2
 ⍝ From '' ⎕FIO[0] '': Zi ←    ⎕FIO[21] Bh    rmdir(Bc)
 ∇ERROR←FIO∆RMDIR PATH
   ERROR←⎕FIO[21] PATH
-∇
-
-⍝ Prints formatted output to a file descriptor, like C fprintf.
-⍝ FORMAT_ARGUMENTS - a vector containing the format as the first element, and
-⍝                    the arguments being the remaining elements.
-⍝ BYTES_WRITTEN - the number of bytes written, or a scalar negative number, if
-⍝                 an error ocurred.
-⍝ From '' ⎕FIO[0] '': Zi ← A  ⎕FIO[22] Bh    fprintf(Bh,     A1, A2...) format A1
-∇BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆FPRINTF FD
-  BYTES_WRITTEN←FORMAT_ARGUMENTS ⎕FIO[22] FD
-∇
-
-⍝ From '' ⎕FIO[0] '': Zh ← As ⎕FIO[24] Bs    popen(Bs, As) command Bs mode As
-⍝ Starts the given command in a subprocess.
-⍝ FD - the process' read-only file descriptor, or a scalar 0 on failure.
-∇FD←FIO∆POPEN_READ COMMAND
-  FD←"r" ⎕FIO[24] COMMAND
-∇
-⍝ TODO add unit test
-⍝ Starts the given command in a subprocess.
-⍝ FD - The process' write-only file descriptor, or a scalar 0 on failure.
-∇FD←FIO∆POPEN_WRITE COMMAND
-  FD←"w" ⎕FIO[24] COMMAND
-∇
-
-⍝ Closes a file descripter opened with FIO∆POPEN_READ.
-⍝ ERPOR - process exit code, or probably a scalar ¯1 on failure.
-⍝ From '' ⎕FIO[0] '': Ze ←    ⎕FIO[25] Bh    pclose(Bh)
-∇ERROR←FIO∆PCLOSE FD
-  ERROR←⎕FIO[25] FD
-∇
-
-⍝ Reads in the entirety of the file at the given path as a byte vector.
-⍝ BYTE_VECTOR← - The byte vector, or a scalar 0 on failure.
-⍝ From '' ⎕FIO[0] '': Zb ←    ⎕FIO[26] Bs    return entire file Bs as byte vector
+⍝ Reads in an entire file as bytes.
+⍝ PATH: string - path to the file.
+⍝ Bytes: optional<bytes>.
 ∇BYTES←FIO∆READ_ENTIRE_FILE PATH
-  BYTES←⎕FIO[26] PATH
-
-  →(¯2≢BYTES) ⍴ LSUCCESS
-    BYTES←0 ◊ →LERROR
+  ⍝ Zb ←    ⎕FIO[26] Bs    return entire file Bs as byte vector
+  ⍝ ⎕FIO[26] throws an APL exception on directories, and probably some other
+  ⍝ things.
+  BYTES←"→LEXCEPTION" ⎕EA "⎕FIO[26] PATH"
+  →(1≤≡BYTES) ⍴ LSUCCESS
+    ⍝ Failed to read file.
+    BYTES←0 "File does not exist" ◊ →LSWITCH_END
+  LEXCEPTION:
+    BYTES←0 "Either APL exception or not a file" ◊ →LSWITCH_END
   LSUCCESS:
-    ⍝ ⎕FIO[26] actually returns a character vector of the bytes, so ⎕UCS is used
-    ⍝ to convert them to numbers.
-    BYTES←⎕UCS BYTES
-  LERROR:
+    ⍝ ⎕FIO[26] actually returns a string of bytes, so ⎕UCS is used to convert
+    ⍝ them to numbers.
+    BYTES←1 (⎕UCS BYTES)
+  LSWITCH_END:
 ∇
 
-⍝ TODO ⎕FIO[27] rename file.
-
-⍝ Returns a vector of character vectors with the contents of the directory at
-⍝ the given path, or a scalar 0 on error.
-⍝ From '' ⎕FIO[0] '': Zn ←    ⎕FIO[29] Bs    return file names in directory Bs
-∇CONTENTS←FIO∆LIST_DIRECTORY PATH
-  CONTENTS←⎕FIO[29] PATH
-
-  →(¯2≢CONTENTS) ⍴ LSUCCESS
-    CONTENTS←0
+⍝ Writes bytes to the file descriptor.
+⍝ BYTES: bytes.
+⍝ FD: fd.
+⍝ SUCCESS: optional<void>.
+∇SUCCESS←BYTES FIO∆WRITE_FD FD
+  ⍝ Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
+  ⍝ ⎕FIO[7] throws an APL exception on an unopen fd.
+  SUCCESS←"→LEXCEPTION" ⎕EA "BYTES ⎕FIO[7] FD"
+  →((≢BYTES)≡SUCCESS) ⍴ LSUCCESS
+    ⍝ Failed to write to FD.
+    SUCCESS←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LEXCEPTION:
+    SUCCESS←0 "Either APL exception or not an open file descriptor" ◊ →LSWITCH_END
   LSUCCESS:
+    SUCCESS←⍬,1
+  LSWITCH_END:
 ∇
 
-⍝ Returns the current working directory.
-⍝ Probably returns 0 on error.
-⍝ From '' ⎕FIO[0] '': Zs ←    ⎕FIO 30        getcwd()
-∇DIRECTORY←FIO∆GETCWD
-  DIRECTORY←⎕FIO 30
+⍝ TODO add printf.
+⍝ Prints formatted output to a file descriptor, like C fprintf.
+⍝ FORMAT_ARGUMENTS: vector<[1]string, any> - a vector with the format as the
+⍝                   first element, and the arguments as the rest.
+⍝ FD: fd.
+⍝ BYTES_WRITTEN: optional<uint> - the number of bytes written.
+∇BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆FPRINTF FD
+  ⍝ Zi ← A  ⎕FIO[22] Bh    fprintf(Bh,     A1, A2...) format A1
+  BYTES_WRITTEN←"→LEXCEPTION" ⎕EA "FORMAT_ARGUMENTS ⎕FIO[22] FD"
+  →(0≤BYTES_WRITTEN) ⍴ LSUCCESS
+    ⍝ Failed to write to FD.
+    BYTES_WRITTEN←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LEXCEPTION:
+    BYTES_WRITTEN←0 "Either APL exception or not an open file descriptor"
+    →LSWITCH_END
+  LSUCCESS:
+    BYTES_WRITTEN←1 BYTES_WRITTEN
+  LSWITCH_END:
+∇
+
+∇
+
+⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+⍝ Process Handling                                                             ⍝
+⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+
+⍝ Escapes the given shell argument with quotes.
+⍝ ARGUMENT: string.
+⍝ ESCAPED_ARUGMENT: string.
+∇ESCAPED_ARUGMENT←FIO∆ESCAPE_SHELL_ARGUMENT ARGUMENT
+  ESCAPED_ARUGMENT←"'",⍨"'",∊(ARGUMENT,⍨⊂"'\\''")[1+(⍳⍨ARGUMENT)×~ARGUMENT∊"'"]
+∇
+
+⍝ TODO unit test.
+⍝ Joins two shell arguments together with a space.
+⍝ FRONT_ARGUMENT: string.
+⍝ BACK_ARGUMENT: string.
+⍝ RESULT: string.
+∇RESULT←FRONT_ARGUMENT FIO∆JOIN_SHELL_ARGUMENTS BACK_ARGUMENT
+  RESULT←FRONT_ARGUMENT,' ',BACK_ARGUMENT
+∇
+
+⍝ Runs the given command in the user's shell in a subprocess. Close with FD
+⍝ FIO∆PCLOSE.
+⍝ EXE_ARGUMENTS: vector<string> - a vector with the executable to run as the
+⍝                first element, and the arguments to it as the rest.
+⍝ FD: optional<fd> - the process' read-only file descriptor.
+∇FD←FIO∆POPEN_READ EXE_ARGUMENTS
+  ⍝ Zh ← As ⎕FIO[24] Bs    popen(Bs, As) command Bs mode As
+  FD←"r" ⎕FIO[24] ↑FIO∆JOIN_SHELL_ARGUMENTS/ FIO∆ESCAPE_SHELL_ARGUMENT¨ EXE_ARGUMENTS
+
+  →(1≤FD) ⍴ LSUCCESS
+    ⍝ Failed to run popen.
+    FD←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LSUCCESS:
+    FD←1 FD
+  LSWITCH_END:
+∇
+
+⍝ TODO add unit test
+⍝ Runs the given command in the user's shell in a subprocess. Close with FD
+⍝ FIO∆PCLOSE.
+⍝ EXE_ARGUMENTS: vector<string> - a vector with the executable to run as the
+⍝                first element, and the arguments to it as the rest.
+⍝ FD: optional<fd> - The process' write-only file descriptor.
+∇FD←FIO∆POPEN_WRITE EXE_ARGUMENTS
+  ⍝ Zh ← As ⎕FIO[24] Bs    popen(Bs, As) command Bs mode As
+  FD←"w" ⎕FIO[24] ↑FIO∆JOIN_SHELL_ARGUMENTS/ FIO∆ESCAPE_SHELL_ARGUMENT¨ EXE_ARGUMENTS
+
+  →(1≤FD) ⍴ LSUCCESS
+    ⍝ Failed to run popen.
+    FD←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LSUCCESS:
+    FD←1 FD
+  LSWITCH_END:
+∇
+
+⍝ Closes a file descriptor opened with FIO∆POPEN_{READ,WRITE}.
+⍝ FD: fd.
+⍝ SUCCESS: optional<uint> - process exit code.
+∇ERROR←FIO∆PCLOSE FD
+  ⍝ Ze ←    ⎕FIO[25] Bh    pclose(Bh)
+  ERROR←"→LEXCEPTION" ⎕EA "⎕FIO[25] FD"
+
+  →(0≤ERROR) ⍴ LSUCCESS
+    ⍝ Failed to run pclose.
+    ERROR←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LEXCEPTION:
+    ERROR←0 "Either APL exception or not an open file descriptor" ◊ →LSWITCH_END
+  LSUCCESS:
+    ERROR←1 ERROR
+  LSWITCH_END:
+∇
+
+⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+⍝ Time                                                                         ⍝
+⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+
+⍝ Returns the current time since the Epoch in seconds.
+⍝ S: optional<uint>.
+∇S←FIO∆TIME_S
+  ⍝ Zi ←    ⎕FIO[50] Bu    gettimeofday()
+  S←⎕FIO[50] 1
+
+  →(0≢S) ⍴ LSUCCESS
+    ⍝ Failed to get time.
+    S←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LSUCCESS:
+    S←1 S
+  LSWITCH_END:
+∇
+
+⍝ Returns the current time since the Epoch in milliseconds.
+⍝ MILLISECONDS: optional<uint>.
+∇MS←FIO∆TIME_MS
+  ⍝ Zi ←    ⎕FIO[50] Bu    gettimeofday()
+  MS←⎕FIO[50] 1000
+
+  →(0≢MS) ⍴ LSUCCESS
+    ⍝ Failed to get time.
+    MS←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LSUCCESS:
+    MS←1 MS
+  LSWITCH_END:
+∇
+
+⍝ Returns the current time since the Epoch in microseconds.
+⍝ MICROSECONDS: optional<uint>.
+∇US←FIO∆TIME_US
+  ⍝ Zi ←    ⎕FIO[50] Bu    gettimeofday()
+  US←⎕FIO[50] 1000000
+
+  →(0≢US) ⍴ LSUCCESS
+    ⍝ Failed to get time.
+    US←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LSUCCESS:
+    US←1 US
+  LSWITCH_END:
 ∇
 
 ⍝ TODO ⎕FIO[31] access
@@ -292,22 +542,6 @@ FIO∆STDERR←2
 ⍝ TODO ⎕FIO[48] fscanf
 ⍝ TODO ⎕FIO[49] read entire file as nested lines
 
-⍝ From '' ⎕FIO[0] '': Zi ←    ⎕FIO[50] Bu    gettimeofday()
-⍝ Returns the current time since the Epoch in seconds, or a scalar 0 on error.
-∇SECONDS←FIO∆GET_TIME_OF_DAY_S
-  SECONDS←⎕FIO[50] 1
-∇
-⍝ Returns the current time since the Epoch in milliseconds, or a scalar 0 on
-⍝ error.
-∇MILISECONDS←FIO∆GET_TIME_OF_DAY_MS
-  MILISECONDS←⎕FIO[50] 1000
-∇
-⍝ Returns the current time since the Epoch in microseconds, or a scalar 0 on
-⍝ error.
-∇MICROSECONDS←FIO∆GET_TIME_OF_DAY_US
-  MICROSECONDS←⎕FIO[50] 1000000
-∇
-
 ⍝ TODO ⎕FIO[51] mktime
 ⍝ TODO ⎕FIO[52] localtime
 ⍝ TODO ⎕FIO[53] gmtime
@@ -319,81 +553,6 @@ FIO∆STDERR←2
 ⍝ TODO ⎕FIO[59] fcntl
 ⍝ TODO ⎕FIO[60] random byte vector
 ⍝ TODO ⎕FIO[61] seconds since Epoch; Bv←YYYY [MM DD [HH MM SS]]   ???????
-
-⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
-⍝ Utility Functions                                                            ⍝
-⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
-
-⍝ Converts a byte vector to a UTF-8 encoded character vector.
-∇UTF8←FIO∆BYTES_TO_UTF8 BYTES
-  UTF8←19 ⎕CR ⎕UCS BYTES
-∇
-⍝ Converts a UTF-8 encoded character vector to a byte vector.
-∇BYTES←FIO∆UTF8_TO_BYTES UTF8
-  BYTES←⎕UCS 18 ⎕CR UTF8
-∇
-
-⍝ Prints a message, with a newline, to stderr describing the value in ERRNO. If
-⍝ MESSAGE is not an empty list, it will be prepended to the printed message with
-⍝ a colon and space.
-∇FIO∆PERROR MESSAGE; NEWLINE
-  NEWLINE←FIO∆UTF8_TO_BYTES "\n"
-
-  →(0≡≢MESSAGE) ⍴ LNO_MESSAGE
-    ⊣ FIO∆STDERR FIO∆FWRITE⍨ NEWLINE,⍨(FIO∆STRERROR FIO∆ERRNO),⍨FIO∆UTF8_TO_BYTES MESSAGE,": "
-    →LMESSAGE
-  LNO_MESSAGE:
-    ⊣ FIO∆STDERR FIO∆FWRITE⍨ NEWLINE,⍨FIO∆STRERROR FIO∆ERRNO
-  LMESSAGE:
-∇
-
-⍝ Splits a vector by a delimiter value into a nested vector of vectors. If a
-⍝ vector ends up being empty, it will still be included in the result (i.e.
-⍝ VALUE VALUE DELIMETER DELIMETER VALUE -> (VALUE VALUE) () (VALUE).) The
-⍝ delimiter value will not appear in the resulting vectors.
-∇RESULT←DELIMETER FIO∆SPLIT VECTOR
-  RESULT←DELIMETER~⍨¨VECTOR⊂⍨1++\VECTOR∊DELIMETER
-∇
-⍝ Splits a vector by a delimiter value into a nested vector of vectors. If a
-⍝ vector ends up being empty, it will not be included in the result (i.e. VALUE
-⍝ VALUE DELIMETER DELIMETER VALUE -> (VALUE VALUE) (VALUE).) The delimiter value
-⍝ will not appear in the resulting vectors.
-∇RESULT←DELIMETER FIO∆SPLIT_CLEAN VECTOR
-  RESULT←VECTOR⊂⍨~VECTOR∊DELIMETER
-∇
-
-⍝ Splits a file path into it's seperate parts and removes the seperators (i.e.
-⍝ FIO∆SPLIT_PATH "../a/p///apples" → ".." "a" "p" "apples".)
-∇PATHS←FIO∆SPLIT_PATH PATH
-  PATHS←'/' FIO∆SPLIT_CLEAN PATH
-∇
-⍝ Joins two paths together with a seperator.
-∇PATH←FRONT_PATH FIO∆JOIN_PATH BACK_PATH
-  PATH←FRONT_PATH,'/',BACK_PATH
-∇
-
-⍝ Reads input from the file descriptor until EOF is reached and outputs the
-⍝ contents as a byte vector.
-⍝ ←The byte vector, or a scalar 0, if and error occurred or EOF was reached.
-∇BYTE_VECTOR←FIO∆READ_ENTIRE_FD FD
-  BYTE_VECTOR←⍬
-
-  LREAD_LOOP:
-    BYTE_VECTOR←BYTE_VECTOR,5000 FIO∆FREAD FD
-    →(0≢FIO∆FEOF   FD) ⍴ LEND_READ_LOOP
-    →(0≢FIO∆FERROR FD) ⍴ LEND_READ_LOOP
-    →LREAD_LOOP
-  LEND_READ_LOOP:
-
-  →(BYTE_VECTOR≢⍬,0) ⍴ LSUCCESS
-    BYTE_VECTOR←0
-  LSUCCESS:
-∇
-
-⍝ Checks is the file path exists and is a directory.
-∇RESULT←FIO∆IS_DIRECTORY PATH
-  RESULT←"0" ⎕EA "0≢FIO∆LIST_DIRECTORY PATH"
-∇
 
 ⍝ TODO unit test.
 ⍝ Creates a directory at the given path and it's parent directories if they
@@ -430,13 +589,4 @@ LSUCCESS:
 LERROR:
   ERROR←¯1
 LEND:
-∇
-
-⍝ Escapes the given shell argument with quotes.
-∇ESCAPED_ARUGMENT←FIO∆ESCAPE_SHELL_ARGUMENT ARGUMENT
-  ESCAPED_ARUGMENT←"'",⍨"'",∊(ARGUMENT,⍨⊂"'\\''")[1+(⍳⍨ARGUMENT)×~ARGUMENT∊"'"]
-∇
-⍝ Joins two shell arguments together with a space.
-∇RESULT←FRONT_ARGUMENT FIO∆JOIN_SHELL_ARGUMENTS BACK_ARGUMENT
-  RESULT←FRONT_ARGUMENT,' ',BACK_ARGUMENT
 ∇
