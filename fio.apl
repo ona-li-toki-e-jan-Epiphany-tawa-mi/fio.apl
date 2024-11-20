@@ -42,8 +42,26 @@
 ⍝   If the inclusion of ')COPY_ONCE' in scripts results in weird text output,
 ⍝   replace the command with '⊣ ⍎")COPY_ONCE fio.apl"'.
 ⍝
-⍝ Changelog:
-⍝ - Upcoming:
+⍝ DATA TYPES:
+⍝  string - a character vector.
+⍝  bytes - a number vector whose elements, N, are 0≤N≤255.
+⍝  fd - a scalar number representing a file descriptor.
+⍝  errno - a scalar number representing an error a la C's ERRNO.
+⍝  boolean - a scalar 0, for false, or a 1, for true.
+⍝  any - any value of any type.
+⍝  void - used in optionals to indicate no value is returned.
+⍝  uint - scalar whole number.
+⍝  optional<TYPE>:
+⍝    Error handling type. An optional is a nested vector, where
+⍝    the first value is guaranteed to exist and is a boolean representing
+⍝    whether the function succeeded.
+⍝    If 1, the function succeded. If the function returned a result, it will be
+⍝    the second value and of type TYPE.
+⍝    If 0, the function failed. The second value is a string describing the
+⍝    issue.
+⍝
+⍝ CHANGELOG:
+⍝   Upcoming:
 ⍝   - Relicensed as GPLv3+ (orignally zlib.)
 ⍝   - Code cleanup. A number of functions have changed, audit your code.
 ⍝   - Added FIO∆PERROR, FIO∆LIST_FDS, FIO∆STRERROR, FIO∆ERRNO, FIO∆FGETS,
