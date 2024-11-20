@@ -63,7 +63,7 @@ FAILED_TESTS←⍬
   →(0≡RESULT) ⍴ LVALID ◊ →(1≡RESULT) ⍴ LVALID
     ⍞←"\nASSERT: encounted unexpected result value. Expected a scalar 0 or 1, got"
     ⍞←": '" ◊ ⍞←RESULT ◊ ⍞←"'\n"
-    ⍎")OFF"
+    ⍎")OFF 1"
   LVALID:
 
   ASSERTION_NUMBER←1+ASSERTION_NUMBER
