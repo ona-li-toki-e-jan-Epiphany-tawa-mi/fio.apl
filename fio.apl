@@ -341,11 +341,6 @@ FIO∆STDERR←2
 LEND:
 ∇
 
-⍝ Deletes the directory at the given path.
-⍝ ERROR - a non-zero scalar number if an error occured.
-⍝ From '' ⎕FIO[0] '': Zi ←    ⎕FIO[21] Bh    rmdir(Bc)
-∇ERROR←FIO∆RMDIR PATH
-  ERROR←⎕FIO[21] PATH
 ⍝ Reads in an entire file as bytes.
 ⍝ PATH: string - path to the file.
 ⍝ Bytes: optional<bytes>.
@@ -404,6 +399,25 @@ LEND:
   LSWITCH_END:
 ∇
 
+⍝ If PATH points to a file, it will be unlinked, possibly deleting it.
+⍝ If PATH points to a directory, it will be deleted if empty.
+⍝ PATH: string.
+⍝ SUCCESS: optional<void>.
+∇SUCCESS←FIO∆REMOVE PATH
+  →(↑FIO∆LIST_DIRECTORY PATH) ⍴ LDIRECTORY
+    ⍝ Zi ←    ⎕FIO[19] Bh    unlink(Bc)
+    SUCCESS←⎕FIO[19] PATH ◊ →LFILE
+  LDIRECTORY:
+    ⍝ Zi ←    ⎕FIO[21] Bh    rmdir(Bc)
+    SUCCESS←⎕FIO[21] PATH
+  LFILE:
+
+  →(0≡SUCCESS) ⍴ LSUCCESS
+    ⍝ Failed to remove path.
+    SUCCESS←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LSUCCESS:
+    SUCCESS←⍬,1
+  LSWITCH_END:
 ∇
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
