@@ -63,20 +63,26 @@
 ⍝ CHANGELOG:
 ⍝   Upcoming:
 ⍝   - Relicensed as GPLv3+ (orignally zlib.)
-⍝   - Code cleanup. A number of functions have changed, audit your code.
-⍝   - Added FIO∆PERROR, FIO∆LIST_FDS, FIO∆STRERROR, FIO∆ERRNO, FIO∆FGETS,
-⍝     FIO∆FGETC, FIO∆UNLINK, FIO∆RMDIR, FIO∆FPRINTF, FIO∆GETCWD.
-⍝   - Split FIO∆GET_TIME_OF_DAY into seperate functions.
+⍝   - Completely redid error handling in a more APL-friendly manner.
+⍝   - Code cleanup.
 ⍝   - Verified behavior with unit testing.
-⍝ - 0.1.0:
+⍝   - Made FIO∆POPEN_READ and FIO∆POPEN_WRITE escape shell commands
+⍝     automatically.
+⍝   - Added FIO∆PERROR, FIO∆LIST_FDS, FIO∆STRERROR, FIO∆ERRNO, FIO∆READ_LINE_FD,
+⍝     FIO∆REMOVE, FIO∆FPRINTF, FIO∆CURRENT_DIRECTORY, FIO∆RMDIRS.
+⍝   - Renamed FIO∆FOPEN -> FIO∆OPEN_FILE, FIO∆FLOSE -> FIO∆CLOSE_FD, FIO∆FEOF ->
+⍝     FIO∆EOF_FD, FIO∆FERROR -> FIO∆ERROR_FD, FIO∆FREAD -> FIO∆READ_FD,
+⍝     FIO∆FWRITE -> FIO∆WRITE_FD, FIO∆MKDIR -> FIO∆MAKE_DIRECTORY.
+⍝   - Split FIO∆GET_TIME_OF_DAY into FIO∆TIME_S, FIO∆TIME_MS, and FIO∆TIME_US.
+⍝   - Removed FIO∆IS_DIRECTORY; FIO∆LIST_DIRECTORY makes it redundant.
+⍝   0.1.0:
 ⍝   - Intial release.
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ Metadata                                                                     ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
-⍝ See <https://www.gnu.org/software/apl/Library-Guidelines-GNU-APL.html> for
-⍝ details.
+⍝ See for details: https://www.gnu.org/software/apl/Library-Guidelines-GNU-APL.html
 FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://paltepuk.xyz/cgit/fio.apl.git/about/" "https://paltepuk.xyz/cgit/fio.apl.git/plain/fio.apl" "GPLv3+" "L3" "FIO" "" "0.1.0"
 
 ⍝ Links:
