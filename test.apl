@@ -97,41 +97,38 @@ ASSERT_R←"→(ASSERT RESULT) ⍴ LFAIL"
 ⍝ Tests                                                                        ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
-EXISTING_FILE←"tests/existing-file"
-EXISTING_FILE_CONTENTS←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-EXISTING_FILE_CONTENTS_LINES←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-
-∇TEST_UTF8_BYTES_CONVERSION; RESULT;STRING;BYTES;ASSERT_UTF8_BYTES_CONVERSION
-  ASSERT_UTF8_BYTES_CONVERSION←"RESULT←BYTES≡FIO∆UTF8_TO_BYTES STRING ◊ ⍎ASSERT_R ◊ RESULT←STRING≡FIO∆BYTES_TO_UTF8 BYTES ◊ ⍎ASSERT_R"
-
+∇TEST_UTF8_BYTES_CONVERSION; RESULT;STRING;BYTES
   SECTION "1"
   STRING←"This is a test"
   BYTES←84 104 105 115 32 105 115 32 97 32 116 101 115 116
-  ⍎ASSERT_UTF8_BYTES_CONVERSION
+  RESULT←BYTES≡FIO∆UTF8_TO_BYTES STRING ◊ ⍎ASSERT_R
+  RESULT←STRING≡FIO∆BYTES_TO_UTF8 BYTES ◊ ⍎ASSERT_R
 
   SECTION "2"
   STRING←"Have you tried C-\\ APL-Z RET?"
   BYTES←72 97 118 101 32 121 111 117 32 116 114 105 101 100 32 67 45 92 32 65 80 76 45 90 32 82 69 84 63
-  ⍎ASSERT_UTF8_BYTES_CONVERSION
+  RESULT←BYTES≡FIO∆UTF8_TO_BYTES STRING ◊ ⍎ASSERT_R
+  RESULT←STRING≡FIO∆BYTES_TO_UTF8 BYTES ◊ ⍎ASSERT_R
 
   SECTION "3"
   STRING←"Вы что, яйцо?"
   BYTES←208 146 209 139 32 209 135 209 130 208 190 44 32 209 143 208 185 209 134 208 190 63
-  ⍎ASSERT_UTF8_BYTES_CONVERSION
+  RESULT←BYTES≡FIO∆UTF8_TO_BYTES STRING ◊ ⍎ASSERT_R
+  RESULT←STRING≡FIO∆BYTES_TO_UTF8 BYTES ◊ ⍎ASSERT_R
 
 LFAIL:
 ∇
 
 ∇TEST_MISC; RESULT
   SECTION "Assumptions"
-  RESULT←0≡FIO∆ERRNO                                          ◊ ⍎ASSERT_R
-  RESULT←(FIO∆STRERROR FIO∆ERRNO)≡FIO∆UTF8_TO_BYTES "Success" ◊ ⍎ASSERT_R
+  RESULT←0≡FIO∆ERRNO                      ◊ ⍎ASSERT_R
+  RESULT←"Success"≡FIO∆STRERROR FIO∆ERRNO ◊ ⍎ASSERT_R
 
 LFAIL:
 ∇
 
 ∇TEST_SPLITTING_VECTORS; VECTOR;RESULT
-  SECTION "Number vector"
+  SECTION "Splitting number vector"
   VECTOR←1 1 2 2 3 3 4 4 5 5
   RESULT←(1 FIO∆SPLIT VECTOR)≡⍬ (2 2 3 3 4 4 5 5)        ◊ ⍎ASSERT_R
   RESULT←(2 FIO∆SPLIT VECTOR)≡(1 1) ⍬ (3 3 4 4 5 5)      ◊ ⍎ASSERT_R
@@ -144,10 +141,14 @@ LFAIL:
   RESULT←(4 FIO∆SPLIT_CLEAN VECTOR)≡(1 1 2 2 3 3) (5 5)  ◊ ⍎ASSERT_R
   RESULT←(5 FIO∆SPLIT_CLEAN VECTOR)≡⍬,⊂1 1 2 2 3 3 4 4   ◊ ⍎ASSERT_R
 
-  SECTION "Character vector"
-  RESULT←EXISTING_FILE_CONTENTS_LINES≡"\n" FIO∆SPLIT EXISTING_FILE_CONTENTS
+  SECTION "Splitting strings"
+  VECTOR←"This is\na\n\ntest"
+  RESULT←"This is" "a" (0⍴'') "test"≡"\n" FIO∆SPLIT VECTOR ◊ ⍎ASSERT_R
+  RESULT←"This is" "a" "test"≡"\n" FIO∆SPLIT_CLEAN VECTOR  ◊ ⍎ASSERT_R
+  VECTOR←"/bin:/usr/bin:/usr/local/bin"
+  RESULT←"/bin" "/usr/bin" "/usr/local/bin"≡":" FIO∆SPLIT VECTOR
   ⍎ASSERT_R
-  RESULT←EXISTING_FILE_CONTENTS_LINES≡"\n" FIO∆SPLIT_CLEAN EXISTING_FILE_CONTENTS
+  RESULT←"/bin" "/usr/bin" "/usr/local/bin"≡":" FIO∆SPLIT_CLEAN VECTOR
   ⍎ASSERT_R
 
 LFAIL:
@@ -174,110 +175,26 @@ LFAIL:
 LFAIL:
 ∇
 
-∇MACRO←MODE ASSERT_FOPEN PATH
-  MACRO←'FD←"',MODE,'" FIO∆FOPEN "',PATH,'" ◊ '
-  MACRO←MACRO,"RESULT←1≤FD ◊ "
-  MACRO←MACRO,"⍎ASSERT_R"
-∇
-∇MACRO←CHECK_NEWLINE ASSERT_FGETS EXISTING_FILE_CONTENT_LINE
-  MACRO←"BUFFER←500 FIO∆FGETS FD ◊ "
-  MACRO←MACRO,"CONTENTS←CONTENTS,BUFFER ◊ "
-
-  MACRO←MACRO,"RESULT←(FIO∆BYTES_TO_UTF8 BUFFER)≡"
-  MACRO←MACRO,↑('"\n",⍨' "")[1+CHECK_NEWLINE]
-  MACRO←MACRO,"↑EXISTING_FILE_CONTENTS_LINES[",EXISTING_FILE_CONTENT_LINE,"] ◊ "
-
-  MACRO←MACRO,"⍎ASSERT_R"
-∇
-∇TEST_FILE_HANDLING; RESULT;FD;CONTENTS;BUFFER;ASSERT_READ;ASSERT_FCLOSE;BYTES_WRITTEN
+∇TEST_DIRECTORY_HANDLING; RESULT;CONTENTS
   SECTION "Assumptions"
-  RESULT←0≡FIO∆STDIN                                    ◊ ⍎ASSERT_R
-  RESULT←1≡FIO∆STDOUT                                   ◊ ⍎ASSERT_R
-  RESULT←2≡FIO∆STDERR                                   ◊ ⍎ASSERT_R
-  RESULT←3≡≢FIO∆LIST_FDS                                ◊ ⍎ASSERT_R
-  RESULT←∧/FIO∆LIST_FDS∊FIO∆STDIN FIO∆STDOUT FIO∆STDERR ◊ ⍎ASSERT_R
+  RESULT←0≢FIO∆CURRENT_DIRECTORY  ◊ ⍎ASSERT_R
+  RESULT←0≢≢FIO∆CURRENT_DIRECTORY ◊ ⍎ASSERT_R
 
-  SECTION "FIO∆FOPEN fail on non-existant file"
-  FD←"r" FIO∆FOPEN "tests/nonexisting-file"
-  RESULT←1>FD ◊ ⍎ASSERT_R
+  SECTION "Fail on files and nonexistant directories"
+  RESULT←~↑FIO∆LIST_DIRECTORY "tests/existing-file"               ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆LIST_DIRECTORY "tests/nonexisting-directory"       ◊ ⍎ASSERT_R
+  RESULT←~↑7 5 5 FIO∆MAKE_DIRECTORY "tests/nonexisting/directory" ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆REMOVE "tests/nonexisting-directory"               ◊ ⍎ASSERT_R
 
-  ⍝ Should read exact file contents without error.
-  ASSERT_READ←"RESULT←0≡FIO∆FERROR FD ◊ ⍎ASSERT_R ◊ RESULT←0≢FIO∆FEOF FD ◊ ⍎ASSERT_R ◊ RESULT←EXISTING_FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 CONTENTS ◊ ⍎ASSERT_R"
-  ⍝ Should close fd.
-  ASSERT_FCLOSE←"RESULT←0≡FIO∆FCLOSE FD ◊ ⍎ASSERT_R"
+  SECTION "FIO∆LIST_DIRECTORY"
+  CONTENTS←FIO∆LIST_DIRECTORY "tests/" ◊ RESULT←↑CONTENTS    ◊ ⍎ASSERT_R
+  CONTENTS←↑CONTENTS[2] ◊ RESULT←CONTENTS≡⍬,⊂"existing-file" ◊ ⍎ASSERT_R
 
-  SECTION "FIO∆FREAD"
-  ⍎"r" ASSERT_FOPEN EXISTING_FILE
-  CONTENTS←⍬
-  LFREAD_LOOP:
-    BUFFER←500 FIO∆FREAD FD
-    →(0≡BUFFER) ⍴ LEND_FREAD_LOOP
-    CONTENTS←CONTENTS,BUFFER ◊ →LFREAD_LOOP
-  LEND_FREAD_LOOP:
-  RESULT←0≡500 FIO∆FREAD FD ◊ ⍎ASSERT_R
-  ⍎ASSERT_READ ◊ ⍎ASSERT_FCLOSE
-
-  SECTION "FIO∆FGETS"
-  ⍎"r" ASSERT_FOPEN EXISTING_FILE
-  ⍝ Should read file line-by-line, preserving newlines.
-  CONTENTS←⍬
-  ⍎0 ASSERT_FGETS "1"
-  ⍎0 ASSERT_FGETS "2"
-  ⍎0 ASSERT_FGETS "3"
-  ⍎1 ASSERT_FGETS "4"
-  RESULT←0≡500 FIO∆FGETS FD ◊ ⍎ASSERT_R
-  ⍎ASSERT_READ ◊ ⍎ASSERT_FCLOSE
-
-  SECTION "FIO∆READ_ENTIRE_FD"
-  ⍎"r" ASSERT_FOPEN EXISTING_FILE
-  RESULT←1≤FD ◊ ⍎ASSERT_R
-  CONTENTS←FIO∆READ_ENTIRE_FD FD ◊ RESULT←0≡FIO∆READ_ENTIRE_FD FD ◊ ⍎ASSERT_R
-  ⍎ASSERT_READ ◊ ⍎ASSERT_FCLOSE
-
-  SECTION "FIO∆FWRITE"
-  ⍎"w" ASSERT_FOPEN "tests/new-file"
-  BYTES_WRITTEN←FD FIO∆FWRITE⍨ FIO∆UTF8_TO_BYTES EXISTING_FILE_CONTENTS
-  RESULT←(≢EXISTING_FILE_CONTENTS)≡BYTES_WRITTEN ◊ ⍎ASSERT_R
-  ⍎ASSERT_FCLOSE ◊ ⍎"r" ASSERT_FOPEN "tests/new-file"
-  CONTENTS←FIO∆READ_ENTIRE_FD FD ◊ RESULT←0≡FIO∆READ_ENTIRE_FD FD ◊ ⍎ASSERT_R
-  ⍎ASSERT_READ ◊ ⍎ASSERT_FCLOSE
-  RESULT←0≡FIO∆UNLINK "tests/new-file" ◊ ⍎ASSERT_R
-
-  SECTION "FIO∆PRINTF"
-  ⍎"w" ASSERT_FOPEN "tests/new-file"
-  BYTES_WRITTEN←FD FIO∆FPRINTF⍨ "%s" EXISTING_FILE_CONTENTS
-  RESULT←(≢EXISTING_FILE_CONTENTS)≡BYTES_WRITTEN ◊ ⍎ASSERT_R
-  ⍎ASSERT_FCLOSE ◊ ⍎"r" ASSERT_FOPEN "tests/new-file"
-  CONTENTS←FIO∆READ_ENTIRE_FD FD ◊ RESULT←0≡FIO∆READ_ENTIRE_FD FD ◊ ⍎ASSERT_R
-  ⍎ASSERT_READ ◊ ⍎ASSERT_FCLOSE
-  RESULT←0≡FIO∆UNLINK "tests/new-file" ◊ ⍎ASSERT_R
-
-  SECTION "FIO∆READ_ENTIRE_FILE"
-  RESULT←0≡FIO∆READ_ENTIRE_FILE "test/nonexisting-file"    ◊ ⍎ASSERT_R
-  CONTENTS←FIO∆READ_ENTIRE_FILE EXISTING_FILE
-  RESULT←0≢CONTENTS                                        ◊ ⍎ASSERT_R
-  RESULT←EXISTING_FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 CONTENTS ◊ ⍎ASSERT_R
-
-LFAIL:
-∇
-
-∇TEST_DIRECTORY_HANDLING; RESULT;FD
-  SECTION "Assumptions"
-  RESULT←(⍬,⊂"existing-file")≡FIO∆LIST_DIRECTORY "tests/" ◊ ⍎ASSERT_R
-  RESULT←1≡FIO∆IS_DIRECTORY "tests/"                      ◊ ⍎ASSERT_R
-  RESULT←0≢FIO∆GETCWD                                     ◊ ⍎ASSERT_R
-  RESULT←0≢≢FIO∆GETCWD                                    ◊ ⍎ASSERT_R
-
-  SECTION "Non-existant directories"
-  RESULT←0≡FIO∆LIST_DIRECTORY "tests/nonexisting-directory/" ◊ ⍎ASSERT_R
-  RESULT←0≢FIO∆RMDIR "tests/nonexisting-directory/"          ◊ ⍎ASSERT_R
-  RESULT←0≡FIO∆IS_DIRECTORY "tests/nonexisting-directory/"   ◊ ⍎ASSERT_R
-
-  SECTION "FIO∆MKDIR and FIO∆RMDIR"
-  RESULT←0≡7 5 5 FIO∆MKDIR "tests/new-directory/"  ◊ ⍎ASSERT_R
-  RESULT←1≡FIO∆IS_DIRECTORY "tests/new-directory/" ◊ ⍎ASSERT_R
-  RESULT←0≡FIO∆RMDIR "tests/new-directory/"        ◊ ⍎ASSERT_R
-  RESULT←0≡FIO∆IS_DIRECTORY "tests/new-directory/" ◊ ⍎ASSERT_R
+  SECTION "FIO∆MAKE_DIRECTORY"
+  RESULT←↑7 5 5 FIO∆MAKE_DIRECTORY "tests/new-directory/" ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆LIST_DIRECTORY "tests/new-directory/"       ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆REMOVE "tests/new-directory/"               ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆LIST_DIRECTORY "tests/new-directory/"      ◊ ⍎ASSERT_R
 
   ⍝ TODO reinstate
   ⍝SECTION "FIO∆MKDIRS and FIO∆RMDIRS"
@@ -296,6 +213,100 @@ LFAIL:
 LFAIL:
 ∇
 
+∇TEST_FILE_HANDLING; FILE;FILE_CONTENTS;FILE_CONTENTS_LINES;RESULT;FD;CONTENTS;BUFFER;BYTES_WRITTEN
+  FILE←"tests/existing-file"
+  FILE_CONTENTS←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+  FILE_CONTENTS_LINES←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
+  SECTION "Assumptions"
+  RESULT←0≡FIO∆STDIN                                    ◊ ⍎ASSERT_R
+  RESULT←1≡FIO∆STDOUT                                   ◊ ⍎ASSERT_R
+  RESULT←2≡FIO∆STDERR                                   ◊ ⍎ASSERT_R
+  RESULT←3≡≢FIO∆LIST_FDS                                ◊ ⍎ASSERT_R
+  RESULT←∧/FIO∆LIST_FDS∊FIO∆STDIN FIO∆STDOUT FIO∆STDERR ◊ ⍎ASSERT_R
+
+  SECTION "Fail on non-existant file/fd"
+  FD←100
+  RESULT←~↑"r" FIO∆OPEN_FILE "tests/nonexisting-file"    ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆CLOSE_FD FD                               ◊ ⍎ASSERT_R
+  RESULT←~↑500 FIO∆READ_FD FD                            ◊ ⍎ASSERT_R
+  RESULT←~↑500 FIO∆READ_LINE_FD FD                       ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆READ_ENTIRE_FD FD                         ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆READ_ENTIRE_FILE "tests/nonexisting-file" ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆WRITE_FD FD                               ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆REMOVE "tests/nonexisting-file"           ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆FPRINTF FD                                ◊ ⍎ASSERT_R
+
+  SECTION "FIO∆OPEN_FILE & FIO∆CLOSE_FD"
+  FD←"r" FIO∆OPEN_FILE FILE ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
+  RESULT←↑FIO∆CLOSE_FD FD ◊ ⍎ASSERT_R
+
+  SECTION "FIO∆READ_FD"
+  FD←"r" FIO∆OPEN_FILE FILE ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
+  CONTENTS←⍬
+  LREAD_LOOP:
+    BUFFER←500 FIO∆READ_FD FD
+    →(~↑BUFFER) ⍴ LREAD_LOOP_END
+    CONTENTS←CONTENTS,↑BUFFER[2]
+  LREAD_LOOP_END:
+  RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 CONTENTS ◊ ⍎ASSERT_R
+  RESULT←~↑500 FIO∆READ_FD FD                     ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆CLOSE_FD FD                         ◊ ⍎ASSERT_R
+
+  SECTION "FIO∆READ_LINE_FD"
+  FD←"r" FIO∆OPEN_FILE FILE ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
+  CONTENTS←⍬
+  BUFFER←500 FIO∆READ_LINE_FD FD ◊ RESULT←↑BUFFER                 ◊ ⍎ASSERT_R
+  BUFFER←↑BUFFER[2] ◊ CONTENTS←CONTENTS,BUFFER
+  RESULT←(FIO∆BYTES_TO_UTF8 BUFFER)≡"\n",⍨↑FILE_CONTENTS_LINES[1] ◊ ⍎ASSERT_R
+  BUFFER←500 FIO∆READ_LINE_FD FD ◊ RESULT←↑BUFFER                 ◊ ⍎ASSERT_R
+  BUFFER←↑BUFFER[2] ◊ CONTENTS←CONTENTS,BUFFER
+  RESULT←(FIO∆BYTES_TO_UTF8 BUFFER)≡"\n",⍨↑FILE_CONTENTS_LINES[2] ◊ ⍎ASSERT_R
+  BUFFER←500 FIO∆READ_LINE_FD FD ◊ RESULT←↑BUFFER                 ◊ ⍎ASSERT_R
+  BUFFER←↑BUFFER[2] ◊ CONTENTS←CONTENTS,BUFFER
+  RESULT←(FIO∆BYTES_TO_UTF8 BUFFER)≡"\n",⍨↑FILE_CONTENTS_LINES[3] ◊ ⍎ASSERT_R
+  BUFFER←500 FIO∆READ_LINE_FD FD ◊ RESULT←↑BUFFER                 ◊ ⍎ASSERT_R
+  BUFFER←↑BUFFER[2] ◊ CONTENTS←CONTENTS,BUFFER
+  RESULT←(FIO∆BYTES_TO_UTF8 BUFFER)≡↑FILE_CONTENTS_LINES[4]       ◊ ⍎ASSERT_R
+  RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 CONTENTS                 ◊ ⍎ASSERT_R
+  RESULT←~↑500 FIO∆READ_LINE_FD FD                                ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆CLOSE_FD FD                                         ◊ ⍎ASSERT_R
+
+  SECTION "FIO∆READ_ENTIRE_FD"
+  FD←"r" FIO∆OPEN_FILE FILE ◊ RESULT←↑FD ◊ ⍎ASSERT_R  ◊ FD←FD[2]
+  CONTENTS←FIO∆READ_ENTIRE_FD FD ◊ RESULT←↑CONTENTS   ◊ ⍎ASSERT_R
+  RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑CONTENTS[2] ◊ ⍎ASSERT_R
+  RESULT←~↑500 FIO∆READ_FD FD                         ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆CLOSE_FD FD                             ◊ ⍎ASSERT_R
+
+  SECTION "FIO∆READ_ENTIRE_FILE"
+  RESULT←~↑FIO∆READ_ENTIRE_FILE "tests/" ◊ ⍎ASSERT_R
+  ⍝ ^ Fail on directory.
+  CONTENTS←FIO∆READ_ENTIRE_FILE FILE ◊ ⍎ASSERT_R ◊ RESULT←↑CONTENTS ◊ ⍎ASSERT_R
+  RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑CONTENTS[2] ◊ ⍎ASSERT_R
+
+  SECTION "FIO∆WRITE_FD"
+  FD←"w" FIO∆OPEN_FILE "tests/new-file" ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
+  RESULT←↑FD FIO∆WRITE_FD⍨ FIO∆UTF8_TO_BYTES FILE_CONTENTS ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆CLOSE_FD FD                                  ◊ ⍎ASSERT_R
+  CONTENTS←FIO∆READ_ENTIRE_FILE "tests/new-file"           ◊ ⍎ASSERT_R
+  RESULT←↑CONTENTS                                         ◊ ⍎ASSERT_R
+  RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑CONTENTS[2]      ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆REMOVE "tests/new-file"                      ◊ ⍎ASSERT_R
+
+  SECTION "FIO∆FPRINTF"
+  FD←"w" FIO∆OPEN_FILE "tests/new-file" ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
+  BYTES_WRITTEN←FD FIO∆FPRINTF⍨ "%s" FILE_CONTENTS
+  RESULT←↑BYTES_WRITTEN ◊ ⍎ASSERT_R ◊ BYTES_WRITTEN←↑BYTES_WRITTEN[2]
+  RESULT←(≢FILE_CONTENTS)≡BYTES_WRITTEN               ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆CLOSE_FD FD                             ◊ ⍎ASSERT_R
+  RESULT←↑CONTENTS                                    ◊ ⍎ASSERT_R
+  RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑CONTENTS[2] ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆REMOVE "tests/new-file"                 ◊ ⍎ASSERT_R
+
+LFAIL:
+∇
+
 ∇TEST_PROCESS_HANDLING; RESULT;APL_PATH;COMMAND;FD;OUTPUT
   SECTION "FIO∆ESCAPE_SHELL_ARGUMENT"
   RESULT←"''"≡FIO∆ESCAPE_SHELL_ARGUMENT ""
@@ -309,30 +320,35 @@ LFAIL:
   RESULT←("'test'" "'text'" "'--option'" "'it'\\''s'")≡FIO∆ESCAPE_SHELL_ARGUMENT¨ "test" "text" "--option" "it's"
   ⍎ASSERT_R
 
+  SECTION "Fail on non-existant fd"
+  FD←100
+  RESULT←~↑FIO∆PCLOSE FD ◊ ⍎ASSERT_R
+
   SECTION "FIO∆POPEN_READ"
   APL_PATH←↑⎕ARG
-  COMMAND←FIO∆ESCAPE_SHELL_ARGUMENT¨ APL_PATH "--script" "--LX" '⍞←"Hello World!" ◊ ⍎")OFF"'
-  FD←FIO∆POPEN_READ ↑FIO∆JOIN_SHELL_ARGUMENTS/ COMMAND ◊ RESULT←0≢FD ◊ ⍎ASSERT_R
-  RESULT←"Hello World!\n"≡FIO∆BYTES_TO_UTF8 FIO∆READ_ENTIRE_FD FD    ◊ ⍎ASSERT_R
-  RESULT←0≡FIO∆PCLOSE FD                                             ◊ ⍎ASSERT_R
+  COMMAND←APL_PATH "--script" "--LX" '⍞←"Hello World!" ◊ ⍎")OFF"'
+  FD←FIO∆POPEN_READ COMMAND ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
+  OUTPUT←FIO∆READ_ENTIRE_FD FD ◊ RESULT←↑OUTPUT ◊ ⍎ASSERT_R ◊ OUTPUT←↑OUTPUT[2]
+  RESULT←"Hello World!\n"≡FIO∆BYTES_TO_UTF8 OUTPUT ◊ ⍎ASSERT_R
+  OUTPUT←FIO∆PCLOSE FD ◊ RESULT←↑OUTPUT ◊ ⍎ASSERT_R ◊ OUTPUT←OUTPUT[2]
+  RESULT←0≡OUTPUT ◊ ⍎ASSERT_R
 
 LFAIL:
 ∇
 
-∇TEST_TIME; RESULT;SECONDS;MILLISECONDS;MICROSECONDS
-  SECONDS←FIO∆GET_TIME_OF_DAY_S
-  MILLISECONDS←FIO∆GET_TIME_OF_DAY_MS
-  MICROSECONDS←FIO∆GET_TIME_OF_DAY_US
+∇TEST_TIME; RESULT;S;MS;US;TIME
+  SECTION "Fetch current time"
+  S←FIO∆TIME_S   ◊ RESULT←↑S  ◊ ⍎ASSERT_R ◊ S←S[2]
+  MS←FIO∆TIME_MS ◊ RESULT←↑MS ◊ ⍎ASSERT_R ◊ MS←MS[2]
+  US←FIO∆TIME_US ◊ RESULT←↑US ◊ ⍎ASSERT_R ◊ US←US[2]
 
-  SECTION "Assumptions"
-  RESULT←0≢SECONDS      ◊ ⍎ASSERT_R
-  RESULT←0≢MILLISECONDS ◊ ⍎ASSERT_R
-  RESULT←0≢MICROSECONDS ◊ ⍎ASSERT_R
-
-  SECTION "Time should increases"
-  RESULT←SECONDS≤FIO∆GET_TIME_OF_DAY_S       ◊ ⍎ASSERT_R
-  RESULT←MILLISECONDS≤FIO∆GET_TIME_OF_DAY_MS ◊ ⍎ASSERT_R
-  RESULT←MICROSECONDS≤FIO∆GET_TIME_OF_DAY_US ◊ ⍎ASSERT_R
+  SECTION "Time should increase"
+  TIME←FIO∆TIME_S ◊ RESULT←↑TIME ◊ ⍎ASSERT_R ◊ TIME←TIME[2]
+  RESULT←S≤TIME ◊ ⍎ASSERT_R
+  TIME←FIO∆TIME_MS ◊ RESULT←↑TIME ◊ ⍎ASSERT_R ◊ TIME←TIME[2]
+  RESULT←MS≤TIME ◊ ⍎ASSERT_R
+  TIME←FIO∆TIME_US ◊ RESULT←↑TIME ◊ ⍎ASSERT_R ◊ TIME←TIME[2]
+  RESULT←US≤TIME ◊ ⍎ASSERT_R
 
 LFAIL:
 ∇
@@ -349,8 +365,8 @@ LFAIL:
   RUN "TEST_MISC"
   RUN "TEST_SPLITTING_VECTORS"
   RUN "TEST_PATH_HANDLING"
-  RUN "TEST_FILE_HANDLING"
   RUN "TEST_DIRECTORY_HANDLING"
+  RUN "TEST_FILE_HANDLING"
   RUN "TEST_PROCESS_HANDLING"
   RUN "TEST_TIME"
   ⍞←"\n" ◊ REPORT
