@@ -538,6 +538,25 @@ LEND:
   LSWITCH_END:
 ∇
 
+⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+
+⍝ TODO Consider adding the following ⎕FIO functions:
+⍝ TODO ⎕FIO[51] mktime
+⍝ TODO ⎕FIO[52] localtime
+⍝ TODO ⎕FIO[53] gmtime
+⍝ TODO ⎕FIO[54] chdir
+⍝ TODO ⎕FIO[55] sscanf
+⍝ TODO ⎕FIO[56] write nested lines to file
+⍝ TODO ⎕FIO[57] fork and execve
+⍝ TODO ⎕FIO[58] snprintf
+⍝ TODO ⎕FIO[59] fcntl
+⍝ TODO ⎕FIO[60] random byte vector
+⍝ TODO ⎕FIO[61] seconds since Epoch; Bv←YYYY [MM DD [HH MM SS]]   ???????
+⍝ TODO FIO[12] - ftell
+⍝ TODO FIO[13,14,15] - fseek
+⍝ TODO FIO[16] - fflush.
+⍝ TODO FIO[17] - fsync.
+⍝ TODO FIO[18] - fstat.
 ⍝ TODO ⎕FIO[31] access
 ⍝ TODO ⎕FIO[32] socket
 ⍝ TODO ⎕FIO[33] bind
@@ -555,19 +574,12 @@ LEND:
 ⍝ TODO ⎕FIO[47] setsockopt
 ⍝ TODO ⎕FIO[48] fscanf
 ⍝ TODO ⎕FIO[49] read entire file as nested lines
+⍝ TODO ⎕FIO[27] rename file.
 
-⍝ TODO ⎕FIO[51] mktime
-⍝ TODO ⎕FIO[52] localtime
-⍝ TODO ⎕FIO[53] gmtime
-⍝ TODO ⎕FIO[54] chdir
-⍝ TODO ⎕FIO[55] sscanf
-⍝ TODO ⎕FIO[56] write nested lines to file
-⍝ TODO ⎕FIO[57] fork and execve
-⍝ TODO ⎕FIO[58] snprintf
-⍝ TODO ⎕FIO[59] fcntl
-⍝ TODO ⎕FIO[60] random byte vector
-⍝ TODO ⎕FIO[61] seconds since Epoch; Bv←YYYY [MM DD [HH MM SS]]   ???????
+⍝ TODO add defer system like what Zig has.
+⍝ TODO add (or find) function to check if a file exists at a given path.
 
+⍝ TODO add optional.
 ⍝ TODO unit test.
 ⍝ Creates a directory at the given path and it's parent directories if they
 ⍝ don't exist.
@@ -578,6 +590,7 @@ LEND:
   ERROR←↑DIRECTORIES FIO∆MKDIR⍨¨ (≢DIRECTORIES)/⊂MODE
 ∇
 
+⍝ TODO add optional.
 ⍝ TODO refactor.
 ⍝ TODO unit test.
 ⍝ TODO fix: failure on deleteing files.
