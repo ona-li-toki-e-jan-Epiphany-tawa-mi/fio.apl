@@ -131,6 +131,15 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
   RESULT←VECTOR⊂⍨~VECTOR∊DELIMITER
 ∇
 
+⍝ Prints formatted output to stdout, like C printf.
+⍝ FORMAT_ARGUMENTS: vector<[1]string, any> - a vector with the format as the
+⍝                   first element, and the arguments as the rest.
+⍝ BYTES_WRITTEN: optional<uint> - the number of bytes written.
+∇BYTES_WRITTEN←FIO∆PRINTF FORMAT_ARGUMENTS
+  BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆FPRINTF FIO∆STDOUT
+∇
+
+
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ ERRNO                                                                        ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
@@ -304,6 +313,7 @@ FIO∆STDERR←2
   LSWITCH_END:
 ∇
 
+⍝ TODO remove MAXIMUM_BYTES and just read till newline or EOF.
 ⍝ Reads bytes up to a newline or a specified number of bytes from the file
 ⍝ descriptor. Newlines are included in the output.
 ⍝ MAXIMUM_BYTES: uint - the maximum number of bytes to read.
@@ -385,7 +395,6 @@ LEND:
   LSWITCH_END:
 ∇
 
-⍝ TODO add printf.
 ⍝ Prints formatted output to a file descriptor, like C fprintf.
 ⍝ FORMAT_ARGUMENTS: vector<[1]string, any> - a vector with the format as the
 ⍝                   first element, and the arguments as the rest.
