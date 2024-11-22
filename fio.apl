@@ -63,13 +63,15 @@
 ⍝ CHANGELOG:
 ⍝   Upcoming:
 ⍝   - Relicensed as GPLv3+ (orignally zlib.)
-⍝   - Completely redid error handling in a more APL-friendly manner.
 ⍝   - Code cleanup.
+⍝   - Completely redid error handling in a more APL-friendly manner.
 ⍝   - Verified behavior with unit testing.
 ⍝   - Made FIO∆POPEN_READ and FIO∆POPEN_WRITE escape shell commands
 ⍝     automatically.
+⍝   - Added FIO∆DEFER and FIO∆DEFER_END which replicate the defer statement in
+⍝     languages like Zig.
 ⍝   - Added FIO∆PERROR, FIO∆LIST_FDS, FIO∆STRERROR, FIO∆ERRNO, FIO∆READ_LINE_FD,
-⍝     FIO∆REMOVE, FIO∆FPRINTF, FIO∆CURRENT_DIRECTORY, FIO∆RMDIRS.
+⍝     FIO∆REMOVE, FIO∆FPRINTF, FIO∆PRINTF, FIO∆CURRENT_DIRECTORY, FIO∆RMDIRS.
 ⍝   - Renamed FIO∆FOPEN -> FIO∆OPEN_FILE, FIO∆FLOSE -> FIO∆CLOSE_FD, FIO∆FEOF ->
 ⍝     FIO∆EOF_FD, FIO∆FERROR -> FIO∆ERROR_FD, FIO∆FREAD -> FIO∆READ_FD,
 ⍝     FIO∆FWRITE -> FIO∆WRITE_FD, FIO∆MKDIR -> FIO∆MAKE_DIRECTORY.
@@ -139,6 +141,30 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
   BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆FPRINTF FIO∆STDOUT
 ∇
 
+⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+⍝ Defer                                                                        ⍝
+⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+
+⍝ TODO unit test.
+
+FIO∆DEFERS←⍬
+
+⍝ Defers the given APL code until FIO∆DEFER_END is called.
+⍝ CODE: string.
+∇FIO∆DEFER CODE
+  FIO∆DEFERS←FIO∆DEFERS,⍨⊂CODE
+∇
+
+⍝ Runs all deferred code in the reverse order by which they were added via
+⍝ FIO∆DEFER
+∇FIO∆DEFER_END; DEFERRED
+  LLOOP:
+    →(0≡≢FIO∆DEFERS) ⍴ LEND
+    DEFERRED←↑FIO∆DEFERS ◊ FIO∆DEFERS←1↓FIO∆DEFERS
+    ⍎DEFERRED
+    →LLOOP
+  LEND:
+∇
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ ERRNO                                                                        ⍝
@@ -591,7 +617,6 @@ LEND:
 ⍝ TODO ⎕FIO[49] read entire file as nested lines
 ⍝ TODO ⎕FIO[27] rename file.
 
-⍝ TODO add defer system like what Zig has.
 ⍝ TODO add (or find) function to check if a file exists at a given path.
 
 ⍝ TODO add optional.
