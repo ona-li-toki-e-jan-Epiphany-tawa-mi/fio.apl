@@ -22,14 +22,18 @@
 ⍝ Testing Functions                                                            ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
-⍝ TODO document.
+⍝ The number of tests called with RUN.
 TEST_COUNT←0
-SECTION_NAME←⍬
-ASSERTION_NUMBER←0
+⍝ Whether the current test with RUN failed.
 TEST_FAILED←0
+⍝ The section name to display for failed assertions. ⍬ means no section.
+SECTION_NAME←⍬
+⍝ Counter.
+ASSERTION_NUMBER←0
 FAILED_TESTS←⍬
 
-⍝ TODO document.
+⍝ Runs the given test. Must be used to call functions with SECTION and ASSERT.
+⍝ TEST: string - the test function to run.
 ∇RUN TEST; RESULT
   TEST_COUNT←1+TEST_COUNT
 
@@ -52,13 +56,16 @@ FAILED_TESTS←⍬
   LNOT_FAILED:
 ∇
 
-⍝ TODO document.
+⍝ Sets the current section name, which is displayed when assertions faile.
+⍝ NAME: string.
 ∇SECTION NAME
   SECTION_NAME←NAME
   ASSERTION_NUMBER←0
 ∇
 
-⍝ TODO document.
+⍝ Asserts that RESULT is true.
+⍝ RESULT: boolean.
+⍝ FAILED: boolean - opposite of RESULT.
 ∇FAILED←ASSERT RESULT
   →(0≡RESULT) ⍴ LVALID ◊ →(1≡RESULT) ⍴ LVALID
     ⍞←"\nASSERT: encounted unexpected result value. Expected a scalar 0 or 1, got"
@@ -74,13 +81,10 @@ LALREADY_FAILED:
   FAILED←TEST_FAILED
 ∇
 
-⍝ TODO document.
+⍝ Macro for asserting a value in RESULT.
 ASSERT_R←"→(ASSERT RESULT) ⍴ LFAIL"
 
-⍝ TODO document.
-∇REPORT_TEST_FAILED TEST_NAME
-  ⍞←" - " ◊ ⍞←TEST_NAME ◊ ⍞←"\n"
-∇
+⍝ Prints out the final report for the tests.
 ∇REPORT; TESTS_PASSED
   TESTS_PASSED←TEST_COUNT-≢FAILED_TESTS
   ⍞←TESTS_PASSED ◊ ⍞←"/" ◊ ⍞←TEST_COUNT ◊ ⍞←" test(s) passed - "
@@ -91,6 +95,9 @@ ASSERT_R←"→(ASSERT RESULT) ⍴ LFAIL"
     ⍞←"\nPlease review the following failed tests:\n"
     REPORT_TEST_FAILED¨ FAILED_TESTS
   LTESTS_PASSED:
+∇
+∇REPORT_TEST_FAILED TEST_NAME
+  ⍞←" - " ◊ ⍞←TEST_NAME ◊ ⍞←"\n"
 ∇
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
