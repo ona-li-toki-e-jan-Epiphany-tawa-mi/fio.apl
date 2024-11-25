@@ -71,7 +71,8 @@
 ⍝   - Added FIO∆DEFER and FIO∆DEFER_END which replicate the defer statement in
 ⍝     languages like Zig.
 ⍝   - Added FIO∆PERROR, FIO∆LIST_FDS, FIO∆STRERROR, FIO∆ERRNO, FIO∆READ_LINE_FD,
-⍝     FIO∆REMOVE, FIO∆FPRINTF, FIO∆PRINTF, FIO∆CURRENT_DIRECTORY, FIO∆RMDIRS.
+⍝     FIO∆REMOVE, FIO∆FPRINTF, FIO∆PRINTF, FIO∆CURRENT_DIRECTORY, FIO∆RMDIRS,
+⍝     FIO∆IS_FILE.
 ⍝   - Renamed FIO∆FOPEN -> FIO∆OPEN_FILE, FIO∆FLOSE -> FIO∆CLOSE_FD, FIO∆FEOF ->
 ⍝     FIO∆EOF_FD, FIO∆FERROR -> FIO∆ERROR_FD, FIO∆FREAD -> FIO∆READ_FD,
 ⍝     FIO∆FWRITE -> FIO∆WRITE_FD, FIO∆MKDIR -> FIO∆MAKE_DIRECTORY.
@@ -259,6 +260,23 @@ FIO∆STDERR←2
 ∇FDS←FIO∆LIST_FDS
   ⍝ ⎕FIO     0     return a list of open file descriptors
   FDS←⎕FIO 0
+∇
+
+⍝ Checks if a file (not a directory) exists at the given path and can be opened.
+⍝ NOTE - if you plan on opening the file, just use FIO∆OPEN_FILE.
+⍝ PATH: string.
+⍝ RESULT: boolean.
+∇RESULT←FIO∆IS_FILE PATH; FD
+  →(↑FIO∆LIST_DIRECTORY PATH) ⍴ LIS_DIRECTORY
+  FD←"r" FIO∆OPEN_FILE PATH ◊ →(↑FD) ⍴ LIS_FILE
+    ⍝ An error occured, probably not a file.
+    RESULT←0 ◊ →LSWITCH_END
+  LIS_DIRECTORY:
+    RESULT←0 ◊ →LSWITCH_END
+  LIS_FILE:
+    ⊣ FIO∆CLOSE_FD FD[2]
+    RESULT←1
+  LSWITCH_END:
 ∇
 
 ⍝ Opens a file.
