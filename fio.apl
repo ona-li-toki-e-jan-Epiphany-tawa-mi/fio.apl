@@ -404,24 +404,37 @@ LSUCCESS:
   LSWITCH_END:
 ∇
 
-⍝ TODO remove MAXIMUM_BYTES and just read till newline or EOF.
-⍝ Reads bytes up to a newline or a specified number of bytes from the file
-⍝ descriptor. Newlines are included in the output.
-⍝ MAXIMUM_BYTES: uint - the maximum number of bytes to read.
+⍝ Reads bytes up to a newline or EOF. Newlines are not included in the output.
 ⍝ FD: fd.
 ⍝ BYTES: optional<bytes>.
-∇BYTES←MAXIMUM_BYTES FIO∆READ_LINE_FD FD
-  →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
-  ⍝ Zb ← Ai ⎕FIO[ 8] Bh    fgets(Zb, Ai, Bh) 1 byte per Zb
-  BYTES←MAXIMUM_BYTES ⎕FIO[8] FD
-  →(⍬≢BYTES) ⍴ LSUCCESS
-    ⍝ Failed to read FD.
-    BYTES←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
-  LUNOPEN_FD:
-    BYTES←0 "Not an open file descriptor" ◊ →LSWITCH_END
-  LSUCCESS:
-    BYTES←1 BYTES
-  LSWITCH_END:
+∇BYTES←FIO∆READ_LINE_FD FD; NEWLINE;BUFFER
+  →(FD∊FIO∆LIST_FDS) ⍴ LOPEN_FD
+    BYTES←0 "Not an open file descriptor" ◊ →LEND
+  LOPEN_FD:
+  →(~FIO∆EOF_FD FD) ⍴ LNOT_EOF
+    BYTES←0 "Reached EOF" ◊ →LEND
+  LNOT_EOF:
+
+  BYTES←⍬
+  NEWLINE←FIO∆UTF8_TO_BYTES "\n"
+  LREAD_LOOP:
+    ⍝ Zb ← Ai ⎕FIO[ 8] Bh    fgets(Zb, Ai, Bh) 1 byte per Zb
+    BUFFER←5000 ⎕FIO[8] FD
+    →(0≡≢BUFFER) ⍴ LREAD_LOOP_END
+    BYTES←BYTES,BUFFER
+    →(NEWLINE≢¯1↑BYTES) ⍴ LNO_NEWLINE
+      BYTES←¯1↓BYTES ◊ →LREAD_LOOP_END
+    LNO_NEWLINE:
+    →LREAD_LOOP
+  LREAD_LOOP_END:
+
+  →(0≢≢BYTES) ⍴ LREAD_SUCCESS
+    BYTES←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LEND
+  LREAD_SUCCESS:
+
+  BYTES←1 BYTES
+
+LEND:
 ∇
 
 ⍝ Reads bytes from a file descriptor until EOF is reached.
