@@ -74,11 +74,13 @@
 ⍝   - Made functions that work with file descriptors no longer throw APL
 ⍝     exceptions on unopen file descriptors.
 ⍝   - Added FIO∆PERROR, FIO∆LIST_FDS, FIO∆STRERROR, FIO∆ERRNO, FIO∆READ_LINE_FD,
-⍝     FIO∆REMOVE, FIO∆FPRINTF, FIO∆PRINTF, FIO∆CURRENT_DIRECTORY, FIO∆RMDIRS,
+⍝     FIO∆REMOVE, FIO∆REMOVE_RECURSIVE, FIO∆FPRINTF, FIO∆PRINTF,
+⍝     FIO∆CURRENT_DIRECTORY.
 ⍝     FIO∆IS_FILE.
 ⍝   - Renamed FIO∆FOPEN -> FIO∆OPEN_FILE, FIO∆FLOSE -> FIO∆CLOSE_FD, FIO∆FEOF ->
 ⍝     FIO∆EOF_FD, FIO∆FERROR -> FIO∆ERROR_FD, FIO∆FREAD -> FIO∆READ_FD,
-⍝     FIO∆FWRITE -> FIO∆WRITE_FD, FIO∆MKDIR -> FIO∆MAKE_DIRECTORY.
+⍝     FIO∆FWRITE -> FIO∆WRITE_FD, FIO∆MKDIR -> FIO∆MAKE_DIRECTORY, FIO∆MKDIRS ->
+⍝     FIO∆MAKE_DIRECTORIES,
 ⍝   - Split FIO∆GET_TIME_OF_DAY into FIO∆TIME_S, FIO∆TIME_MS, and FIO∆TIME_US.
 ⍝   - Removed FIO∆IS_DIRECTORY; FIO∆LIST_DIRECTORY makes it redundant.
 ⍝   0.1.0:
@@ -253,6 +255,23 @@ FIO∆DEFERS←⍬
   LSUCCESS:
     SUCCESS←⍬,1
   LSWITCH_END:
+∇
+
+⍝ Creates a directory at the given path and it's parent directories if they
+⍝ don't exist.
+⍝ MODE: vector<uint> - octal mode for the directory as an integer vector (i.e.
+⍝       7 5 5.)
+⍝ SUCCESS: optional<void>.
+∇SUCCESS←MODE FIO∆MAKE_DIRECTORIES PATH; DIRECTORIES
+  DIRECTORIES←FIO∆JOIN_PATH\ FIO∆SPLIT_PATH PATH
+  →(0≡≢DIRECTORIES) ⍴ LINVALID_PATH
+
+  SUCCESS←↑DIRECTORIES FIO∆MAKE_DIRECTORY⍨¨ (≢DIRECTORIES)/⊂MODE
+
+  →LSUCCESS
+LINVALID_PATH:
+  SUCCESS←0 "Invalid path"
+LSUCCESS:
 ∇
 
 ⍝ Common file descriptors.
@@ -486,6 +505,25 @@ LEND:
   LSWITCH_END:
 ∇
 
+⍝ If PATH points to a file, it will be unlinked, possibly deleting it.
+⍝ If PATH points to a directory, it, and all of its contents, will be deleted.
+⍝ PATH: string.
+⍝ SUCCESS: optional<void>.
+∇SUCCESS←FIO∆REMOVE_RECURSIVE PATH; CONTENTS;OTHER_PATH
+  CONTENTS←FIO∆LIST_DIRECTORY PATH
+  →(~↑CONTENTS) ⍴ LIS_NOT_DIRECTORY
+    CONTENTS←↑CONTENTS[2]
+    LDELETE_LOOP:
+      →(0≡≢CONTENTS) ⍴ LDELETE_LOOP_END
+      OTHER_PATH←PATH FIO∆JOIN_PATH ↑CONTENTS ◊ CONTENTS←1↓CONTENTS
+      ⊣ FIO∆REMOVE_RECURSIVE OTHER_PATH
+      →LDELETE_LOOP
+    LDELETE_LOOP_END:
+  LIS_NOT_DIRECTORY:
+
+  SUCCESS←FIO∆REMOVE PATH
+∇
+
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ Process Handling                                                             ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
@@ -639,44 +677,3 @@ LEND:
 ⍝ TODO ⎕FIO[48] fscanf
 ⍝ TODO ⎕FIO[49] read entire file as nested lines
 ⍝ TODO ⎕FIO[27] rename file.
-
-⍝ TODO add (or find) function to check if a file exists at a given path.
-
-⍝ TODO add optional.
-⍝ TODO unit test.
-⍝ Creates a directory at the given path and it's parent directories if they
-⍝ don't exist.
-⍝ →MODE - octal mode for the directory as an integer vector (i.e. 0 7 5 5.)
-⍝ ←ERROR_CODES - a non-zero scalar number if an error occured.
-∇ERROR←MODE FIO∆MKDIRS PATH; DIRECTORIES
-  DIRECTORIES←FIO∆JOIN_PATH\ FIO∆SPLIT_PATH PATH
-  ERROR←↑DIRECTORIES FIO∆MKDIR⍨¨ (≢DIRECTORIES)/⊂MODE
-∇
-
-⍝ TODO add optional.
-⍝ TODO refactor.
-⍝ TODO unit test.
-⍝ TODO fix: failure on deleteing files.
-∇ERROR←FIO∆RMDIRS PATH; CONTENTS;OTHER_PATH
-  CONTENTS←FIO∆LIST_DIRECTORY PATH
-  →(0≡CONTENTS) ⍴ LERROR
-
-  →(0≡≢CONTENTS) ⍴ LDELETE_LOOP_END
-  LDELETE_LOOP:
-    OTHER_PATH←PATH FIO∆JOIN_PATH ↑CONTENTS
-    CONTENTS←1↓CONTENTS
-    →(FIO∆IS_DIRECTORY OTHER_PATH) ⍴ LIS_DIRECTORY
-      →(0≢FIO∆UNLINK OTHER_PATH) ⍴ LERROR ◊ →LIS_FILE
-    LIS_DIRECTORY:
-      →(0≢FIO∆RMDIRS OTHER_PATH) ⍴ LERROR
-    LIS_FILE:
-    →(0≢≢CONTENTS) ⍴ LDELETE_LOOP
-  LDELETE_LOOP_END:
-
-  ERROR←FIO∆RMDIR PATH ◊ →LEND
-LSUCCESS:
-  ERROR←0  ◊ →LEND
-LERROR:
-  ERROR←¯1
-LEND:
-∇

@@ -201,7 +201,7 @@ LFAIL:
 LFAIL:
 ∇
 
-∇TEST_DIRECTORY_HANDLING; RESULT;CONTENTS
+∇TEST_DIRECTORY_HANDLING; RESULT;CONTENTS;FD
   SECTION "Assumptions"
   RESULT←0≢FIO∆CURRENT_DIRECTORY  ◊ ⍎ASSERT_R
   RESULT←0≢≢FIO∆CURRENT_DIRECTORY ◊ ⍎ASSERT_R
@@ -223,19 +223,18 @@ LFAIL:
   RESULT←↑FIO∆REMOVE "tests/new-directory/"               ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆LIST_DIRECTORY "tests/new-directory/"      ◊ ⍎ASSERT_R
 
-  ⍝ TODO reinstate
-  ⍝SECTION "FIO∆MKDIRS and FIO∆RMDIRS"
-  ⍝RESULT←0≡7 5 5 FIO∆MKDIRS "tests/this/is/a/test/" ◊ ⍎ASSERT_R
-  ⍝RESULT←1≡FIO∆IS_DIRECTORY "tests/this/"           ◊ ⍎ASSERT_R
-  ⍝RESULT←1≡FIO∆IS_DIRECTORY "tests/this/is/"        ◊ ⍎ASSERT_R
-  ⍝RESULT←1≡FIO∆IS_DIRECTORY "tests/this/is/a/"      ◊ ⍎ASSERT_R
-  ⍝RESULT←1≡FIO∆IS_DIRECTORY "tests/this/is/a/test/" ◊ ⍎ASSERT_R
-  ⍝FD←"w" FIO∆FOPEN "tests/this/is/a/test/file"
-  ⍝RESULT←1≤FD ◊ ⍎ASSERT_R
-  ⍝RESULT←(≢EXISTING_FILE_CONTENTS)≡FD FIO∆FWRITE⍨ FIO∆UTF8_TO_BYTES EXISTING_FILE_CONTENTS
-  ⍝⍎ASSERT_R ◊ RESULT←0≡FIO∆FCLOSE FD ◊ ⍎ASSERT_R
-  ⍝RESULT←0≡FIO∆RMDIRS "tests/this"                  ◊ ⍎ASSERT_R
-  ⍝RESULT←0≡FIO∆IS_DIRECTORY "tests/this/"           ◊ ⍎ASSERT_R
+  SECTION "FIO∆MAKE_DIRECTORIES and FIO∆RMDIRS"
+  RESULT←↑7 5 5 FIO∆MAKE_DIRECTORIES "tests/this/is/a/test/" ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆LIST_DIRECTORY "tests/this/"                   ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆LIST_DIRECTORY "tests/this/is/"                ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆LIST_DIRECTORY "tests/this/is/a/"              ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆LIST_DIRECTORY "tests/this/is/a/test/"         ◊ ⍎ASSERT_R
+  FD←"w" FIO∆OPEN_FILE "tests/this/is/a/test/file"
+  RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
+  RESULT←↑FD FIO∆WRITE_FD⍨ FIO∆UTF8_TO_BYTES "Hello, World!" ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆CLOSE_FD FD                                    ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆REMOVE_RECURSIVE "tests/this"                  ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆LIST_DIRECTORY "tests/this/"                  ◊ ⍎ASSERT_R
 
 LFAIL:
 ∇
