@@ -70,6 +70,7 @@
 ⍝     automatically.
 ⍝   - Added FIO∆DEFER and FIO∆DEFER_END which replicate the defer statement in
 ⍝     languages like Zig.
+⍝   - FIO∆MAKE_DIRECTORY (was FIO∆MKDIR) now fails if PATH is a file.
 ⍝   - Added FIO∆PERROR, FIO∆LIST_FDS, FIO∆STRERROR, FIO∆ERRNO, FIO∆READ_LINE_FD,
 ⍝     FIO∆REMOVE, FIO∆FPRINTF, FIO∆PRINTF, FIO∆CURRENT_DIRECTORY, FIO∆RMDIRS,
 ⍝     FIO∆IS_FILE.
@@ -235,16 +236,18 @@ FIO∆DEFERS←⍬
   LSWITCH_END:
 ∇
 
-⍝ TODO make fail if path exists and is not directory.
 ⍝ Creates a directory at the given path if it doesn't exist. Does not recurse.
 ⍝ MODE: vector<uint> - octal mode for the directory (i.e. 7 5 5.)
 ⍝ SUCCESS: optional<void>.
 ∇SUCCESS←MODE FIO∆MAKE_DIRECTORY PATH
+  →(FIO∆IS_FILE PATH) ⍴ LIS_FILE
   ⍝ Zi ← Ai ⎕FIO[20] Bh    mkdir(Bc, AI)
   SUCCESS←PATH ⎕FIO[20]⍨ 8⊥MODE
-
   →(0≡SUCCESS) ⍴ LSUCCESS
+    ⍝ Failed to make directory.
     SUCCESS←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
+  LIS_FILE:
+    SUCCESS←0 "Path already exists and is a file" ◊ →LSWITCH_END
   LSUCCESS:
     SUCCESS←⍬,1
   LSWITCH_END:

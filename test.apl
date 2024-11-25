@@ -209,6 +209,7 @@ LFAIL:
   SECTION "Fail on files and nonexistant directories"
   RESULT←~↑FIO∆LIST_DIRECTORY "tests/existing-file"               ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆LIST_DIRECTORY "tests/nonexisting-directory"       ◊ ⍎ASSERT_R
+  RESULT←~↑7 5 5 FIO∆MAKE_DIRECTORY "tests/existing-file"         ◊ ⍎ASSERT_R
   RESULT←~↑7 5 5 FIO∆MAKE_DIRECTORY "tests/nonexisting/directory" ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆REMOVE "tests/nonexisting-directory"               ◊ ⍎ASSERT_R
 
