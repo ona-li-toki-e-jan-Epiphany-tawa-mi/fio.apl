@@ -145,8 +145,6 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ Defer                                                                        ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
-⍝ TODO unit test.
-
 FIO∆DEFERS←⍬
 
 ⍝ Defers the given APL code until FIO∆DEFER_END is called.
@@ -472,7 +470,6 @@ LEND:
   ESCAPED_ARUGMENT←"'",⍨"'",∊(ARGUMENT,⍨⊂"'\\''")[1+(⍳⍨ARGUMENT)×~ARGUMENT∊"'"]
 ∇
 
-⍝ TODO unit test.
 ⍝ Joins two shell arguments together with a space.
 ⍝ FRONT_ARGUMENT: string.
 ⍝ BACK_ARGUMENT: string.
@@ -498,7 +495,6 @@ LEND:
   LSWITCH_END:
 ∇
 
-⍝ TODO add unit test
 ⍝ Runs the given command in the user's shell in a subprocess. Close with FD
 ⍝ FIO∆PCLOSE.
 ⍝ EXE_ARGUMENTS: vector<string> - a vector with the executable to run as the
