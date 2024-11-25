@@ -71,6 +71,8 @@
 ⍝   - Added FIO∆DEFER and FIO∆DEFER_END which replicate the defer statement in
 ⍝     languages like Zig.
 ⍝   - FIO∆MAKE_DIRECTORY (was FIO∆MKDIR) now fails if PATH is a file.
+⍝   - Made functions that work with file descriptors no longer throw APL
+⍝     exceptions on unopen file descriptors.
 ⍝   - Added FIO∆PERROR, FIO∆LIST_FDS, FIO∆STRERROR, FIO∆ERRNO, FIO∆READ_LINE_FD,
 ⍝     FIO∆REMOVE, FIO∆FPRINTF, FIO∆PRINTF, FIO∆CURRENT_DIRECTORY, FIO∆RMDIRS,
 ⍝     FIO∆IS_FILE.
@@ -300,14 +302,14 @@ FIO∆STDERR←2
 ⍝ FD: fd.
 ⍝ SUCCESS: optional<void>.
 ∇SUCCESS←FIO∆CLOSE_FD FD
+  →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Ze ←    ⎕FIO[ 4] Bh    fclose(Bh)
-  ⍝ ⎕FIO[4] throws an APL exception on an unopen fd.
-  SUCCESS←"→LEXCEPTION" ⎕EA "⎕FIO[4] FD"
+  SUCCESS←⎕FIO[4] FD
   →(0≡SUCCESS) ⍴ LSUCCESS
     ⍝ Failed to close FD.
     SUCCESS←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
-  LEXCEPTION:
-    SUCCESS←0 "Either APL exception or not an open file descriptor" ◊ →LSWITCH_END
+  LUNOPEN_FD:
+    SUCCESS←0 "Not an open file descriptor" ◊ →LSWITCH_END
   LSUCCESS:
     SUCCESS←⍬,1
   LSWITCH_END:
@@ -318,13 +320,14 @@ FIO∆STDERR←2
 ⍝ FD: fd.
 ⍝ EOF_REACHED: boolean.
 ∇EOF_REACHED←FIO∆EOF_FD FD
+  →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Zi ←    ⎕FIO[10] Bh    feof(Bh).
-  ⍝ ⎕FIO[10] throws an APL exception on an unopen fd.
-  EOF_REACHED←0≢"→LEXCEPTION" ⎕EA "⎕FIO[10] FD"
+  EOF_REACHED←0≢(⎕FIO[10] FD)
+
   →LSUCCESS
-  LEXCEPTION:
-    EOF_REACHED←1
-  LSUCCESS:
+LUNOPEN_FD:
+  EOF_REACHED←1
+LSUCCESS:
 ∇
 
 ⍝ Returns whether an error ocurred with the file descriptor. If the file
@@ -332,12 +335,14 @@ FIO∆STDERR←2
 ⍝ FD: fd.
 ⍝ HAS_ERROR: boolean.
 ∇HAS_ERROR←FIO∆ERROR_FD FD
+  →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Ze ←    ⎕FIO[11] Bh    ferror(Bh)
-  HAS_ERROR←0≢"→LEXCEPTION" ⎕EA "⎕FIO[11] FD"
+  HAS_ERROR←0≢(⎕FIO[11] FD)
+
   →LSUCCESS
-  LEXCEPTION:
-    HAS_ERROR←1
-  LSUCCESS:
+LUNOPEN_FD:
+  HAS_ERROR←1
+LSUCCESS:
 ∇
 
 ⍝ Reads bytes up to specified number of bytes from the file descriptor.
@@ -345,14 +350,14 @@ FIO∆STDERR←2
 ⍝ FD: fd.
 ⍝ BYTES: optional<bytes>.
 ∇BYTES←MAXIMUM_BYTES FIO∆READ_FD FD
+  →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
-  ⍝ ⎕FIO[6] throws an APL exception on an unopen fd.
-  BYTES←"→LEXCEPTION" ⎕EA "MAXIMUM_BYTES ⎕FIO[6] FD"
+  BYTES←MAXIMUM_BYTES ⎕FIO[6] LUNOPEN_FD
   →(0≢BYTES) ⍴ LSUCCESS
     ⍝ Failed to read FD.
     BYTES←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
-  LEXCEPTION:
-    BYTES←0 "Either APL exception or not an open file descriptor" ◊ →LSWITCH_END
+  LUNOPEN_FD:
+    BYTES←0 "Not an open file descriptor" ◊ →LSWITCH_END
   LSUCCESS:
     BYTES←1 BYTES
   LSWITCH_END:
@@ -365,14 +370,14 @@ FIO∆STDERR←2
 ⍝ FD: fd.
 ⍝ BYTES: optional<bytes>.
 ∇BYTES←MAXIMUM_BYTES FIO∆READ_LINE_FD FD
+  →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Zb ← Ai ⎕FIO[ 8] Bh    fgets(Zb, Ai, Bh) 1 byte per Zb
-  ⍝ ⎕FIO[8] throws an APL exception on an unopen fd.
-  BYTES←"→LEXCEPTION" ⎕EA "MAXIMUM_BYTES ⎕FIO[8] FD"
+  BYTES←MAXIMUM_BYTES ⎕FIO[8] FD
   →(⍬≢BYTES) ⍴ LSUCCESS
     ⍝ Failed to read FD.
     BYTES←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
-  LEXCEPTION:
-    BYTES←0 "Either APL exception or not an open file descriptor" ◊ →LSWITCH_END
+  LUNOPEN_FD:
+    BYTES←0 "Not an open file descriptor" ◊ →LSWITCH_END
   LSUCCESS:
     BYTES←1 BYTES
   LSWITCH_END:
@@ -427,14 +432,14 @@ LEND:
 ⍝ FD: fd.
 ⍝ SUCCESS: optional<void>.
 ∇SUCCESS←BYTES FIO∆WRITE_FD FD
+  →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
-  ⍝ ⎕FIO[7] throws an APL exception on an unopen fd.
-  SUCCESS←"→LEXCEPTION" ⎕EA "BYTES ⎕FIO[7] FD"
+  SUCCESS←BYTES ⎕FIO[7] FD
   →((≢BYTES)≡SUCCESS) ⍴ LSUCCESS
     ⍝ Failed to write to FD.
     SUCCESS←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
-  LEXCEPTION:
-    SUCCESS←0 "Either APL exception or not an open file descriptor" ◊ →LSWITCH_END
+  LUNOPEN_FD:
+    SUCCESS←0 "Not an open file descriptor" ◊ →LSWITCH_END
   LSUCCESS:
     SUCCESS←⍬,1
   LSWITCH_END:
@@ -446,13 +451,14 @@ LEND:
 ⍝ FD: fd.
 ⍝ BYTES_WRITTEN: optional<uint> - the number of bytes written.
 ∇BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆FPRINTF FD
+  →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Zi ← A  ⎕FIO[22] Bh    fprintf(Bh,     A1, A2...) format A1
-  BYTES_WRITTEN←"→LEXCEPTION" ⎕EA "FORMAT_ARGUMENTS ⎕FIO[22] FD"
+  BYTES_WRITTEN←FORMAT_ARGUMENTS ⎕FIO[22] FD
   →(0≤BYTES_WRITTEN) ⍴ LSUCCESS
     ⍝ Failed to write to FD.
     BYTES_WRITTEN←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
-  LEXCEPTION:
-    BYTES_WRITTEN←0 "Either APL exception or not an open file descriptor"
+  LUNOPEN_FD:
+    BYTES_WRITTEN←0 "Not an open file descriptor"
     →LSWITCH_END
   LSUCCESS:
     BYTES_WRITTEN←1 BYTES_WRITTEN
@@ -537,14 +543,14 @@ LEND:
 ⍝ FD: fd.
 ⍝ SUCCESS: optional<uint> - process exit code.
 ∇ERROR←FIO∆PCLOSE FD
+  →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Ze ←    ⎕FIO[25] Bh    pclose(Bh)
-  ERROR←"→LEXCEPTION" ⎕EA "⎕FIO[25] FD"
-
+  ERROR←⎕FIO[25] FD
   →(0≤ERROR) ⍴ LSUCCESS
     ⍝ Failed to run pclose.
     ERROR←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
-  LEXCEPTION:
-    ERROR←0 "Either APL exception or not an open file descriptor" ◊ →LSWITCH_END
+  LUNOPEN_FD:
+    ERROR←0 "Not an open file descriptor" ◊ →LSWITCH_END
   LSUCCESS:
     ERROR←1 ERROR
   LSWITCH_END:
