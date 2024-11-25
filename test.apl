@@ -396,8 +396,7 @@ LFAIL:
 ⍝ Test Runner                                                                  ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
-)COPY ./fio.apl
-⍞←" ^ Output of )COPY. Unimportant, please ignore\n\n"
+⊣ ⍎")COPY ./fio.apl"
 
 ∇MAIN
   RUN "TEST_UTF8_BYTES_CONVERSION"

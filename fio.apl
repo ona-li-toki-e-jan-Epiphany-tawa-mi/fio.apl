@@ -58,11 +58,12 @@
 ⍝   in ⎕FIO.
 ⍝
 ⍝ USAGE:
-⍝   Simply include it into your project on one of the library search paths (run
-⍝   ')LIBS' to see them,) and use ')COPY_ONCE fio.apl' to load it.
+⍝   Either include it into your project on one of the library search paths (run
+⍝   ')LIBS' to see them,) and use ')COPY_ONCE fio.apl' to load it, or include it
+⍝   directly via path, i.e. ')COPY_ONCE ./path/to/fio.apl'.
 ⍝
-⍝   If the inclusion of ')COPY_ONCE' in scripts results in weird text output,
-⍝   replace the command with '⊣ ⍎")COPY_ONCE fio.apl"'.
+⍝   If the inclusion of ')COPY_ONCE' in scripts results in text output that you
+⍝   don't want replace the command with '⊣ ⍎")COPY_ONCE <name or path>"'.
 ⍝
 ⍝ DATA TYPES:
 ⍝  string - a character vector.
@@ -83,7 +84,7 @@
 ⍝    issue.
 ⍝
 ⍝ CHANGELOG:
-⍝   Upcoming:
+⍝   1.0.0:
 ⍝   - Relicensed as GPLv3+ (orignally zlib.)
 ⍝   - Code cleanup.
 ⍝   - Completely redid error handling in a more APL-friendly manner.
@@ -113,7 +114,7 @@
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
 ⍝ See for details: https://www.gnu.org/software/apl/Library-Guidelines-GNU-APL.html
-FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://paltepuk.xyz/cgit/fio.apl.git/about/" "https://paltepuk.xyz/cgit/fio.apl.git/plain/fio.apl" "GPLv3+" "L3" "FIO" "" "0.1.0"
+FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://paltepuk.xyz/cgit/fio.apl.git/about/" "https://paltepuk.xyz/cgit/fio.apl.git/plain/fio.apl" "GPLv3+" "L3" "FIO" "" "1.0.0"
 
 ⍝ Links:
 ⍝ - paltepuk - https://http://paltepuk.xyz/cgit/fio.apl.git/about/
