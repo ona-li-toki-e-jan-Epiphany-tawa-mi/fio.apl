@@ -13,6 +13,12 @@ In GnuAPL, interations with the operating system (file handling, spawning
 processes, opening ports, etc.) are done with ⎕FIO. However, I find that there
 are several problems with it.
 
+Prior to version GnuAPL 1.9, where specified with an axis argument, i.e.
+⎕FIO[3] (fopen,) which lead to code that was hard to read. Now you can specify
+them by name, i.e. ⎕FIO['fopen'] or ⎕FIO.fopen. This is the reason I orignally
+developed this library, but there are still other things for which I think this
+library has value.
+
 The ⎕FIO functions are replicas of C functions, whose error handling methods
 vary considerably between functions. This is fine in C, but APL is far more
 abstract than C with a completely different way to represent logic. This library
