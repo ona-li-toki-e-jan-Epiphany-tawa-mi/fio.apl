@@ -79,7 +79,8 @@
 ⍝    the first value is guaranteed to exist and is a boolean representing
 ⍝    whether the function succeeded.
 ⍝    If 1, the function succeded. If the function returned a result, it will be
-⍝    the second value and of type TYPE.
+⍝    the second value and of type TYPE. You can unwrap this value from an
+⍝    optional O by doing "↑1↓O"
 ⍝    If 0, the function failed. The second value is a string describing the
 ⍝    issue.
 ⍝
@@ -91,6 +92,7 @@
 ⍝   - Added FIO∆PRINT_FD and FIO∆PRINT for easily outputting strings without
 ⍝     needing to convert them to bytes first.
 ⍝   - Renamed FIO∆FPRINTF -> FIO∆PRINTF_FD.
+⍝   - Changed meta for unwrapping optionals from "↑O[2]" to "↑1↓V".
 ⍝   1.0.0:
 ⍝   - Relicensed as GPLv3+ (orignally zlib.)
 ⍝   - Code cleanup.
@@ -129,7 +131,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ - paltepuk (Tor) - http://4blcq4arxhbkc77tfrtmy4pptf55gjbhlj32rbfyskl672v2plsmjcyd.onion/cgit/fio.apl.git/about/
 ⍝ - GitHub - https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/fio.apl/
 
-⍝ TODO: use "↑1↓V" instead of "↑V[2]" for unwrapping optionals.
+
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ Utilities                                                                    ⍝
@@ -338,7 +340,7 @@ FIO∆STDERR←2
   LIS_DIRECTORY:
     RESULT←0 ◊ →LSWITCH_END
   LIS_FILE:
-    ⊣ FIO∆CLOSE_FD FD[2]
+    ⊣ FIO∆CLOSE_FD ↑1↓FD
     RESULT←1
   LSWITCH_END:
 ∇
@@ -467,11 +469,11 @@ LEND:
   LREAD_LOOP:
     BUFFER←FD FIO∆READ_FD 5000
     →(~↑BUFFER) ⍴ LEND_READ_LOOP
-    BYTES←BYTES,↑BUFFER[2] ◊ →LREAD_LOOP
+    BYTES←BYTES,↑1↓BUFFER ◊ →LREAD_LOOP
   LEND_READ_LOOP:
 
   →(~FIO∆ERROR_FD FD) ⍴ LSUCCESS
-    BYTES←0 BUFFER[2] ◊ →LFAIL
+    BYTES←0 BYTES ◊ →LFAIL
   LSUCCESS:
     BYTES←1 BYTES
   LFAIL:
@@ -572,7 +574,7 @@ LEND:
 ∇SUCCESS←FIO∆REMOVE_RECURSIVE PATH; CONTENTS;OTHER_PATH
   CONTENTS←FIO∆LIST_DIRECTORY PATH
   →(~↑CONTENTS) ⍴ LIS_NOT_DIRECTORY
-    CONTENTS←↑CONTENTS[2]
+    CONTENTS←↑1↓CONTENTS
     LDELETE_LOOP:
       →(0≡≢CONTENTS) ⍴ LDELETE_LOOP_END
       OTHER_PATH←PATH FIO∆JOIN_PATH ↑CONTENTS ◊ CONTENTS←1↓CONTENTS
