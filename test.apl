@@ -232,10 +232,10 @@ LFAIL:
   RESULT←↑FIO∆LIST_DIRECTORY "tests/this/is/a/test/"         ◊ ⍎ASSERT_R
   FD←"w" FIO∆OPEN_FILE "tests/this/is/a/test/file"
   RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
-  RESULT←↑FD FIO∆WRITE_FD⍨ FIO∆UTF8_TO_BYTES "Hello, World!" ◊ ⍎ASSERT_R
-  RESULT←↑FIO∆CLOSE_FD FD                                    ◊ ⍎ASSERT_R
-  RESULT←↑FIO∆REMOVE_RECURSIVE "tests/this"                  ◊ ⍎ASSERT_R
-  RESULT←~↑FIO∆LIST_DIRECTORY "tests/this/"                  ◊ ⍎ASSERT_R
+  RESULT←↑FD FIO∆WRITE_FD FIO∆UTF8_TO_BYTES "Hello, World!" ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆CLOSE_FD FD                                   ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆REMOVE_RECURSIVE "tests/this"                 ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆LIST_DIRECTORY "tests/this/"                 ◊ ⍎ASSERT_R
 
 LFAIL:
 ∇
@@ -256,15 +256,15 @@ LFAIL:
   FD←100
   RESULT←~↑"r" FIO∆OPEN_FILE "tests/nonexisting-file"    ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆CLOSE_FD FD                               ◊ ⍎ASSERT_R
-  RESULT←~↑500 FIO∆READ_FD FD                            ◊ ⍎ASSERT_R
+  RESULT←~↑FD FIO∆READ_FD 500                            ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆READ_LINE_FD FD                           ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆READ_ENTIRE_FD FD                         ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆READ_ENTIRE_FILE "tests/nonexisting-file" ◊ ⍎ASSERT_R
-  RESULT←~↑0 FIO∆WRITE_FD FD                             ◊ ⍎ASSERT_R
+  RESULT←~↑FD FIO∆WRITE_FD 0                             ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆REMOVE "tests/nonexisting-file"           ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆REMOVE_RECURSIVE "tests/nonexisting-file" ◊ ⍎ASSERT_R
-  RESULT←~↑"" FIO∆PRINT_FD FD                            ◊ ⍎ASSERT_R
-  RESULT←~↑"" FIO∆PRINTF_FD FD                           ◊ ⍎ASSERT_R
+  RESULT←~↑FD FIO∆PRINT_FD ""                            ◊ ⍎ASSERT_R
+  RESULT←~↑FD FIO∆PRINTF_FD ""                           ◊ ⍎ASSERT_R
 
   SECTION "FIO∆OPEN_FILE & FIO∆CLOSE_FD"
   FD←"r" FIO∆OPEN_FILE FILE ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
@@ -279,12 +279,12 @@ LFAIL:
   FD←"r" FIO∆OPEN_FILE FILE ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
   CONTENTS←⍬
   LREAD_LOOP:
-    BUFFER←500 FIO∆READ_FD FD
+    BUFFER←FD FIO∆READ_FD 500
     →(~↑BUFFER) ⍴ LREAD_LOOP_END
     CONTENTS←CONTENTS,↑BUFFER[2]
   LREAD_LOOP_END:
   RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 CONTENTS ◊ ⍎ASSERT_R
-  RESULT←~↑500 FIO∆READ_FD FD                     ◊ ⍎ASSERT_R
+  RESULT←~↑FD FIO∆READ_FD 500                     ◊ ⍎ASSERT_R
   RESULT←↑FIO∆CLOSE_FD FD                         ◊ ⍎ASSERT_R
 
   SECTION "FIO∆READ_LINE_FD"
@@ -321,8 +321,8 @@ LFAIL:
 
   SECTION "FIO∆WRITE_FD"
   FD←"w" FIO∆OPEN_FILE "tests/new-file" ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
-  RESULT←↑FD FIO∆WRITE_FD⍨ FIO∆UTF8_TO_BYTES FILE_CONTENTS ◊ ⍎ASSERT_R
-  RESULT←↑FIO∆CLOSE_FD FD                                  ◊ ⍎ASSERT_R
+  RESULT←↑FD FIO∆WRITE_FD FIO∆UTF8_TO_BYTES FILE_CONTENTS ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆CLOSE_FD FD                                 ◊ ⍎ASSERT_R
   CONTENTS←FIO∆READ_ENTIRE_FILE "tests/new-file"
   RESULT←↑CONTENTS                                     ◊ ⍎ASSERT_R
   RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑CONTENTS[2]  ◊ ⍎ASSERT_R
@@ -330,8 +330,8 @@ LFAIL:
 
   SECTION "FIO∆PRINT_FD"
   FD←"w" FIO∆OPEN_FILE "tests/new-file" ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
-  RESULT←↑FD FIO∆PRINT_FD⍨ FILE_CONTENTS  ◊ ⍎ASSERT_R
-  RESULT←↑FIO∆CLOSE_FD FD                 ◊ ⍎ASSERT_R
+  RESULT←↑FD FIO∆PRINT_FD FILE_CONTENTS  ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆CLOSE_FD FD                ◊ ⍎ASSERT_R
   CONTENTS←FIO∆READ_ENTIRE_FILE "tests/new-file"
   RESULT←↑CONTENTS                                    ◊ ⍎ASSERT_R
   RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑CONTENTS[2] ◊ ⍎ASSERT_R
@@ -339,7 +339,7 @@ LFAIL:
 
   SECTION "FIO∆PRINTF_FD"
   FD←"w" FIO∆OPEN_FILE "tests/new-file" ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
-  BYTES_WRITTEN←FD FIO∆PRINTF_FD⍨ "%s" FILE_CONTENTS
+  BYTES_WRITTEN←FD FIO∆PRINTF_FD "%s" FILE_CONTENTS
   RESULT←↑BYTES_WRITTEN ◊ ⍎ASSERT_R ◊ BYTES_WRITTEN←↑BYTES_WRITTEN[2]
   RESULT←(≢FILE_CONTENTS)≡BYTES_WRITTEN ◊ ⍎ASSERT_R
   RESULT←↑FIO∆CLOSE_FD FD               ◊ ⍎ASSERT_R

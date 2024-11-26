@@ -86,6 +86,8 @@
 ⍝ CHANGELOG:
 ⍝   Upcoming:
 ⍝   - Fixed FIO∆READ_FD not reading from given file descriptor.
+⍝   - Swapped arugments for dyadic functions that work with file descriptors for
+⍝     a better user experience.
 ⍝   - Added FIO∆PRINT_FD and FIO∆PRINT for easily outputting strings without
 ⍝     needing to convert them to bytes first.
 ⍝   - Renamed FIO∆FPRINTF -> FIO∆PRINTF_FD.
@@ -127,7 +129,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ - paltepuk (Tor) - http://4blcq4arxhbkc77tfrtmy4pptf55gjbhlj32rbfyskl672v2plsmjcyd.onion/cgit/fio.apl.git/about/
 ⍝ - GitHub - https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/fio.apl/
 
-⍝ TODO swap arguments of dyadic file descriptor functions.
+⍝ TODO: use "↑1↓V" instead of "↑V[2]" for unwrapping optionals.
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ Utilities                                                                    ⍝
@@ -172,7 +174,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ Prints a string out to stdout.
 ⍝ STRING: string.
 ∇SUCCESS←FIO∆PRINT STRING
-  SUCCESS←STRING FIO∆PRINT_FD FIO∆STDOUT
+  SUCCESS←FIO∆STDOUT FIO∆PRINT_FD STRING
 ∇
 
 ⍝ Prints formatted output to stdout, like C printf.
@@ -180,7 +182,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝                   first element, and the arguments as the rest.
 ⍝ BYTES_WRITTEN: optional<uint> - the number of bytes written.
 ∇BYTES_WRITTEN←FIO∆PRINTF FORMAT_ARGUMENTS
-  BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆PRINTF_FD FIO∆STDOUT
+  BYTES_WRITTEN←FIO∆STDOUT FIO∆PRINTF_FD FORMAT_ARGUMENTS
 ∇
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
@@ -404,9 +406,9 @@ LSUCCESS:
 
 ⍝ Reads bytes up to specified number of bytes from the file descriptor.
 ⍝ MAXIMUM_BYTES: uint - the maximum number of bytes to read.
-⍝ FD: fd.
 ⍝ BYTES: optional<bytes>.
-∇BYTES←MAXIMUM_BYTES FIO∆READ_FD FD
+⍝ FD: fd.
+∇BYTES←FD FIO∆READ_FD MAXIMUM_BYTES
   →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
   BYTES←MAXIMUM_BYTES ⎕FIO[6] FD
@@ -463,7 +465,7 @@ LEND:
 
   BYTES←⍬
   LREAD_LOOP:
-    BUFFER←5000 FIO∆READ_FD FD
+    BUFFER←FD FIO∆READ_FD 5000
     →(~↑BUFFER) ⍴ LEND_READ_LOOP
     BYTES←BYTES,↑BUFFER[2] ◊ →LREAD_LOOP
   LEND_READ_LOOP:
@@ -498,10 +500,10 @@ LEND:
 ∇
 
 ⍝ Writes bytes to the file descriptor.
-⍝ BYTES: bytes.
 ⍝ FD: fd.
+⍝ BYTES: bytes.
 ⍝ SUCCESS: optional<void>.
-∇SUCCESS←BYTES FIO∆WRITE_FD FD
+∇SUCCESS←FD FIO∆WRITE_FD BYTES
   →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
   SUCCESS←BYTES ⎕FIO[7] FD
@@ -516,18 +518,18 @@ LEND:
 ∇
 
 ⍝ Prints a string out to a file descriptor.
-⍝ STRING: string.
 ⍝ FD: fd.
-∇SUCCESS←STRING FIO∆PRINT_FD FD
-  SUCCESS←FD FIO∆WRITE_FD⍨ FIO∆UTF8_TO_BYTES STRING
+⍝ STRING: string.
+∇SUCCESS←FD FIO∆PRINT_FD STRING
+  SUCCESS←FD FIO∆WRITE_FD FIO∆UTF8_TO_BYTES STRING
 ∇
 
 ⍝ Prints formatted output to a file descriptor, like C fprintf.
+⍝ FD: fd.
 ⍝ FORMAT_ARGUMENTS: vector<[1]string, any> - a vector with the format as the
 ⍝                   first element, and the arguments as the rest.
-⍝ FD: fd.
 ⍝ BYTES_WRITTEN: optional<uint> - the number of bytes written.
-∇BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆PRINTF_FD FD
+∇BYTES_WRITTEN←FD FIO∆PRINTF_FD FORMAT_ARGUMENTS
   →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Zi ← A  ⎕FIO[22] Bh    fprintf(Bh,     A1, A2...) format A1
   BYTES_WRITTEN←FORMAT_ARGUMENTS ⎕FIO[22] FD
