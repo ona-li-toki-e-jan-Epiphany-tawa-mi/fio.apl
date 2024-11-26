@@ -86,6 +86,8 @@
 ⍝ CHANGELOG:
 ⍝   Upcoming:
 ⍝   - Fixed FIO∆READ_FD not reading from given file descriptor.
+⍝   - Added FIO∆PRINT_FD and FIO∆PRINT for easily outputting strings without
+⍝     needing to convert them to bytes first.
 ⍝   - Renamed FIO∆FPRINTF -> FIO∆PRINTF_FD.
 ⍝   1.0.0:
 ⍝   - Relicensed as GPLv3+ (orignally zlib.)
@@ -165,6 +167,12 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ RESULT: vector<vector<any>>.
 ∇RESULT←DELIMITER FIO∆SPLIT_CLEAN VECTOR
   RESULT←VECTOR⊂⍨~VECTOR∊DELIMITER
+∇
+
+⍝ Prints a string out to stdout.
+⍝ STRING: string.
+∇SUCCESS←FIO∆PRINT STRING
+  SUCCESS←STRING FIO∆PRINT_FD FIO∆STDOUT
 ∇
 
 ⍝ Prints formatted output to stdout, like C printf.
@@ -505,6 +513,13 @@ LEND:
   LSUCCESS:
     SUCCESS←⍬,1
   LSWITCH_END:
+∇
+
+⍝ Prints a string out to a file descriptor.
+⍝ STRING: string.
+⍝ FD: fd.
+∇SUCCESS←STRING FIO∆PRINT_FD FD
+  SUCCESS←FD FIO∆WRITE_FD⍨ FIO∆UTF8_TO_BYTES STRING
 ∇
 
 ⍝ Prints formatted output to a file descriptor, like C fprintf.
