@@ -87,6 +87,7 @@
 ⍝ CHANGELOG:
 ⍝   Upcoming:
 ⍝   - Fixed FIO∆READ_FD not reading from given file descriptor.
+⍝   - Fixed FIO∆READ_ENTIRE_FD not properly returning read data.
 ⍝   - Swapped arugments for dyadic functions that work with file descriptors for
 ⍝     a better user experience.
 ⍝   - Added FIO∆PRINT_FD and FIO∆PRINT for easily outputting strings without
