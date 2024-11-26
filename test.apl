@@ -260,10 +260,11 @@ LFAIL:
   RESULT←~↑FIO∆READ_LINE_FD FD                           ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆READ_ENTIRE_FD FD                         ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆READ_ENTIRE_FILE "tests/nonexisting-file" ◊ ⍎ASSERT_R
-  RESULT←~↑FIO∆WRITE_FD FD                               ◊ ⍎ASSERT_R
+  RESULT←~↑0 FIO∆WRITE_FD FD                             ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆REMOVE "tests/nonexisting-file"           ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆REMOVE_RECURSIVE "tests/nonexisting-file" ◊ ⍎ASSERT_R
-  RESULT←~↑FIO∆PRINTF_FD FD                              ◊ ⍎ASSERT_R
+  RESULT←~↑"" FIO∆PRINT_FD FD                            ◊ ⍎ASSERT_R
+  RESULT←~↑"" FIO∆PRINTF_FD FD                           ◊ ⍎ASSERT_R
 
   SECTION "FIO∆OPEN_FILE & FIO∆CLOSE_FD"
   FD←"r" FIO∆OPEN_FILE FILE ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
@@ -309,7 +310,7 @@ LFAIL:
   FD←"r" FIO∆OPEN_FILE FILE ◊ RESULT←↑FD ◊ ⍎ASSERT_R  ◊ FD←FD[2]
   CONTENTS←FIO∆READ_ENTIRE_FD FD ◊ RESULT←↑CONTENTS   ◊ ⍎ASSERT_R
   RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑CONTENTS[2] ◊ ⍎ASSERT_R
-  RESULT←~↑500 FIO∆READ_FD FD                         ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆READ_ENTIRE_FD FD                      ◊ ⍎ASSERT_R
   RESULT←↑FIO∆CLOSE_FD FD                             ◊ ⍎ASSERT_R
 
   SECTION "FIO∆READ_ENTIRE_FILE"
