@@ -85,6 +85,7 @@
 ⍝
 ⍝ CHANGELOG:
 ⍝   Upcoming:
+⍝   - Fixed FIO∆READ_FD not reading from given file descriptor.
 ⍝   - Renamed FIO∆FPRINTF -> FIO∆PRINTF_FD.
 ⍝   1.0.0:
 ⍝   - Relicensed as GPLv3+ (orignally zlib.)
@@ -400,7 +401,7 @@ LSUCCESS:
 ∇BYTES←MAXIMUM_BYTES FIO∆READ_FD FD
   →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
-  BYTES←MAXIMUM_BYTES ⎕FIO[6] LUNOPEN_FD
+  BYTES←MAXIMUM_BYTES ⎕FIO[6] FD
   →(0≢BYTES) ⍴ LSUCCESS
     ⍝ Failed to read FD.
     BYTES←0 (FIO∆STRERROR FIO∆ERRNO) ◊ →LSWITCH_END
