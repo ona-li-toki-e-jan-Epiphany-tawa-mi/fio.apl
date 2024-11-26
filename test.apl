@@ -263,7 +263,7 @@ LFAIL:
   RESULT←~↑FIO∆WRITE_FD FD                               ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆REMOVE "tests/nonexisting-file"           ◊ ⍎ASSERT_R
   RESULT←~↑FIO∆REMOVE_RECURSIVE "tests/nonexisting-file" ◊ ⍎ASSERT_R
-  RESULT←~↑FIO∆FPRINTF FD                                ◊ ⍎ASSERT_R
+  RESULT←~↑FIO∆PRINTF_FD FD                              ◊ ⍎ASSERT_R
 
   SECTION "FIO∆OPEN_FILE & FIO∆CLOSE_FD"
   FD←"r" FIO∆OPEN_FILE FILE ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
@@ -322,17 +322,18 @@ LFAIL:
   FD←"w" FIO∆OPEN_FILE "tests/new-file" ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
   RESULT←↑FD FIO∆WRITE_FD⍨ FIO∆UTF8_TO_BYTES FILE_CONTENTS ◊ ⍎ASSERT_R
   RESULT←↑FIO∆CLOSE_FD FD                                  ◊ ⍎ASSERT_R
-  CONTENTS←FIO∆READ_ENTIRE_FILE "tests/new-file"           ◊ ⍎ASSERT_R
-  RESULT←↑CONTENTS                                         ◊ ⍎ASSERT_R
-  RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑CONTENTS[2]      ◊ ⍎ASSERT_R
-  RESULT←↑FIO∆REMOVE "tests/new-file"                      ◊ ⍎ASSERT_R
+  CONTENTS←FIO∆READ_ENTIRE_FILE "tests/new-file"
+  RESULT←↑CONTENTS                                     ◊ ⍎ASSERT_R
+  RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑CONTENTS[2]  ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆REMOVE "tests/new-file"                  ◊ ⍎ASSERT_R
 
-  SECTION "FIO∆FPRINTF"
+  SECTION "FIO∆PRINT_FD"
   FD←"w" FIO∆OPEN_FILE "tests/new-file" ◊ RESULT←↑FD ◊ ⍎ASSERT_R ◊ FD←FD[2]
-  BYTES_WRITTEN←FD FIO∆FPRINTF⍨ "%s" FILE_CONTENTS
+  BYTES_WRITTEN←FD FIO∆PRINTF_FD⍨ "%s" FILE_CONTENTS
   RESULT←↑BYTES_WRITTEN ◊ ⍎ASSERT_R ◊ BYTES_WRITTEN←↑BYTES_WRITTEN[2]
-  RESULT←(≢FILE_CONTENTS)≡BYTES_WRITTEN               ◊ ⍎ASSERT_R
-  RESULT←↑FIO∆CLOSE_FD FD                             ◊ ⍎ASSERT_R
+  RESULT←(≢FILE_CONTENTS)≡BYTES_WRITTEN ◊ ⍎ASSERT_R
+  RESULT←↑FIO∆CLOSE_FD FD               ◊ ⍎ASSERT_R
+  CONTENTS←FIO∆READ_ENTIRE_FILE "tests/new-file"
   RESULT←↑CONTENTS                                    ◊ ⍎ASSERT_R
   RESULT←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑CONTENTS[2] ◊ ⍎ASSERT_R
   RESULT←↑FIO∆REMOVE "tests/new-file"                 ◊ ⍎ASSERT_R

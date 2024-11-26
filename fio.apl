@@ -84,6 +84,8 @@
 ⍝    issue.
 ⍝
 ⍝ CHANGELOG:
+⍝   Upcoming:
+⍝   - Renamed FIO∆FPRINTF -> FIO∆PRINTF_FD.
 ⍝   1.0.0:
 ⍝   - Relicensed as GPLv3+ (orignally zlib.)
 ⍝   - Code cleanup.
@@ -121,6 +123,8 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ - paltepuk (I2P) - http://oytjumugnwsf4g72vemtamo72vfvgmp4lfsf6wmggcvba3qmcsta.b32.i2p/cgit/fio.apl.git/about/
 ⍝ - paltepuk (Tor) - http://4blcq4arxhbkc77tfrtmy4pptf55gjbhlj32rbfyskl672v2plsmjcyd.onion/cgit/fio.apl.git/about/
 ⍝ - GitHub - https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/fio.apl/
+
+⍝ TODO swap arguments of dyadic file descriptor functions.
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ Utilities                                                                    ⍝
@@ -167,12 +171,14 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝                   first element, and the arguments as the rest.
 ⍝ BYTES_WRITTEN: optional<uint> - the number of bytes written.
 ∇BYTES_WRITTEN←FIO∆PRINTF FORMAT_ARGUMENTS
-  BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆FPRINTF FIO∆STDOUT
+  BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆PRINTF_FD FIO∆STDOUT
 ∇
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ Defer                                                                        ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
+
+⍝ TODO add DEFER_START to segment defers by function.
 
 FIO∆DEFERS←⍬
 
@@ -505,7 +511,7 @@ LEND:
 ⍝                   first element, and the arguments as the rest.
 ⍝ FD: fd.
 ⍝ BYTES_WRITTEN: optional<uint> - the number of bytes written.
-∇BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆FPRINTF FD
+∇BYTES_WRITTEN←FORMAT_ARGUMENTS FIO∆PRINTF_FD FD
   →(~FD∊FIO∆LIST_FDS) ⍴ LUNOPEN_FD
   ⍝ Zi ← A  ⎕FIO[22] Bh    fprintf(Bh,     A1, A2...) format A1
   BYTES_WRITTEN←FORMAT_ARGUMENTS ⎕FIO[22] FD
