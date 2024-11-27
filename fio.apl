@@ -85,7 +85,7 @@
 ⍝    issue.
 ⍝
 ⍝ CHANGELOG:
-⍝   Upcoming:
+⍝   1.0.1:
 ⍝   - Fixed FIO∆READ_FD not reading from given file descriptor.
 ⍝   - Fixed FIO∆READ_ENTIRE_FD not properly returning read data.
 ⍝   - Swapped arugments for dyadic functions that work with file descriptors for
@@ -124,7 +124,7 @@
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
 ⍝ See for details: https://www.gnu.org/software/apl/Library-Guidelines-GNU-APL.html
-FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://paltepuk.xyz/cgit/fio.apl.git/about/" "https://paltepuk.xyz/cgit/fio.apl.git/plain/fio.apl" "GPLv3+" "L3" "FIO" "" "1.0.0"
+FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://paltepuk.xyz/cgit/fio.apl.git/about/" "https://paltepuk.xyz/cgit/fio.apl.git/plain/fio.apl" "GPLv3+" "L3" "FIO" "" "1.0.1"
 
 ⍝ Links:
 ⍝ - paltepuk - https://http://paltepuk.xyz/cgit/fio.apl.git/about/
@@ -591,6 +591,7 @@ LEND:
 ⍝ Process Handling                                                             ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
+⍝ TODO consider splitting out replacement algorithm.
 ⍝ Escapes the given shell argument with quotes.
 ⍝ ARGUMENT: string.
 ⍝ ESCAPED_ARUGMENT: string.

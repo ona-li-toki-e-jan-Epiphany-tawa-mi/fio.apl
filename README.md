@@ -62,3 +62,12 @@ apl --script test.apl
 ## TODOs
 
 - Add all functions from ⎕FIO.
+
+## Release notes
+
+- Fixed FIO∆READ_FD not reading from given file descriptor.
+- Fixed FIO∆READ_ENTIRE_FD not properly returning read data.
+- Swapped arugments for dyadic functions that work with file descriptors for a better user experience.
+- Added FIO∆PRINT_FD and FIO∆PRINT for easily outputting strings without needing to convert them to bytes first.
+- Renamed FIO∆FPRINTF -> FIO∆PRINTF_FD.
+- Changed meta for unwrapping optionals from "↑O[2]" to "↑1↓V".
