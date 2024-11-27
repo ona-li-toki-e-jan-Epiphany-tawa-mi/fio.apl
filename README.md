@@ -1,6 +1,6 @@
 ## fio.apl
 
-GnuAPL ⎕FIO abstraction library.
+GNU APL ⎕FIO abstraction library.
 
 ## Synopsis
 
@@ -9,11 +9,11 @@ highly-biased reimagining of it.
 
 See the library file `fio.apl` for more details.
 
-In GnuAPL, interations with the operating system (file handling, spawning
+In GNU APL, interations with the operating system (file handling, spawning
 processes, opening ports, etc.) are done with ⎕FIO. However, I find that there
 are several problems with it.
 
-Prior to version GnuAPL 1.9, ⎕FIO functions were specified with an axis
+Prior to version GNU APL 1.9, ⎕FIO functions were specified with an axis
 argument, i.e.  ⎕FIO[3] (fopen,) which lead to code that was hard to read. Now
 you can specify them by name, i.e. ⎕FIO['fopen'] or ⎕FIO.fopen. This is the
 reason I orignally developed this library, but there are still other things for
@@ -47,7 +47,7 @@ Note: functions have been added as-needed, so it will not cover everything in
 
 Dependencies:
 
-- GnuAPL: ([https://www.gnu.org/software/apl](https://www.gnu.org/software/apl))
+- GNU APL: ([https://www.gnu.org/software/apl](https://www.gnu.org/software/apl))
 
 There is a `flake.nix` you can use with `nix develop path:.` to generate a
 development enviroment.
