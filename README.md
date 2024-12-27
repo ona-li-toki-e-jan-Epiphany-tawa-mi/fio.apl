@@ -37,8 +37,7 @@ before calling. Functions such as these are given a more user-friendly
 interface.
 
 Additionally, this library provides a number of extra functions you will
-probably like, such as recursively creating and deleting directories, and a
-defer system akin to what Zig has.
+probably like, such as recursively creating and deleting directories.
 
 Note: functions have been added as-needed, so it will not cover everything in
 ⎕FIO.

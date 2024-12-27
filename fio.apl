@@ -51,8 +51,7 @@
 ⍝   user-friendly interface.
 ⍝
 ⍝   Additionally, this library provides a number of extra functions you will
-⍝   probably like, such as recursively creating and deleting directories, and a
-⍝   defer system akin to what Zig has.
+⍝   probably like, such as recursively creating and deleting directories.
 ⍝
 ⍝   Note: functions have been added as-needed, so it will not cover everything
 ⍝   in ⎕FIO.
@@ -85,6 +84,8 @@
 ⍝    issue.
 ⍝
 ⍝ CHANGELOG:
+⍝   Upcoming:
+⍝   - Removed defer system since it seems useless.
 ⍝   1.0.1:
 ⍝   - Fixed FIO∆READ_FD not reading from given file descriptor.
 ⍝   - Fixed FIO∆READ_ENTIRE_FD not properly returning read data.
@@ -127,12 +128,10 @@
 FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://paltepuk.xyz/cgit/fio.apl.git/about/" "https://paltepuk.xyz/cgit/fio.apl.git/plain/fio.apl" "GPLv3+" "L3" "FIO" "" "1.0.1"
 
 ⍝ Links:
-⍝ - paltepuk - https://http://paltepuk.xyz/cgit/fio.apl.git/about/
+⍝ - paltepuk - https://paltepuk.xyz/cgit/fio.apl.git/about/
 ⍝ - paltepuk (I2P) - http://oytjumugnwsf4g72vemtamo72vfvgmp4lfsf6wmggcvba3qmcsta.b32.i2p/cgit/fio.apl.git/about/
 ⍝ - paltepuk (Tor) - http://4blcq4arxhbkc77tfrtmy4pptf55gjbhlj32rbfyskl672v2plsmjcyd.onion/cgit/fio.apl.git/about/
 ⍝ - GitHub - https://github.com/ona-li-toki-e-jan-Epiphany-tawa-mi/fio.apl/
-
-
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 ⍝ Utilities                                                                    ⍝
@@ -186,31 +185,6 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ BYTES_WRITTEN: optional<uint> - the number of bytes written.
 ∇BYTES_WRITTEN←FIO∆PRINTF FORMAT_ARGUMENTS
   BYTES_WRITTEN←FIO∆STDOUT FIO∆PRINTF_FD FORMAT_ARGUMENTS
-∇
-
-⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
-⍝ Defer                                                                        ⍝
-⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
-
-⍝ TODO add DEFER_START to segment defers by function.
-
-FIO∆DEFERS←⍬
-
-⍝ Defers the given APL code until FIO∆DEFER_END is called.
-⍝ CODE: string.
-∇FIO∆DEFER CODE
-  FIO∆DEFERS←FIO∆DEFERS,⍨⊂CODE
-∇
-
-⍝ Runs all deferred code in the reverse order by which they were added via
-⍝ FIO∆DEFER
-∇FIO∆DEFER_END; DEFERRED
-  LLOOP:
-    →(0≡≢FIO∆DEFERS) ⍴ LEND
-    DEFERRED←↑FIO∆DEFERS ◊ FIO∆DEFERS←1↓FIO∆DEFERS
-    ⍎DEFERRED
-    →LLOOP
-  LEND:
 ∇
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
