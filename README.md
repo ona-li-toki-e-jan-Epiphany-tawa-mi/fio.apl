@@ -23,13 +23,13 @@ The ⎕FIO functions are replicas of C functions, whose error handling methods
 vary considerably between functions. This is fine in C, but APL is far more
 abstract than C with a completely different way to represent logic. This library
 provides, what I consider, to be a more consistent and sensible error handling
-scheme through the use of a vector that replicates the optional data type from
-other languages, like ? in Zig or std::optional<T> in C++.
+scheme through the use of a vector that replicates the errorable data types from
+other languages, like error unions in Zig and Either in Haskell.
 
 Many of the functions that handle file descriptors throw an exception on an
 unopened file descriptor, instead of returning some kind of error code. I think
-that this is kind of weird, and I have replaced it with the aforementioned
-optionals.
+that this is kind of weird, and I have replaced it with the aforementioned error
+handling.
 
 Some of the functions are also annoying to use. For example, ⎕FIO[20], mkdir,
 requires the file permissions to be converted from octal to decimal numbers

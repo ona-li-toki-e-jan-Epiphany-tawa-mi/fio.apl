@@ -37,13 +37,13 @@
 ⍝   abstract than C with a completely different way to represent logic. This
 ⍝   library provides, what I consider, to be a more consistent and sensible
 ⍝   error handling scheme through the use of a vector that replicates the
-⍝   optional data type from other languages, like ? in Zig or std::optional<T>
-⍝   in C++.
+⍝   errorable types from other languages, like error unions in Zig or Either in
+⍝   Haskell.
 ⍝
 ⍝   Many of the functions that handle file descriptors throw an exception on an
 ⍝   unopened file descriptor, instead of returning some kind of error code. I
 ⍝   think that this is kind of weird, and I have replaced it with the
-⍝   aforementioned optionals.
+⍝   aforementioned error handling.
 ⍝
 ⍝   Some of the functions are also annoying to use. For example, ⎕FIO[20],
 ⍝   mkdir, requires the file permissions to be converted from octal to decimal
@@ -72,16 +72,16 @@
 ⍝  boolean - a scalar 0, for false, or a 1, for true.
 ⍝  any - any value of any type.
 ⍝  uint - scalar whole number.
-⍝  optional<TYPE>:
-⍝    Error handling type. An optional is a nested vector, where
-⍝    the first value is guaranteed to exist and is a boolean representing
-⍝    whether the function succeeded.
+⍝  maybe<TYPE>:
+⍝    Error handling type. A maybe is a nested vector, where the first value is
+⍝    guaranteed to exist and is a boolean representing whether the function
+⍝    succeeded.
 ⍝    If 1, the function succeded. If the function returned a result, it will be
-⍝    the second value and of type TYPE. You can unwrap this value from an
-⍝    optional O by doing "↑1↓O"
+⍝    the second value and of type TYPE. You can unwrap this value from a maybe
+⍝    m by doing "↑1↓m"
 ⍝    If 0, the function failed. The second value is a string describing the
 ⍝    issue.
-⍝  void - used in optionals to indicate no value is returned.
+⍝  void - used in maybe to indicate no value is returned.
 
 ⍝ Changelog:
 ⍝   Upcoming:
@@ -91,6 +91,7 @@
 ⍝   - Improved typing information.
 ⍝   - Fixed FIO∆JOIN_PATH adding a seperator if one of the arguments was empty
 ⍝     (i.e.: "" FIO∆JOIN_PATH "test" -> "/test", which is obviously not good.)
+⍝   - Renamed optional to maybe.
 ⍝   1.0.1:
 ⍝   - Fixed FIO∆READ_FD not reading from given file descriptor.
 ⍝   - Fixed FIO∆READ_ENTIRE_FD not properly returning read data.
@@ -180,7 +181,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 
 ⍝ Prints a string out to stdout.
 ⍝ →string: string.
-⍝ ←success: optional<void>.
+⍝ ←success: maybe<void>.
 ∇success←FIO∆PRINT string
   success←FIO∆STDOUT FIO∆PRINT_FD string
 ∇
@@ -188,7 +189,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ Prints formatted output to stdout, like C printf.
 ⍝ →format_arguments: vector<string, any...> - a vector with the format as the
 ⍝ first element, and the arguments as the rest.
-⍝ ←bytes_written: optional<uint> - the number of bytes written.
+⍝ ←bytes_written: maybe<uint> - the number of bytes written.
 ∇bytes_written←FIO∆PRINTF format_arguments
   bytes_written←FIO∆STDOUT FIO∆PRINTF_FD format_arguments
 ∇
@@ -243,7 +244,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ Returns a vector of strings with the contents of the directory at the given
 ⍝ path.
 ⍝ →path: string.
-⍝ ←contents: optional<vector<string>>.
+⍝ ←contents: maybe<vector<string>>.
 ∇contents←FIO∆LIST_DIRECTORY path
   ⍝ Zn ←    ⎕FIO[29] Bs    return file names in directory Bs
   contents←⎕FIO[29] path
@@ -257,7 +258,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ∇
 
 ⍝ Returns path of the current working directory.
-⍝ ←path: optional<string>.
+⍝ ←path: maybe<string>.
 ∇path←FIO∆CURRENT_DIRECTORY
   ⍝ Zs ←    ⎕FIO 30        getcwd()
   path←⎕FIO 30
@@ -273,7 +274,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ Creates a directory at the given path if it doesn't exist. Does not recurse.
 ⍝ →mode: vector<uint> - octal mode for the directory (i.e. 7 5 5.)
 ⍝ →path: string.
-⍝ ←success: optional<void>.
+⍝ ←success: maybe<void>.
 ∇success←mode FIO∆MAKE_DIRECTORY path
   →(FIO∆IS_FILE path) ⍴ lis_file
   ⍝ Zi ← Ai ⎕FIO[20] Bh    mkdir(Bc, AI)
@@ -293,7 +294,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ →mode: vector<uint> - octal mode for the directory as an integer vector (i.e.
 ⍝ 7 5 5.)
 ⍝ →path: string.
-⍝ ←success: optional<void>.
+⍝ ←success: maybe<void>.
 ∇success←mode FIO∆MAKE_DIRECTORIES path; directories
   directories←FIO∆JOIN_PATH\ FIO∆SPLIT_PATH path
   →(0≡≢directories) ⍴ linvalid_path
@@ -342,7 +343,7 @@ FIO∆stderr←2
 ⍝ →mode: string - open mode (i.e. "w", "r+", etc..). See 'man fopen' for
 ⍝ details.
 ⍝ →path: string.
-⍝ ←fd: optional<fd> - the descriptor of the opened file.
+⍝ ←fd: maybe<fd> - the descriptor of the opened file.
 ∇fd←mode FIO∆OPEN_FILE path
   ⍝ Zh ← As ⎕FIO[ 3] Bs    fopen(Bs, As) filename Bs mode As
   fd←mode ⎕FIO[3] path
@@ -356,7 +357,7 @@ FIO∆stderr←2
 
 ⍝ Closes a file descriptor.
 ⍝ →fd: fd.
-⍝ ←success: optional<void>.
+⍝ ←success: maybe<void>.
 ∇success←FIO∆CLOSE_FD fd
   →(~fd∊FIO∆LIST_FDS) ⍴ lunopen_fd
   ⍝ Ze ←    ⎕FIO[ 4] Bh    fclose(Bh)
@@ -404,7 +405,7 @@ lsuccess:
 ⍝ Reads bytes up to specified number of bytes from the file descriptor.
 ⍝ →maximum_bytes: uint - the maximum number of bytes to read.
 ⍝ →fd: fd.
-⍝ ←bytes: optional<bytes>.
+⍝ ←bytes: maybe<bytes>.
 ∇bytes←fd FIO∆READ_FD maximum_bytes
   →(~fd∊FIO∆LIST_FDS) ⍴ lunopen_fd
   ⍝ Zb ← Ai ⎕FIO[ 6] Bh    fread(Zi, 1, Ai, Bh) 1 byte per Zb
@@ -421,7 +422,7 @@ lsuccess:
 
 ⍝ Reads bytes up to a newline or EOF. Newlines are not included in the output.
 ⍝ →fd: fd.
-⍝ ←bytes: optional<bytes>.
+⍝ ←bytes: maybe<bytes>.
 ∇bytes←FIO∆READ_LINE_FD fd; newline;buffer
   →(fd∊FIO∆LIST_FDS) ⍴ lopen_fd
     bytes←0 "Not an open file descriptor" ◊ →lend
@@ -454,7 +455,7 @@ lend:
 
 ⍝ Reads bytes from a file descriptor until EOF is reached.
 ⍝ →fd: fd.
-⍝ ←bytes: optional<bytes>.
+⍝ ←bytes: maybe<bytes>.
 ∇bytes←FIO∆READ_ENTIRE_FD fd; buffer
   →(~FIO∆EOF_FD fd) ⍴ lnot_eof
     bytes←0 "Reached EOF" ◊ →lend
@@ -478,7 +479,7 @@ lend:
 
 ⍝ Reads in an entire file as bytes.
 ⍝ →path: string.
-⍝ ←bytes: optional<bytes>.
+⍝ ←bytes: maybe<bytes>.
 ∇bytes←FIO∆READ_ENTIRE_FILE path
   ⍝ Zb ←    ⎕FIO[26] Bs    return entire file Bs as byte vector
   ⍝ ⎕FIO[26] throws an APL exception on directories, and probably some other
@@ -499,7 +500,7 @@ lend:
 ⍝ Writes bytes to the file descriptor.
 ⍝ →fd: fd.
 ⍝ →bytes: bytes.
-⍝ ←success: optional<void>.
+⍝ ←success: maybe<void>.
 ∇success←fd FIO∆WRITE_FD bytes
   →(~fd∊FIO∆LIST_FDS) ⍴ lunopen_fd
   ⍝ Zi ← Ab ⎕FIO[ 7] Bh    fwrite(Ab, 1, ⍴Ai, Bh) 1 byte per Ai
@@ -525,7 +526,7 @@ lend:
 ⍝ →fd: fd.
 ⍝ →format_arguments: vector<string, any...> - a vector with the format as the
 ⍝ first element, and the arguments as the rest.
-⍝ ←bytes_written: optional<uint> - the number of bytes written.
+⍝ ←bytes_written: maybe<uint> - the number of bytes written.
 ∇bytes_written←fd FIO∆PRINTF_FD format_arguments
   →(~fd∊FIO∆LIST_FDS) ⍴ lunopen_fd
   ⍝ Zi ← A  ⎕FIO[22] Bh    fprintf(Bh,     A1, A2...) format A1
@@ -544,7 +545,7 @@ lend:
 ⍝ If path points to a file, it will be unlinked, possibly deleting it.
 ⍝ If path points to a directory, it will be deleted if empty.
 ⍝ →path: string.
-⍝ ←success: optional<void>.
+⍝ ←success: maybe<void>.
 ∇success←FIO∆REMOVE path
   →(↑FIO∆LIST_DIRECTORY path) ⍴ ldirectory
     ⍝ Zi ←    ⎕FIO[19] Bh    unlink(Bc)
@@ -565,7 +566,7 @@ lend:
 ⍝ If path points to a file, it will be unlinked, possibly deleting it.
 ⍝ If path points to a directory, it, and all of its contents, will be deleted.
 ⍝ →path: string.
-⍝ ←success: optional<void>.
+⍝ ←success: maybe<void>.
 ∇success←FIO∆REMOVE_RECURSIVE path; contents;other_path
   contents←FIO∆LIST_DIRECTORY path
   →(~↑contents) ⍴ lis_not_directory
@@ -605,7 +606,7 @@ lend:
 ⍝ FIO∆PCLOSE.
 ⍝ →exe_arguments: vector<string> - a vector with the executable to run as the
 ⍝ first element, and the arguments to it as the rest.
-⍝ ←fd: optional<fd> - the process' read-only file descriptor.
+⍝ ←fd: maybe<fd> - the process' read-only file descriptor.
 ∇fd←FIO∆POPEN_READ exe_arguments
   ⍝ Zh ← As ⎕FIO[24] Bs    popen(Bs, As) command Bs mode As
   fd←"r" ⎕FIO[24] ↑FIO∆JOIN_SHELL_ARGUMENTS/ FIO∆ESCAPE_SHELL_ARGUMENT¨ exe_arguments
@@ -622,7 +623,7 @@ lend:
 ⍝ FIO∆PCLOSE.
 ⍝ →exe_arguments: vector<string> - a vector with the executable to run as the
 ⍝ first element, and the arguments to it as the rest.
-⍝ ←fd: optional<fd> - The process' write-only file descriptor.
+⍝ ←fd: maybe<fd> - The process' write-only file descriptor.
 ∇fd←FIO∆POPEN_WRITE exe_arguments
   ⍝ Zh ← As ⎕FIO[24] Bs    popen(Bs, As) command Bs mode As
   fd←"w" ⎕FIO[24] ↑FIO∆JOIN_SHELL_ARGUMENTS/ FIO∆ESCAPE_SHELL_ARGUMENT¨ exe_arguments
@@ -637,7 +638,7 @@ lend:
 
 ⍝ Closes a file descriptor opened with FIO∆POPEN_{READ,WRITE}.
 ⍝ →fd: fd.
-⍝ ←error: optional<uint> - process exit code.
+⍝ ←error: maybe<uint> - process exit code.
 ∇error←FIO∆PCLOSE fd
   →(~fd∊FIO∆LIST_FDS) ⍴ lunopen_fd
   ⍝ Ze ←    ⎕FIO[25] Bh    pclose(Bh)
@@ -657,7 +658,7 @@ lend:
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
 ⍝ Returns the current time since the Epoch in seconds.
-⍝ ←s: optional<uint>.
+⍝ ←s: maybe<uint>.
 ∇s←FIO∆TIME_S
   ⍝ Zi ←    ⎕FIO[50] Bu    gettimeofday()
   s←⎕FIO[50] 1
@@ -671,7 +672,7 @@ lend:
 ∇
 
 ⍝ Returns the current time since the Epoch in milliseconds.
-⍝ ←ms: optional<uint>.
+⍝ ←ms: maybe<uint>.
 ∇ms←FIO∆TIME_MS
   ⍝ Zi ←    ⎕FIO[50] Bu    gettimeofday()
   ms←⎕FIO[50] 1000
@@ -685,7 +686,7 @@ lend:
 ∇
 
 ⍝ Returns the current time since the Epoch in microseconds.
-⍝ ←us: optional<uint>.
+⍝ ←us: maybe<uint>.
 ∇us←FIO∆TIME_US
   ⍝ Zi ←    ⎕FIO[50] Bu    gettimeofday()
   us←⎕FIO[50] 1000000
