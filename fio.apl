@@ -84,6 +84,8 @@
 ⍝  void - used in maybe to indicate no value is returned.
 
 ⍝ Changelog:
+⍝   Upcoming:
+⍝   - Fixed introduced bug in FIO∆PRINT and FIO∆PRINTF.
 ⍝   2.0.0:
 ⍝   - Removed defer system since it seems useless.
 ⍝   - Updated code style to use lowercase for variables. For you, the user, this
@@ -131,7 +133,7 @@
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
 ⍝ See for details: https://www.gnu.org/software/apl/Library-Guidelines-GNU-APL.html
-FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://paltepuk.xyz/cgit/fio.apl.git/about/" "https://paltepuk.xyz/cgit/fio.apl.git/plain/fio.apl" "GPLv3+" "L3" "FIO" "" "1.0.1"
+FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Portability" "Provides" "Requires" "Version",⍪"ona li toki e jan Epiphany tawa mi" "" "https://paltepuk.xyz/cgit/fio.apl.git/about/" "https://paltepuk.xyz/cgit/fio.apl.git/plain/fio.apl" "GPLv3+" "L3" "FIO" "" "2.0.0"
 
 ⍝ Links:
 ⍝ - paltepuk - https://paltepuk.xyz/cgit/fio.apl.git/about/
@@ -183,7 +185,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ →string: string.
 ⍝ ←success: maybe<void>.
 ∇success←FIO∆PRINT string
-  success←FIO∆STDOUT FIO∆PRINT_FD string
+  success←FIO∆stdout FIO∆PRINT_FD string
 ∇
 
 ⍝ Prints formatted output to stdout, like C printf.
@@ -191,7 +193,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ first element, and the arguments as the rest.
 ⍝ ←bytes_written: maybe<uint> - the number of bytes written.
 ∇bytes_written←FIO∆PRINTF format_arguments
-  bytes_written←FIO∆STDOUT FIO∆PRINTF_FD format_arguments
+  bytes_written←FIO∆stdout FIO∆PRINTF_FD format_arguments
 ∇
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
