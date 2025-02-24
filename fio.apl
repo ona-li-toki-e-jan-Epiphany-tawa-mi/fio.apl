@@ -84,7 +84,7 @@
 ⍝  void - used in maybe to indicate no value is returned.
 
 ⍝ Changelog:
-⍝   Upcoming:
+⍝   2.0.0:
 ⍝   - Removed defer system since it seems useless.
 ⍝   - Updated code style to use lowercase for variables. For you, the user, this
 ⍝     means FIO∆{STDIN,STDERR,STDOUT} are now FIO∆{stdin,stderr,stdout}.
