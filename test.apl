@@ -194,6 +194,8 @@ lfail:
   result←"this/is/a/test"≡↑FIO∆JOIN_PATH/ "this" "is" "a" "test" ◊ ⍎massert
   result←"public/static/void/main/String[]/args"≡↑FIO∆JOIN_PATH/ "public" "static" "void" "main" "String[]" "args"
   ⍎massert
+  result←"empty"≡"" FIO∆JOIN_PATH "empty"         ◊ ⍎massert
+  result←"directory"≡"directory" FIO∆JOIN_PATH "" ◊ ⍎massert
 
 lfail:
 ∇

@@ -89,6 +89,8 @@
 ⍝   - Updated code style to use lowercase for variables. For you, the user, this
 ⍝     means FIO∆{STDIN,STDERR,STDOUT} are now FIO∆{stdin,stderr,stdout}.
 ⍝   - Improved typing information.
+⍝   - Fixed FIO∆JOIN_PATH adding a seperator if one of the arguments was empty
+⍝     (i.e.: "" FIO∆JOIN_PATH "test" -> "/test", which is obviously not good.)
 ⍝   1.0.1:
 ⍝   - Fixed FIO∆READ_FD not reading from given file descriptor.
 ⍝   - Fixed FIO∆READ_ENTIRE_FD not properly returning read data.
@@ -228,7 +230,14 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ →back_path: string.
 ⍝ ←path: string.
 ∇path←front_path FIO∆JOIN_PATH back_path
-  path←front_path,'/',back_path
+  →(0≡≢front_path) ⍴ lempty_front
+  →(0≡≢back_path) ⍴ lempty_back
+    path←front_path,'/',back_path ◊ →lswitch_end
+  lempty_front:
+    path←back_path ◊ →lswitch_end
+  lempty_back:
+    path←front_path ◊ →lswitch_end
+  lswitch_end:
 ∇
 
 ⍝ Returns a vector of strings with the contents of the directory at the given
