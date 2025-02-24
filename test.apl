@@ -120,24 +120,24 @@ massert←"→(ASSERT result) ⍴ lfail"
 ⍝ Tests                                                                        ⍝
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
 
-∇TEST_UTF8_BYTES_CONVERSION; result;STRING;BYTES
+∇TEST_UTF8_BYTES_CONVERSION; result;string;bytes
   SECTION "1"
-  STRING←"This is a test"
-  BYTES←84 104 105 115 32 105 115 32 97 32 116 101 115 116
-  result←BYTES≡FIO∆UTF8_TO_BYTES STRING ◊ ⍎massert
-  result←STRING≡FIO∆BYTES_TO_UTF8 BYTES ◊ ⍎massert
+  string←"This is a test"
+  bytes←84 104 105 115 32 105 115 32 97 32 116 101 115 116
+  result←bytes≡FIO∆UTF8_TO_BYTES string ◊ ⍎massert
+  result←string≡FIO∆BYTES_TO_UTF8 bytes ◊ ⍎massert
 
   SECTION "2"
-  STRING←"Have you tried C-\\ APL-Z RET?"
-  BYTES←72 97 118 101 32 121 111 117 32 116 114 105 101 100 32 67 45 92 32 65 80 76 45 90 32 82 69 84 63
-  result←BYTES≡FIO∆UTF8_TO_BYTES STRING ◊ ⍎massert
-  result←STRING≡FIO∆BYTES_TO_UTF8 BYTES ◊ ⍎massert
+  string←"Have you tried C-\\ APL-Z RET?"
+  bytes←72 97 118 101 32 121 111 117 32 116 114 105 101 100 32 67 45 92 32 65 80 76 45 90 32 82 69 84 63
+  result←bytes≡FIO∆UTF8_TO_BYTES string ◊ ⍎massert
+  result←string≡FIO∆BYTES_TO_UTF8 bytes ◊ ⍎massert
 
   SECTION "3"
-  STRING←"Вы что, яйцо?"
-  BYTES←208 146 209 139 32 209 135 209 130 208 190 44 32 209 143 208 185 209 134 208 190 63
-  result←BYTES≡FIO∆UTF8_TO_BYTES STRING ◊ ⍎massert
-  result←STRING≡FIO∆BYTES_TO_UTF8 BYTES ◊ ⍎massert
+  string←"Вы что, яйцо?"
+  bytes←208 146 209 139 32 209 135 209 130 208 190 44 32 209 143 208 185 209 134 208 190 63
+  result←bytes≡FIO∆UTF8_TO_BYTES string ◊ ⍎massert
+  result←string≡FIO∆BYTES_TO_UTF8 bytes ◊ ⍎massert
 
 lfail:
 ∇
@@ -150,28 +150,28 @@ lfail:
 lfail:
 ∇
 
-∇TEST_SPLITTING_VECTORS; VECTOR;result
+∇TEST_SPLITTING_VECTORS; vector;result
   SECTION "Splitting number vector"
-  VECTOR←1 1 2 2 3 3 4 4 5 5
-  result←(1 FIO∆SPLIT VECTOR)≡⍬ (2 2 3 3 4 4 5 5)        ◊ ⍎massert
-  result←(2 FIO∆SPLIT VECTOR)≡(1 1) ⍬ (3 3 4 4 5 5)      ◊ ⍎massert
-  result←(3 FIO∆SPLIT VECTOR)≡(1 1 2 2) ⍬ (4 4 5 5)      ◊ ⍎massert
-  result←(4 FIO∆SPLIT VECTOR)≡(1 1 2 2 3 3) ⍬ (5 5)      ◊ ⍎massert
-  result←(5 FIO∆SPLIT VECTOR)≡(1 1 2 2 3 3 4 4) ⍬ ⍬      ◊ ⍎massert
-  result←(1 FIO∆SPLIT_CLEAN VECTOR)≡⍬,⊂(2 2 3 3 4 4 5 5) ◊ ⍎massert
-  result←(2 FIO∆SPLIT_CLEAN VECTOR)≡(1 1) (3 3 4 4 5 5)  ◊ ⍎massert
-  result←(3 FIO∆SPLIT_CLEAN VECTOR)≡(1 1 2 2) (4 4 5 5)  ◊ ⍎massert
-  result←(4 FIO∆SPLIT_CLEAN VECTOR)≡(1 1 2 2 3 3) (5 5)  ◊ ⍎massert
-  result←(5 FIO∆SPLIT_CLEAN VECTOR)≡⍬,⊂1 1 2 2 3 3 4 4   ◊ ⍎massert
+  vector←1 1 2 2 3 3 4 4 5 5
+  result←(1 FIO∆SPLIT vector)≡⍬ (2 2 3 3 4 4 5 5)        ◊ ⍎massert
+  result←(2 FIO∆SPLIT vector)≡(1 1) ⍬ (3 3 4 4 5 5)      ◊ ⍎massert
+  result←(3 FIO∆SPLIT vector)≡(1 1 2 2) ⍬ (4 4 5 5)      ◊ ⍎massert
+  result←(4 FIO∆SPLIT vector)≡(1 1 2 2 3 3) ⍬ (5 5)      ◊ ⍎massert
+  result←(5 FIO∆SPLIT vector)≡(1 1 2 2 3 3 4 4) ⍬ ⍬      ◊ ⍎massert
+  result←(1 FIO∆SPLIT_CLEAN vector)≡⍬,⊂(2 2 3 3 4 4 5 5) ◊ ⍎massert
+  result←(2 FIO∆SPLIT_CLEAN vector)≡(1 1) (3 3 4 4 5 5)  ◊ ⍎massert
+  result←(3 FIO∆SPLIT_CLEAN vector)≡(1 1 2 2) (4 4 5 5)  ◊ ⍎massert
+  result←(4 FIO∆SPLIT_CLEAN vector)≡(1 1 2 2 3 3) (5 5)  ◊ ⍎massert
+  result←(5 FIO∆SPLIT_CLEAN vector)≡⍬,⊂1 1 2 2 3 3 4 4   ◊ ⍎massert
 
   SECTION "Splitting strings"
-  VECTOR←"This is\na\n\ntest"
-  result←"This is" "a" (0⍴'') "test"≡"\n" FIO∆SPLIT VECTOR ◊ ⍎massert
-  result←"This is" "a" "test"≡"\n" FIO∆SPLIT_CLEAN VECTOR  ◊ ⍎massert
-  VECTOR←"/bin:/usr/bin:/usr/local/bin"
-  result←"/bin" "/usr/bin" "/usr/local/bin"≡":" FIO∆SPLIT VECTOR
+  vector←"This is\na\n\ntest"
+  result←"This is" "a" (0⍴'') "test"≡"\n" FIO∆SPLIT vector ◊ ⍎massert
+  result←"This is" "a" "test"≡"\n" FIO∆SPLIT_CLEAN vector  ◊ ⍎massert
+  vector←"/bin:/usr/bin:/usr/local/bin"
+  result←"/bin" "/usr/bin" "/usr/local/bin"≡":" FIO∆SPLIT vector
   ⍎massert
-  result←"/bin" "/usr/bin" "/usr/local/bin"≡":" FIO∆SPLIT_CLEAN VECTOR
+  result←"/bin" "/usr/bin" "/usr/local/bin"≡":" FIO∆SPLIT_CLEAN vector
   ⍎massert
 
 lfail:
@@ -198,7 +198,7 @@ lfail:
 lfail:
 ∇
 
-∇TEST_DIRECTORY_HANDLING; result;CONTENTS;FD
+∇TEST_DIRECTORY_HANDLING; result;contents;fd
   SECTION "Assumptions"
   result←0≢FIO∆CURRENT_DIRECTORY  ◊ ⍎massert
   result←0≢≢FIO∆CURRENT_DIRECTORY ◊ ⍎massert
@@ -212,8 +212,8 @@ lfail:
   result←~↑FIO∆REMOVE_RECURSIVE "tests/nonexisting-directory"     ◊ ⍎massert
 
   SECTION "FIO∆LIST_DIRECTORY"
-  CONTENTS←FIO∆LIST_DIRECTORY "tests/" ◊ result←↑CONTENTS   ◊ ⍎massert
-  CONTENTS←↑1↓CONTENTS ◊ result←CONTENTS≡⍬,⊂"existing-file" ◊ ⍎massert
+  contents←FIO∆LIST_DIRECTORY "tests/" ◊ result←↑contents   ◊ ⍎massert
+  contents←↑1↓contents ◊ result←contents≡⍬,⊂"existing-file" ◊ ⍎massert
 
   SECTION "FIO∆MAKE_DIRECTORY"
   result←↑7 5 5 FIO∆MAKE_DIRECTORY "tests/new-directory/" ◊ ⍎massert
@@ -227,128 +227,128 @@ lfail:
   result←↑FIO∆LIST_DIRECTORY "tests/this/is/"                ◊ ⍎massert
   result←↑FIO∆LIST_DIRECTORY "tests/this/is/a/"              ◊ ⍎massert
   result←↑FIO∆LIST_DIRECTORY "tests/this/is/a/test/"         ◊ ⍎massert
-  FD←"w" FIO∆OPEN_FILE "tests/this/is/a/test/file"
-  result←↑FD ◊ ⍎massert ◊ FD←↑1↓FD
-  result←↑FD FIO∆WRITE_FD FIO∆UTF8_TO_BYTES "Hello, World!" ◊ ⍎massert
-  result←↑FIO∆CLOSE_FD FD                                   ◊ ⍎massert
+  fd←"w" FIO∆OPEN_FILE "tests/this/is/a/test/file"
+  result←↑fd ◊ ⍎massert ◊ fd←↑1↓fd
+  result←↑fd FIO∆WRITE_FD FIO∆UTF8_TO_BYTES "Hello, World!" ◊ ⍎massert
+  result←↑FIO∆CLOSE_FD fd                                   ◊ ⍎massert
   result←↑FIO∆REMOVE_RECURSIVE "tests/this"                 ◊ ⍎massert
   result←~↑FIO∆LIST_DIRECTORY "tests/this/"                 ◊ ⍎massert
 
 lfail:
 ∇
 
-∇TEST_FILE_HANDLING; FILE;FILE_CONTENTS;FILE_CONTENTS_LINES;result;FD;CONTENTS;BUFFER;BYTES_WRITTEN
-  FILE←"tests/existing-file"
-  FILE_CONTENTS←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-  FILE_CONTENTS_LINES←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+∇TEST_FILE_HANDLING; file;file_contents;file_contents_lines;result;fd;contents;buffer;bytes_written
+  file←"tests/existing-file"
+  file_contents←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+  file_contents_lines←"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 
   SECTION "Assumptions"
-  result←0≡FIO∆STDIN                                    ◊ ⍎massert
-  result←1≡FIO∆STDOUT                                   ◊ ⍎massert
-  result←2≡FIO∆STDERR                                   ◊ ⍎massert
+  result←0≡FIO∆stdin                                    ◊ ⍎massert
+  result←1≡FIO∆stdout                                   ◊ ⍎massert
+  result←2≡FIO∆stderr                                   ◊ ⍎massert
   result←3≡≢FIO∆LIST_FDS                                ◊ ⍎massert
-  result←∧/FIO∆LIST_FDS∊FIO∆STDIN FIO∆STDOUT FIO∆STDERR ◊ ⍎massert
+  result←∧/FIO∆LIST_FDS∊FIO∆stdin FIO∆stdout FIO∆stderr ◊ ⍎massert
 
   SECTION "Fail on non-existant file/fd"
-  FD←100
+  fd←100
   result←~↑"r" FIO∆OPEN_FILE "tests/nonexisting-file"    ◊ ⍎massert
-  result←~↑FIO∆CLOSE_FD FD                               ◊ ⍎massert
-  result←~↑FD FIO∆READ_FD 500                            ◊ ⍎massert
-  result←~↑FIO∆READ_LINE_FD FD                           ◊ ⍎massert
-  result←~↑FIO∆READ_ENTIRE_FD FD                         ◊ ⍎massert
+  result←~↑FIO∆CLOSE_FD fd                               ◊ ⍎massert
+  result←~↑fd FIO∆READ_FD 500                            ◊ ⍎massert
+  result←~↑FIO∆READ_LINE_FD fd                           ◊ ⍎massert
+  result←~↑FIO∆READ_ENTIRE_FD fd                         ◊ ⍎massert
   result←~↑FIO∆READ_ENTIRE_FILE "tests/nonexisting-file" ◊ ⍎massert
-  result←~↑FD FIO∆WRITE_FD 0                             ◊ ⍎massert
+  result←~↑fd FIO∆WRITE_FD 0                             ◊ ⍎massert
   result←~↑FIO∆REMOVE "tests/nonexisting-file"           ◊ ⍎massert
   result←~↑FIO∆REMOVE_RECURSIVE "tests/nonexisting-file" ◊ ⍎massert
-  result←~↑FD FIO∆PRINT_FD ""                            ◊ ⍎massert
-  result←~↑FD FIO∆PRINTF_FD ""                           ◊ ⍎massert
+  result←~↑fd FIO∆PRINT_FD ""                            ◊ ⍎massert
+  result←~↑fd FIO∆PRINTF_FD ""                           ◊ ⍎massert
 
   SECTION "FIO∆OPEN_FILE & FIO∆CLOSE_FD"
-  FD←"r" FIO∆OPEN_FILE FILE ◊ result←↑FD ◊ ⍎massert ◊ FD←↑1↓FD
-  result←↑FIO∆CLOSE_FD FD ◊ ⍎massert
+  fd←"r" FIO∆OPEN_FILE file ◊ result←↑fd ◊ ⍎massert ◊ fd←↑1↓fd
+  result←↑FIO∆CLOSE_FD fd ◊ ⍎massert
 
   SECTION "FIO∆IS_FILE"
-  result←FIO∆IS_FILE FILE                      ◊ ⍎massert
+  result←FIO∆IS_FILE file                      ◊ ⍎massert
   result←~FIO∆IS_FILE "tests/nonexisting-file" ◊ ⍎massert
   result←~FIO∆IS_FILE "tests/"                 ◊ ⍎massert
 
   SECTION "FIO∆READ_FD"
-  FD←"r" FIO∆OPEN_FILE FILE ◊ result←↑FD ◊ ⍎massert ◊ FD←↑1↓FD
-  CONTENTS←⍬
+  fd←"r" FIO∆OPEN_FILE file ◊ result←↑fd ◊ ⍎massert ◊ fd←↑1↓fd
+  contents←⍬
   LREAD_LOOP:
-    BUFFER←FD FIO∆READ_FD 500
-    →(~↑BUFFER) ⍴ LREAD_LOOP_END
-    CONTENTS←CONTENTS,↑1↓BUFFER
+    buffer←fd FIO∆READ_FD 500
+    →(~↑buffer) ⍴ LREAD_LOOP_END
+    contents←contents,↑1↓buffer
   LREAD_LOOP_END:
-  result←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 CONTENTS ◊ ⍎massert
-  result←~↑FD FIO∆READ_FD 500                     ◊ ⍎massert
-  result←↑FIO∆CLOSE_FD FD                         ◊ ⍎massert
+  result←file_contents≡FIO∆BYTES_TO_UTF8 contents ◊ ⍎massert
+  result←~↑fd FIO∆READ_FD 500                     ◊ ⍎massert
+  result←↑FIO∆CLOSE_FD fd                         ◊ ⍎massert
 
   SECTION "FIO∆READ_LINE_FD"
-  FD←"r" FIO∆OPEN_FILE FILE ◊ result←↑FD ◊ ⍎massert ◊ FD←↑1↓FD
-  CONTENTS←⍬
-  BUFFER←FIO∆READ_LINE_FD FD ◊ result←↑BUFFER               ◊ ⍎massert
-  BUFFER←↑1↓BUFFER ◊ CONTENTS←CONTENTS,⊂BUFFER
-  result←(FIO∆BYTES_TO_UTF8 BUFFER)≡↑FILE_CONTENTS_LINES[1] ◊ ⍎massert
-  BUFFER←FIO∆READ_LINE_FD FD ◊ result←↑BUFFER               ◊ ⍎massert
-  BUFFER←↑1↓BUFFER ◊ CONTENTS←CONTENTS,⊂BUFFER
-  result←(FIO∆BYTES_TO_UTF8 BUFFER)≡↑FILE_CONTENTS_LINES[2] ◊ ⍎massert
-  BUFFER←FIO∆READ_LINE_FD FD ◊ result←↑BUFFER               ◊ ⍎massert
-  BUFFER←↑1↓BUFFER ◊ CONTENTS←CONTENTS,⊂BUFFER
-  result←(FIO∆BYTES_TO_UTF8 BUFFER)≡↑FILE_CONTENTS_LINES[3] ◊ ⍎massert
-  BUFFER←FIO∆READ_LINE_FD FD ◊ result←↑BUFFER               ◊ ⍎massert
-  BUFFER←↑1↓BUFFER ◊ CONTENTS←CONTENTS,⊂BUFFER
-  result←(FIO∆BYTES_TO_UTF8 BUFFER)≡↑FILE_CONTENTS_LINES[4] ◊ ⍎massert
-  result←FILE_CONTENTS_LINES≡FIO∆BYTES_TO_UTF8¨ CONTENTS    ◊ ⍎massert
-  result←~↑FIO∆READ_LINE_FD FD                              ◊ ⍎massert
-  result←↑FIO∆CLOSE_FD FD                                   ◊ ⍎massert
+  fd←"r" FIO∆OPEN_FILE file ◊ result←↑fd ◊ ⍎massert ◊ fd←↑1↓fd
+  contents←⍬
+  buffer←FIO∆READ_LINE_FD fd ◊ result←↑buffer               ◊ ⍎massert
+  buffer←↑1↓buffer ◊ contents←contents,⊂buffer
+  result←(FIO∆BYTES_TO_UTF8 buffer)≡↑file_contents_lines[1] ◊ ⍎massert
+  buffer←FIO∆READ_LINE_FD fd ◊ result←↑buffer               ◊ ⍎massert
+  buffer←↑1↓buffer ◊ contents←contents,⊂buffer
+  result←(FIO∆BYTES_TO_UTF8 buffer)≡↑file_contents_lines[2] ◊ ⍎massert
+  buffer←FIO∆READ_LINE_FD fd ◊ result←↑buffer               ◊ ⍎massert
+  buffer←↑1↓buffer ◊ contents←contents,⊂buffer
+  result←(FIO∆BYTES_TO_UTF8 buffer)≡↑file_contents_lines[3] ◊ ⍎massert
+  buffer←FIO∆READ_LINE_FD fd ◊ result←↑buffer               ◊ ⍎massert
+  buffer←↑1↓buffer ◊ contents←contents,⊂buffer
+  result←(FIO∆BYTES_TO_UTF8 buffer)≡↑file_contents_lines[4] ◊ ⍎massert
+  result←file_contents_lines≡FIO∆BYTES_TO_UTF8¨ contents    ◊ ⍎massert
+  result←~↑FIO∆READ_LINE_FD fd                              ◊ ⍎massert
+  result←↑FIO∆CLOSE_FD fd                                   ◊ ⍎massert
 
   SECTION "FIO∆READ_ENTIRE_FD"
-  FD←"r" FIO∆OPEN_FILE FILE ◊ result←↑FD ◊ ⍎massert  ◊ FD←↑1↓FD
-  CONTENTS←FIO∆READ_ENTIRE_FD FD ◊ result←↑CONTENTS   ◊ ⍎massert
-  result←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑1↓CONTENTS  ◊ ⍎massert
-  result←~↑FIO∆READ_ENTIRE_FD FD                      ◊ ⍎massert
-  result←↑FIO∆CLOSE_FD FD                             ◊ ⍎massert
+  fd←"r" FIO∆OPEN_FILE file ◊ result←↑fd ◊ ⍎massert  ◊ fd←↑1↓fd
+  contents←FIO∆READ_ENTIRE_FD fd ◊ result←↑contents   ◊ ⍎massert
+  result←file_contents≡FIO∆BYTES_TO_UTF8 ↑1↓contents  ◊ ⍎massert
+  result←~↑FIO∆READ_ENTIRE_FD fd                      ◊ ⍎massert
+  result←↑FIO∆CLOSE_FD fd                             ◊ ⍎massert
 
   SECTION "FIO∆READ_ENTIRE_FILE"
   result←~↑FIO∆READ_ENTIRE_FILE "tests/" ◊ ⍎massert
   ⍝ ^ Fail on directory.
-  CONTENTS←FIO∆READ_ENTIRE_FILE FILE ◊ ⍎massert ◊ result←↑CONTENTS ◊ ⍎massert
-  result←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑1↓CONTENTS ◊ ⍎massert
+  contents←FIO∆READ_ENTIRE_FILE file ◊ ⍎massert ◊ result←↑contents ◊ ⍎massert
+  result←file_contents≡FIO∆BYTES_TO_UTF8 ↑1↓contents ◊ ⍎massert
 
   SECTION "FIO∆WRITE_FD"
-  FD←"w" FIO∆OPEN_FILE "tests/new-file" ◊ result←↑FD ◊ ⍎massert ◊ FD←↑1↓FD
-  result←↑FD FIO∆WRITE_FD FIO∆UTF8_TO_BYTES FILE_CONTENTS ◊ ⍎massert
-  result←↑FIO∆CLOSE_FD FD                                 ◊ ⍎massert
-  CONTENTS←FIO∆READ_ENTIRE_FILE "tests/new-file"
-  result←↑CONTENTS                                   ◊ ⍎massert
-  result←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑1↓CONTENTS ◊ ⍎massert
+  fd←"w" FIO∆OPEN_FILE "tests/new-file" ◊ result←↑fd ◊ ⍎massert ◊ fd←↑1↓fd
+  result←↑fd FIO∆WRITE_FD FIO∆UTF8_TO_BYTES file_contents ◊ ⍎massert
+  result←↑FIO∆CLOSE_FD fd                                 ◊ ⍎massert
+  contents←FIO∆READ_ENTIRE_FILE "tests/new-file"
+  result←↑contents                                   ◊ ⍎massert
+  result←file_contents≡FIO∆BYTES_TO_UTF8 ↑1↓contents ◊ ⍎massert
   result←↑FIO∆REMOVE "tests/new-file"                ◊ ⍎massert
 
   SECTION "FIO∆PRINT_FD"
-  FD←"w" FIO∆OPEN_FILE "tests/new-file" ◊ result←↑FD ◊ ⍎massert ◊ FD←↑1↓FD
-  result←↑FD FIO∆PRINT_FD FILE_CONTENTS  ◊ ⍎massert
-  result←↑FIO∆CLOSE_FD FD                ◊ ⍎massert
-  CONTENTS←FIO∆READ_ENTIRE_FILE "tests/new-file"
-  result←↑CONTENTS                                   ◊ ⍎massert
-  result←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑1↓CONTENTS ◊ ⍎massert
+  fd←"w" FIO∆OPEN_FILE "tests/new-file" ◊ result←↑fd ◊ ⍎massert ◊ fd←↑1↓fd
+  result←↑fd FIO∆PRINT_FD file_contents  ◊ ⍎massert
+  result←↑FIO∆CLOSE_FD fd                ◊ ⍎massert
+  contents←FIO∆READ_ENTIRE_FILE "tests/new-file"
+  result←↑contents                                   ◊ ⍎massert
+  result←file_contents≡FIO∆BYTES_TO_UTF8 ↑1↓contents ◊ ⍎massert
   result←↑FIO∆REMOVE "tests/new-file"                ◊ ⍎massert
 
   SECTION "FIO∆PRINTF_FD"
-  FD←"w" FIO∆OPEN_FILE "tests/new-file" ◊ result←↑FD ◊ ⍎massert ◊ FD←↑1↓FD
-  BYTES_WRITTEN←FD FIO∆PRINTF_FD "%s" FILE_CONTENTS
-  result←↑BYTES_WRITTEN ◊ ⍎massert ◊ BYTES_WRITTEN←↑1↓BYTES_WRITTEN
-  result←(≢FILE_CONTENTS)≡BYTES_WRITTEN ◊ ⍎massert
-  result←↑FIO∆CLOSE_FD FD               ◊ ⍎massert
-  CONTENTS←FIO∆READ_ENTIRE_FILE "tests/new-file"
-  result←↑CONTENTS                                   ◊ ⍎massert
-  result←FILE_CONTENTS≡FIO∆BYTES_TO_UTF8 ↑1↓CONTENTS ◊ ⍎massert
+  fd←"w" FIO∆OPEN_FILE "tests/new-file" ◊ result←↑fd ◊ ⍎massert ◊ fd←↑1↓fd
+  bytes_written←fd FIO∆PRINTF_FD "%s" file_contents
+  result←↑bytes_written ◊ ⍎massert ◊ bytes_written←↑1↓bytes_written
+  result←(≢file_contents)≡bytes_written ◊ ⍎massert
+  result←↑FIO∆CLOSE_FD fd               ◊ ⍎massert
+  contents←FIO∆READ_ENTIRE_FILE "tests/new-file"
+  result←↑contents                                   ◊ ⍎massert
+  result←file_contents≡FIO∆BYTES_TO_UTF8 ↑1↓contents ◊ ⍎massert
   result←↑FIO∆REMOVE "tests/new-file"                ◊ ⍎massert
 
 lfail:
 ∇
 
-∇TEST_PROCESS_HANDLING; result;APL_PATH;COMMAND;FD;OUTPUT
+∇TEST_PROCESS_HANDLING; result;apl_path;command;fd;output
   SECTION "FIO∆ESCAPE_SHELL_ARGUMENT"
   result←"''"≡FIO∆ESCAPE_SHELL_ARGUMENT ""
   ⍎massert
@@ -362,8 +362,8 @@ lfail:
   ⍎massert
 
   SECTION "Fail on non-existant fd"
-  FD←100
-  result←~↑FIO∆PCLOSE FD ◊ ⍎massert
+  fd←100
+  result←~↑FIO∆PCLOSE fd ◊ ⍎massert
 
   SECTION "FIO∆JOIN_SHELL_ARGUMENTS"
   result←"'This is' 'a test'"≡"'This is'" FIO∆JOIN_SHELL_ARGUMENTS "'a test'"
@@ -372,30 +372,30 @@ lfail:
   ⍎massert
 
   SECTION "FIO∆POPEN_READ"
-  APL_PATH←↑⎕ARG
-  COMMAND←APL_PATH "--script" "--LX" '⍞←"Hello World!" ◊ ⍎")OFF"'
-  FD←FIO∆POPEN_READ COMMAND ◊ result←↑FD ◊ ⍎massert ◊ FD←↑1↓FD
-  OUTPUT←FIO∆READ_ENTIRE_FD FD ◊ result←↑OUTPUT ◊ ⍎massert ◊ OUTPUT←↑1↓OUTPUT
-  result←"Hello World!\n"≡FIO∆BYTES_TO_UTF8 OUTPUT ◊ ⍎massert
-  OUTPUT←FIO∆PCLOSE FD ◊ result←↑OUTPUT ◊ ⍎massert ◊ OUTPUT←↑1↓OUTPUT
-  result←0≡OUTPUT ◊ ⍎massert
+  apl_path←↑⎕ARG
+  command←apl_path "--script" "--LX" '⍞←"Hello World!" ◊ ⍎")OFF"'
+  fd←FIO∆POPEN_READ command ◊ result←↑fd ◊ ⍎massert ◊ fd←↑1↓fd
+  output←FIO∆READ_ENTIRE_FD fd ◊ result←↑output ◊ ⍎massert ◊ output←↑1↓output
+  result←"Hello World!\n"≡FIO∆BYTES_TO_UTF8 output ◊ ⍎massert
+  output←FIO∆PCLOSE fd ◊ result←↑output ◊ ⍎massert ◊ output←↑1↓output
+  result←0≡output ◊ ⍎massert
 
 lfail:
 ∇
 
-∇TEST_TIME; result;S;MS;US;TIME
+∇TEST_TIME; result;s;ms;us;time
   SECTION "Fetch current time"
-  S←FIO∆TIME_S   ◊ result←↑S  ◊ ⍎massert ◊ S←↑1↓S
-  MS←FIO∆TIME_MS ◊ result←↑MS ◊ ⍎massert ◊ MS←↑1↓MS
-  US←FIO∆TIME_US ◊ result←↑US ◊ ⍎massert ◊ US←↑1↓US
+  s←FIO∆TIME_S   ◊ result←↑s  ◊ ⍎massert ◊ s←↑1↓s
+  ms←FIO∆TIME_MS ◊ result←↑ms ◊ ⍎massert ◊ ms←↑1↓ms
+  us←FIO∆TIME_US ◊ result←↑us ◊ ⍎massert ◊ us←↑1↓us
 
   SECTION "Time should increase"
-  TIME←FIO∆TIME_S ◊ result←↑TIME ◊ ⍎massert ◊ TIME←↑1↓TIME
-  result←S≤TIME ◊ ⍎massert
-  TIME←FIO∆TIME_MS ◊ result←↑TIME ◊ ⍎massert ◊ TIME←↑1↓TIME
-  result←MS≤TIME ◊ ⍎massert
-  TIME←FIO∆TIME_US ◊ result←↑TIME ◊ ⍎massert ◊ TIME←↑1↓TIME
-  result←US≤TIME ◊ ⍎massert
+  time←FIO∆TIME_S ◊ result←↑time ◊ ⍎massert ◊ time←↑1↓time
+  result←s≤time ◊ ⍎massert
+  time←FIO∆TIME_MS ◊ result←↑time ◊ ⍎massert ◊ time←↑1↓time
+  result←ms≤time ◊ ⍎massert
+  time←FIO∆TIME_US ◊ result←↑time ◊ ⍎massert ◊ time←↑1↓time
+  result←us≤time ◊ ⍎massert
 
 lfail:
 ∇
