@@ -86,6 +86,7 @@
 ⍝ Changelog:
 ⍝   Upcoming:
 ⍝   - Fixed introduced bug in FIO∆PRINT and FIO∆PRINTF.
+⍝   - Removed unnecessary calls to ⎕UCS in FIO∆BYTES_TO_UTF8 and FIO∆STRERROR.
 ⍝   2.0.0:
 ⍝   - Removed defer system since it seems useless.
 ⍝   - Updated code style to use lowercase for variables. For you, the user, this
@@ -149,7 +150,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ →bytes: vector<byte>.
 ⍝ ←utf8: string.
 ∇utf8←FIO∆BYTES_TO_UTF8 bytes
-  utf8←19 ⎕CR ⎕UCS bytes
+  utf8←19 ⎕CR bytes
 ∇
 
 ⍝ Converts a UTF-8 encoded string to bytes.
@@ -212,9 +213,7 @@ FIO⍙metadata←"Author" "BugEmail" "Documentation" "Download" "LICENSE" "Porta
 ⍝ ←description: string.
 ∇description←FIO∆STRERROR errno
   ⍝ Zs ←    ⎕FIO[ 2] Be    strerror(Be)
-  ⍝ ⎕FIO[2] actually returns a character vector of bytes, so ⎕UCS is used to
-  ⍝ convert them to bytes.
-  description←FIO∆BYTES_TO_UTF8 ⎕UCS (⎕FIO[2] errno)
+  description←FIO∆BYTES_TO_UTF8 (⎕FIO[2] errno)
 ∇
 
 ⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝⍝
